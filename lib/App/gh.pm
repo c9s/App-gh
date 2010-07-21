@@ -22,9 +22,9 @@ list all repository of c9s:
 
     $ gh list c9s
 
-if you dont want text wrapped:
+if you want text wrapped:
 
-    $ NO_WRAP=1 gh list c9s
+    $ WRAP=1 gh list c9s
 
 clone Plack repository from miyagawa:
 

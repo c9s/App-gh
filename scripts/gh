@@ -20,7 +20,7 @@ sub print_list {
 
         my $padding = int($column_w) - length( $title );
 
-        if ( ! $ENV{NO_WRAP} && ( $column_w + 3 + length( join " ",@$arg) ) > $screen_width ) {
+        if ( $ENV{WRAP} && ( $column_w + 3 + length( join " ",@$arg) ) > $screen_width ) {
             # wrap description
             my $string = $title . " " x $padding . " - " . join(" ",@$arg) . "\n";
             $string =~ s/\n//g;
@@ -103,9 +103,9 @@ show help message;
 
         $ gh list c9s
 
-    if you dont want text wrapped:
+    if you want text wrapped:
 
-        $ NO_WRAP=1 gh list c9s
+        $ WRAP=1 gh list c9s
 
 * clone:
 
