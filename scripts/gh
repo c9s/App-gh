@@ -4,11 +4,11 @@ use JSON;
 use utf8;
 use warnings;
 
+my $screen_width = 92;
 
 sub print_list {
     my @lines = @_;
 
-    my $width = 92;
     my $column_w = 0;
 
     map { 
@@ -20,7 +20,7 @@ sub print_list {
 
         my $padding = int($column_w) - length( $title );
 
-        if ( ( $column_w + 3 + length( join " ",@$arg) ) > $width ) {
+        if ( ( $column_w + 3 + length( join " ",@$arg) ) > $screen_width ) {
             # wrap description
             my $string = $title . " " x $padding . " - " . join(" ",@$arg) . "\n";
             $string =~ s/\n//g;
@@ -35,13 +35,13 @@ sub print_list {
                 my $c = $1;
                 print $c;
 
-                if( $c =~ /[ \,]/ && $firstline && $cnt > $width ) {
+                if( $c =~ /[ \,]/ && $firstline && $cnt > $screen_width ) {
                     print "\n" . " " x ($column_w + 3 + $tab );
                     $firstline = 0;
                     $cnt = 0;
                     $wrapped = 1;
                 }
-                elsif( $c =~ /[ \,]/ && ! $firstline && $cnt > ($width - $column_w) ) {
+                elsif( $c =~ /[ \,]/ && ! $firstline && $cnt > ($screen_width - $column_w) ) {
                     print "\n" . " " x ($column_w + 3 + $tab );
                     $cnt = 0;
                     $wrapped = 1;
