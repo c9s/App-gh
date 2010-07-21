@@ -31,6 +31,10 @@ or:
 
     $ gh clone miyagawa Plack
 
+    $ gh clone gugod Social http
+
+    $ gh clone clkao Web-Hippie ro
+
 clone from read-only uri:
 
     $ gh clone miyagawa/Plack ro 
