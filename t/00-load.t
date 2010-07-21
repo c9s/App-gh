@@ -3,8 +3,8 @@
 use Test::More tests => 1;
 
 BEGIN {
-    use_ok( 'App::ghget' ) || print "Bail out!
+    use_ok( 'App::gh' ) || print "Bail out!
 ";
 }
 
-diag( "Testing App::ghget $App::ghget::VERSION, Perl $], $^X" );
+diag( "Testing App::gh $App::gh::VERSION, Perl $], $^X" );
