@@ -20,7 +20,7 @@ sub print_list {
 
         my $padding = int($column_w) - length( $title );
 
-        if ( ( $column_w + 3 + length( join " ",@$arg) ) > $screen_width ) {
+        if ( ! $ENV{NO_WRAP} && ( $column_w + 3 + length( join " ",@$arg) ) > $screen_width ) {
             # wrap description
             my $string = $title . " " x $padding . " - " . join(" ",@$arg) . "\n";
             $string =~ s/\n//g;
@@ -97,43 +97,57 @@ show help message;
 
     $ gh help
 
-list all repository of c9s:
+* list:
 
-    $ gh list c9s
+    list all repository of c9s:
 
-clone Plack repository from miyagawa:
+        $ gh list c9s
 
-    $ gh clone miyagawa/Plack   # default: read-only 
+    if you dont want text wrapped:
 
-or:
+        $ NO_WRAP=1 gh list c9s
 
-    $ gh clone miyagawa Plack
+* clone:
 
-    $ gh clone gugod Social http
+    clone Plack repository from miyagawa:
 
-    $ gh clone clkao Web-Hippie ro
+        $ gh clone miyagawa/Plack   # default: read-only 
 
-clone from read-only uri:
+    or:
 
-    $ gh clone miyagawa/Plack ro 
+        $ gh clone miyagawa Plack
 
-clone from ssh uri:
+        $ gh clone gugod Social http
 
-    $ gh clone miyagawa/Plack ssh  
+        $ gh clone clkao Web-Hippie ro
 
-search repository:
+    clone from read-only uri:
 
-    $ gh search Plack
+        $ gh clone miyagawa/Plack ro 
 
-to clone all repository of miyagawa:
+    clone from ssh uri:
 
-    $ gh cloneall miyagawa 
+        $ gh clone miyagawa/Plack ssh  
 
-    $ gh cloneall clkao ro  # read-only
+* search:
 
-to fork project
+    search repository:
 
-    $ gh fork clkao AnyMQ
+        $ gh search Plack
+
+* cloneall:
+
+    to clone all repository of miyagawa:
+
+        $ gh cloneall miyagawa 
+
+        $ gh cloneall clkao ro  # read-only
+
+* fork;
+
+    to fork project
+
+        $ gh fork clkao AnyMQ
 
 END
     exit;
