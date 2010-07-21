@@ -27,23 +27,28 @@ sub print_list {
 
             my $cnt = 0;
             my $firstline = 1;
+            my $tab = 4;
+            my $wrapped = 0;
             while( $string =~ /(.)/g ) {
                 $cnt++;
 
                 my $c = $1;
                 print $c;
 
-                if( $c eq ' ' && $firstline && $cnt > $width ) {
-                    print "\n" . " " x ($column_w + 3 );
+                if( $c =~ /[ \,]/ && $firstline && $cnt > $width ) {
+                    print "\n" . " " x ($column_w + 3 + $tab );
                     $firstline = 0;
                     $cnt = 0;
+                    $wrapped = 1;
                 }
-                elsif( $c eq ' ' && ! $firstline && $cnt > ($width - $column_w) ) {
-                    print "\n" . " " x ($column_w + 3 );
+                elsif( $c =~ /[ \,]/ && ! $firstline && $cnt > ($width - $column_w) ) {
+                    print "\n" . " " x ($column_w + 3 + $tab );
                     $cnt = 0;
+                    $wrapped = 1;
                 }
             }
             print "\n";
+            print "\n" if $wrapped;
         }
         else {
             print $title;
