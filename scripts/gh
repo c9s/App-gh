@@ -27,7 +27,56 @@ $SIG{INT} = sub {
     exit;
 };
 
-if( $act eq 'search' || $act eq 's' ) {
+if( ! $act || $act eq 'help' ) 
+{
+
+    print <<'END';
+
+App::gh
+
+show help message;
+
+    $ gh help
+
+list all repository of c9s:
+
+    $ gh list c9s
+
+clone Plack repository from miyagawa:
+
+    $ gh clone miyagawa/Plack   # default: read-only 
+
+or:
+
+    $ gh clone miyagawa Plack
+
+    $ gh clone gugod Social http
+
+    $ gh clone clkao Web-Hippie ro
+
+clone from read-only uri:
+
+    $ gh clone miyagawa/Plack ro 
+
+clone from ssh uri:
+
+    $ gh clone miyagawa/Plack ssh  
+
+search repository:
+
+    $ gh search Plack
+
+to clone all repository of miyagawa:
+
+    $ gh cloneall miyagawa 
+
+    $ gh cloneall clkao ro  # read-only
+
+END
+    exit;
+
+}
+elsif( $act eq 'search' || $act eq 's' ) {
     my $keyword = shift;
     my $json = get 'http://github.com/api/v2/json/repos/search/' . $keyword;
 
@@ -129,14 +178,45 @@ elsif( $act eq 'fork' ) {
         $repo = shift;
     }
 
-
     my $auth = get_github_auth();
 
     # curl -F 'login=schacon' -F 'token=XXX' http://github.com/api/v2/yaml/repos/fork/dim/retrospectiva
 
-    my $uri = sprintf("http://github.com/api/v2/json/repos/fork/%s/%s", $auth->{user} , $auth->{token} );
+=pod
+
+$VAR1 = {
+          'repository' => {
+                            'has_downloads' => bless( do{\(my $o = 1)}, 'JSON::XS::Boolean' ),
+                            'owner' => 'c9s',
+                            'has_issues' => bless( do{\(my $o = 0)}, 'JSON::XS::Boolean' ),
+                            'name' => 'AnyMQ',
+                            'private' => $VAR1->{'repository'}{'has_issues'},
+                            'has_wiki' => $VAR1->{'repository'}{'has_downloads'},
+                            'pushed_at' => '2010/04/06 00:40:45 -0700',
+                            'description' => 'Simple message queue based on AnyEvent',
+                            'watchers' => 1,
+                            'forks' => 0,
+                            'homepage' => '',
+                            'created_at' => '2010/07/21 06:08:11 -0700',
+                            'fork' => $VAR1->{'repository'}{'has_downloads'},
+                            'url' => 'http://github.com/c9s/AnyMQ',
+                            'open_issues' => 0
+                          }
+        };
+=cut
+
+    my $uri = sprintf("http://github.com/api/v2/json/repos/fork/%s/%s?login=%s&token=%s", $user , $repo , $auth->{user} , $auth->{token} );
     my $json = get( $uri );
     my $data = decode_json( $json );
-    use Data::Dumper; warn Dumper( $data );
+    # use Data::Dumper; warn Dumper( $data );
 
+    $data = $data->{repository};
+    print "Name:       " . $data->{name} . "\n";
+    print "Owner:      " . $data->{owner} . "\n";
+    print "Watchers:   " . $data->{watchers} . "\n";
+    print "Created at: " . $data->{created_at} . "\n";
+    print "Pushed at:  " . $data->{pushed_at} . "\n";
+    print "Fork:       " . $data->{'fork'} . "\n";
+    print "URL:        " . $data->{url} . "\n";
+    print "Homepage:   " . $data->{homepage} . "\n";
 }

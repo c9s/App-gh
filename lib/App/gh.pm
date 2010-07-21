@@ -18,7 +18,6 @@ our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
-
 list all repository of c9s:
 
     $ gh list c9s
