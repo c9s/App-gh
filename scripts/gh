@@ -2,8 +2,26 @@
 use LWP::Simple;
 use JSON;
 use warnings;
-my $act = shift;
 
+sub get_github_auth {
+    open FH , "<" , $ENV{HOME} . "/.gitconfig";
+    local $/;
+    my $content = <FH>;
+    close FH;
+    my @parts = split /(?=\[.*?\])/,$content;
+    for my $part ( @parts ) {
+        if( $part =~ /^\[github\]/ ) {
+            my ($user) = ($part =~ m/user\s*=\s*(\w+)/ );
+            my ($token) = ($part =~ m/token\s*=\s*(\w+)/ );
+            return {
+                user => $user,
+                token => $token
+            };
+        }
+    }
+}
+
+my $act = shift;
 
 $SIG{INT} = sub {
     exit;
@@ -98,4 +116,27 @@ elsif( $act eq 'cloneall' || $act eq 'ca' ) {
             qx{ git clone -q $uri };
         }
     }
+}
+elsif( $act eq 'fork' ) {
+    my $user;
+    my $repo;
+
+    $user = shift;
+    if( $user =~ /\// ) {
+        ($user,$repo) = split /\//,$user;
+    }
+    else {
+        $repo = shift;
+    }
+
+
+    my $auth = get_github_auth();
+
+    # curl -F 'login=schacon' -F 'token=XXX' http://github.com/api/v2/yaml/repos/fork/dim/retrospectiva
+
+    my $uri = sprintf("http://github.com/api/v2/json/repos/fork/%s/%s", $auth->{user} , $auth->{token} );
+    my $json = get( $uri );
+    my $data = decode_json( $json );
+    use Data::Dumper; warn Dumper( $data );
+
 }
