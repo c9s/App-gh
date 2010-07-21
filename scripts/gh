@@ -8,7 +8,7 @@ use warnings;
 sub print_list {
     my @lines = @_;
 
-    my $width = 78;
+    my $width = 92;
     my $column_w = 0;
 
     map { 
