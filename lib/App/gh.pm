@@ -13,7 +13,7 @@ Version 0.01
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 
 =head1 SYNOPSIS
@@ -21,6 +21,10 @@ our $VERSION = '0.03';
 list all repository of c9s:
 
     $ gh list c9s
+
+if you dont want text wrapped:
+
+    $ NO_WRAP=1 gh list c9s
 
 clone Plack repository from miyagawa:
 
