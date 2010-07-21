@@ -1,0 +1,101 @@
+#!/usr/bin/env perl
+use LWP::Simple;
+use JSON;
+use warnings;
+my $act = shift;
+
+
+$SIG{INT} = sub {
+    exit;
+};
+
+if( $act eq 'search' || $act eq 's' ) {
+    my $keyword = shift;
+    my $json = get 'http://github.com/api/v2/json/repos/search/' . $keyword;
+
+    my $result = decode_json( $json );
+    my $width = 78;
+    my $column_w = 0;
+
+    my @ary = ();
+    for my $repo ( @{ $result->{repositories} } ) {
+        my $name = sprintf "%s/%s", $repo->{username} , $repo->{name};
+        my $desc = $repo->{description};
+        $column_w = length($name) if length($name) > $column_w ;
+        push @ary, { name => $name , desc => $desc };
+    }
+
+    for my $arg ( @ary ) {
+        print $arg->{name};
+        my $padding = $column_w - length( $arg->{name} );
+        print " " x $padding;
+        print " - ";
+        print $arg->{desc};
+        print "\n";
+
+    }
+}
+elsif( $act eq 'clone' || $act eq 'c' ) {
+    my $user;
+    my $repo;
+
+    $user = shift;
+    if( $user =~ /\// ) {
+        ($user,$repo) = split /\//,$user;
+    }
+    else {
+        $repo = shift;
+    }
+
+    my $attr = shift || 'ro';
+    my $uri;
+    if( $attr eq 'ro' ) {
+        $uri = sprintf "git://github.com/%s/%s.git" , $user , $repo;
+    }
+    elsif( $attr eq 'ssh' ) {
+        $uri = sprintf "git\@github.com:%s/%s.git" , $user , $repo;
+    }
+    print $uri . "\n";
+    system( qq{git clone $uri} );
+}
+elsif( $act eq 'list' ) 
+{
+    my $acc = shift;
+    my $json = get 'http://github.com/api/v2/json/repos/show/' . $acc;
+    my $data = decode_json( $json );
+    for my $repo ( @{ $data->{repositories} } ) {
+        my $repo_name = $repo->{name};
+        print $acc . "/" . $repo->{name}  . ' - ' . ($repo->{description}||"") . "\n";
+    }
+}
+elsif( $act eq 'cloneall' || $act eq 'ca' ) {
+    my $acc = shift;
+    my $attr = shift || 'ro';
+
+    my $json = get 'http://github.com/api/v2/json/repos/show/' . $acc;
+    my $data = decode_json( $json );
+
+    for my $repo ( @{ $data->{repositories} } ) {
+        my $repo_name = $repo->{name};
+        my $local_repo_name = $repo_name;
+        $local_repo_name =~ s/\.git$//;
+
+        my $uri;
+        if( $attr eq 'ro' ) {
+            $uri = sprintf "git://github.com/%s/%s.git" , $acc , $repo_name;
+        }
+        elsif( $attr eq 'ssh' ) {
+            $uri = sprintf "git\@github.com:%s/%s.git" , $acc , $repo_name;
+        }
+        print $uri . "\n";
+
+        if( -e $local_repo_name ) {
+            print "Updating " . $local_repo_name . " ...\n";
+            qx{ cd $local_repo_name ; git pull origin master };
+        }
+        else {
+            print "Cloning " . $repo->{name} . " ...\n";
+            qx{ git clone -q $uri };
+        }
+    }
+}
