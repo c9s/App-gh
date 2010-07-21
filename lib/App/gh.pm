@@ -52,6 +52,10 @@ to clone all repository of miyagawa:
 
     $ gh cloneall clkao ro  # read-only
 
+to fork project
+
+    $ gh fork clkao AnyMQ
+
 =head1 AUTHOR
 
 Cornelius, C<< <cornelius.howl at gmail.com> >>
