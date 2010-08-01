@@ -10,8 +10,6 @@ $|++;
 
 my $screen_width = 92;
 
-
-
 sub _debug {
     print STDERR @_,"\n" if debug;
 }
@@ -64,8 +62,7 @@ sub print_list {
             print "\n";
             print "\n" if $wrapped;
         }
-        else {
-            print $title;
+        else { print $title;
             print " " x $padding;
             print " - ";
             print join " " , @$arg;
@@ -237,6 +234,34 @@ elsif( $act eq 'cloneall' || $act eq 'ca' ) {
         else {
             print "Cloning " . $repo->{name} . " ...\n";
             qx{ git clone -q $uri };
+        }
+    }
+}
+elsif( $act eq 'network' ) {
+    die "Git config not found." if ( ! -e ".git/config" );
+
+    my $config = parse_config( ".git/config" );
+    for my $remote ( values %{ $config->{remote} } ) {
+        # git://github.com/miyagawa/Tatsumaki.git
+        if ( $remote->{url} =~ m{git://github.com/(.*?)/(.*?).git} 
+            || $remote->{url} =~ m{git\@github.com:(.*?)/(.*?).git} ) 
+        {
+            my ($acc,$repo) = ($1,$2);
+            # curl http://github.com/api/v2/yaml/repos/show/schacon/ruby-git/network
+            my $url = qq(http://github.com/api/v2/json/repos/show/$acc/$repo/network);
+            my $json = get $url;
+            my $objs = decode_json($json);
+            # use Data::Dumper; warn Dumper( $objs );
+            my $networks = $objs->{network};
+
+            for my $net ( @$networks ) {
+                _info sprintf( "% 17s - watchers(%d) forks(%d)"
+                    , $net->{owner} . '/' . $net->{name}
+                    , $net->{watchers}
+                    , $net->{forks}
+                    );
+            }
+            last;
         }
     }
 }
