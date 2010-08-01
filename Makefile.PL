@@ -1,6 +1,7 @@
 use inc::Module::Install;
 
 name     'App-gh';
+version  '0.07';
 all_from 'lib/App/gh.pm';
 author   q{Cornelius <cornelius.howl@gmail.com>};
 license  'perl';

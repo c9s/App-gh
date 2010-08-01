@@ -55,15 +55,6 @@ __END__
 
 App::gh - An apt-like Github clone utility.
 
-=head1 VERSION
-
-Version 0.06
-
-=cut
-
-our $VERSION = '0.06';
-
-
 =head1 SYNOPSIS
 
 list all repository of c9s:
