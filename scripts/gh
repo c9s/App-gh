@@ -3,8 +3,7 @@ use LWP::Simple;
 use JSON;
 use utf8;
 use warnings;
-use constant debug => 1;
-use lib 'lib';
+use constant debug => $ENV{DEBUG};
 use App::gh;
 
 $|++;
