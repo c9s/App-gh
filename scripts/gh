@@ -13,11 +13,11 @@ my $screen_width = 92;
 
 
 sub _debug {
-    print STDERR @_ , "\n" if debug;
+    print STDERR @_,"\n" if debug;
 }
 
 sub _info {
-    print STDERR @_ . "\n";
+    print STDERR @_,"\n";
 }
 
 sub print_list {
@@ -255,7 +255,7 @@ elsif( $act eq 'fork' ) {
     my $auth = get_github_auth();
 
     unless( $auth ) {
-        die "Github authtoken not found.\n";
+        die "Github authtoken not found. Can not fork repository.\n";
     }
 
     unless ( $repo ) {
@@ -273,7 +273,7 @@ elsif( $act eq 'fork' ) {
                             _info "Adding remote.";
 
                             # url = git@github.com:c9s/App-gh.git
-                            my $cmd = qq( git remote add $user git\@github.com:@{[ $auth->{user} ]}/$repo.git );
+                            my $cmd = qq( git remote add @{[ $auth->{user} ]} git\@github.com:@{[ $auth->{user} ]}/$repo.git );
                             _debug $cmd;
                             qx($cmd);
 
