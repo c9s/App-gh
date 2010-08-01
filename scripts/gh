@@ -149,6 +149,15 @@ show help message;
         $ cd clkao/AnyMQ
         $ gh fork
 
+* network:
+
+    to show fork network:
+
+        $ cd App-gh/
+        $ gh network
+            c9s/App-gh - watchers(4) forks(1)
+          gugod/App-gh - watchers(1) forks(0)
+
 END
     exit;
 
