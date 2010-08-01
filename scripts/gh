@@ -133,9 +133,14 @@ show help message;
 
 * fork;
 
-    to fork project
+    to fork project:
 
         $ gh fork clkao AnyMQ
+
+    to fork current project:
+        
+        $ cd clkao/AnyMQ
+        $ gh fork
 
 END
     exit;
