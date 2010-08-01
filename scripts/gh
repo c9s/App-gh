@@ -270,10 +270,13 @@ elsif( $act eq 'fork' ) {
                             ($user,$repo) = ( $1 , $2 );
 
                             _info "Found GitHub repository of $user/$repo";
-                            _info "Adding remote.";
+
+                            my $remote_uri = qq( git\@github.com:@{[ $auth->{user} ]}/$repo.git);
+
+                            _info "Adding remote '@{[ $auth->{user} ]}' => $remote_uri";
 
                             # url = git@github.com:c9s/App-gh.git
-                            my $cmd = qq( git remote add @{[ $auth->{user} ]} git\@github.com:@{[ $auth->{user} ]}/$repo.git );
+                            my $cmd = qq( git remote add @{[ $auth->{user} ]} $remote_uri);
                             _debug $cmd;
                             qx($cmd);
 
@@ -317,7 +320,7 @@ $VAR1 = {
     use Data::Dumper; 
     warn Dumper( $data ) if debug;
 
-    _info "Repository forked.";
+    _info "Repository forked:";
 
     $data = $data->{repository};
     print "  Name:          " . $data->{name} . "\n";
