@@ -11,10 +11,10 @@ requires 'JSON';
 requires 'JSON::XS';
 requires 'LWP::Simple';
 requires 'File::Temp';
+requires 'Exporter::Lite';
 
 install_script 'scripts/gh';
 
 auto_install;
 
 WriteAll;
-
