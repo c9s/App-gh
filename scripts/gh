@@ -10,6 +10,16 @@ $|++;
 
 my $screen_width = 92;
 
+
+
+sub _debug {
+    print STDERR @_ , "\n" if debug;
+}
+
+sub _info {
+    print STDERR @_ . "\n";
+}
+
 sub print_list {
     my @lines = @_;
 
@@ -242,6 +252,12 @@ elsif( $act eq 'fork' ) {
         $repo = shift;
     }
 
+    my $auth = get_github_auth();
+
+    unless( $auth ) {
+        die "Github authtoken not found.\n";
+    }
+
     unless ( $repo ) {
         # detect .git directory
         if ( -e ".git/config" ) {
@@ -252,14 +268,22 @@ elsif( $act eq 'fork' ) {
                         =~ m{git://github.com/(.*?)/(.*?).git}  ) {
                         if( $1 && $2 ) {
                             ($user,$repo) = ( $1 , $2 );
-                            print STDERR "Found GitHub repository of $user/$repo\n";
+
+                            _info "Found GitHub repository of $user/$repo";
+                            _info "Adding remote.";
+
+                            # url = git@github.com:c9s/App-gh.git
+                            my $cmd = qq( git remote add $user git\@github.com:@{[ $auth->{user} ]}/$repo.git );
+                            _debug $cmd;
+                            qx($cmd);
+
+                            _info "Remote added.";
                         }
                 }
             }
         }
     }
 
-    my $auth = get_github_auth();
     # curl -F 'login=schacon' -F 'token=XXX' http://github.com/api/v2/yaml/repos/fork/dim/retrospectiva
 =pod
 
@@ -284,7 +308,7 @@ $VAR1 = {
         };
 =cut
 
-    print STDERR "Forking ...\n";
+    _info "Forking...";
 
     my $uri = sprintf("http://github.com/api/v2/json/repos/fork/%s/%s?login=%s&token=%s", $user , $repo , $auth->{user} , $auth->{token} );
     my $json = get( $uri );
@@ -293,7 +317,7 @@ $VAR1 = {
     use Data::Dumper; 
     warn Dumper( $data ) if debug;
 
-    print STDERR "Forked.\n";
+    _info "Repository forked.";
 
     $data = $data->{repository};
     print "  Name:          " . $data->{name} . "\n";
@@ -306,4 +330,7 @@ $VAR1 = {
     print "  URL:           " . $data->{url} . "\n";
     print "  Homepage:      " . $data->{homepage} . "\n";
 }
+
+
+
 
