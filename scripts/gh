@@ -3,6 +3,11 @@ use LWP::Simple;
 use JSON;
 use utf8;
 use warnings;
+use constant debug => 1;
+use lib 'lib';
+use App::gh;
+
+$|++;
 
 my $screen_width = 92;
 
@@ -59,36 +64,20 @@ sub print_list {
         }
 
     }
-
 }
 
-sub get_github_auth {
-    open FH , "<" , $ENV{HOME} . "/.gitconfig";
-    local $/;
-    my $content = <FH>;
-    close FH;
-    my @parts = split /(?=\[.*?\])/,$content;
-    for my $part ( @parts ) {
-        if( $part =~ /^\[github\]/ ) {
-            my ($user) = ($part =~ m/user\s*=\s*(\w+)/ );
-            my ($token) = ($part =~ m/token\s*=\s*(\w+)/ );
-            return {
-                user => $user,
-                token => $token
-            };
-        }
-    }
-}
+
+
+# my $config = parse_config $ENV{HOME} . "/.gitconfig";
+# use Data::Dumper; warn Dumper( $config );
 
 my $act = shift;
-
 $SIG{INT} = sub {
     exit;
 };
 
 if( ! $act || $act eq 'help' ) 
 {
-
     print <<'END';
 
 App::gh
@@ -242,17 +231,32 @@ elsif( $act eq 'fork' ) {
     my $repo;
 
     $user = shift;
-    if( $user =~ /\// ) {
+    if( $user && $user =~ /\// ) {
         ($user,$repo) = split /\//,$user;
     }
     else {
         $repo = shift;
     }
 
+    unless ( $repo ) {
+        # detect .git directory
+        if ( -e ".git/config" ) {
+            my $config = parse_config( ".git/config" );
+            for my $remote ( values %{ $config->{remote} } ) {
+                # git://github.com/miyagawa/Tatsumaki.git
+                if ( $remote->{url} 
+                        =~ m{git://github.com/(.*?)/(.*?).git}  ) {
+                        if( $1 && $2 ) {
+                            ($user,$repo) = ( $1 , $2 );
+                            print STDERR "Found GitHub repository of $user/$repo\n";
+                        }
+                }
+            }
+        }
+    }
+
     my $auth = get_github_auth();
-
     # curl -F 'login=schacon' -F 'token=XXX' http://github.com/api/v2/yaml/repos/fork/dim/retrospectiva
-
 =pod
 
 $VAR1 = {
@@ -276,18 +280,26 @@ $VAR1 = {
         };
 =cut
 
+    print STDERR "Forking ...\n";
+
     my $uri = sprintf("http://github.com/api/v2/json/repos/fork/%s/%s?login=%s&token=%s", $user , $repo , $auth->{user} , $auth->{token} );
     my $json = get( $uri );
     my $data = decode_json( $json );
-    # use Data::Dumper; warn Dumper( $data );
+
+    use Data::Dumper; 
+    warn Dumper( $data ) if debug;
+
+    print STDERR "Forked.\n";
 
     $data = $data->{repository};
-    print "Name:       " . $data->{name} . "\n";
-    print "Owner:      " . $data->{owner} . "\n";
-    print "Watchers:   " . $data->{watchers} . "\n";
-    print "Created at: " . $data->{created_at} . "\n";
-    print "Pushed at:  " . $data->{pushed_at} . "\n";
-    print "Fork:       " . $data->{'fork'} . "\n";
-    print "URL:        " . $data->{url} . "\n";
-    print "Homepage:   " . $data->{homepage} . "\n";
+    print "  Name:          " . $data->{name} . "\n";
+    print "  Description:   " . $data->{description} . "\n";
+    print "  Owner:         " . $data->{owner} . "\n";
+    print "  Watchers:      " . $data->{watchers} . "\n";
+    print "  Created at:    " . $data->{created_at} . "\n";
+    print "  Pushed at:     " . $data->{pushed_at} . "\n";
+    print "  Fork:          " . $data->{'fork'} . "\n";
+    print "  URL:           " . $data->{url} . "\n";
+    print "  Homepage:      " . $data->{homepage} . "\n";
 }
+
