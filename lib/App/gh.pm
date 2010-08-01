@@ -104,9 +104,14 @@ to clone all repository of miyagawa:
 
     $ gh cloneall clkao ro  # read-only
 
-to fork project
+to fork project:
 
     $ gh fork clkao AnyMQ
+
+to fork current project:
+
+    $ cd miyagawa/Tatsumaki
+    $ gh fork
 
 =head1 AUTHOR
 
