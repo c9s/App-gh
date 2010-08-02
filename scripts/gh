@@ -163,12 +163,12 @@ show help message;
     pull from gugod/project.git branch master (default):
 
         $ cd project
-        $ gh pullfork gugod           
+        $ gh pull gugod           
 
     pull from gugod/project.git branch feature:
 
         $ cd project
-        $ gh pullfork gugod feature    
+        $ gh pull gugod feature    
 
 END
     exit;
@@ -215,7 +215,7 @@ elsif( $act eq 'clone' || $act eq 'c' ) {
 
 
 
-elsif( $act eq 'pullfork' || $act eq 'pf' ) 
+elsif( $act eq 'pullfork' || $act eq 'pull' || $act eq 'pf' ) 
 {
     my $acc  = shift;
     my $branch = shift || 'master';
