@@ -200,6 +200,26 @@ elsif( $act eq 'clone' || $act eq 'c' ) {
     print $uri . "\n";
     system( qq{git clone $uri} );
 }
+elsif( $act eq 'pullfork' || $act eq 'pf' ) 
+{
+    my $acc  = shift;
+
+    die "git config not found." if  ! -e ".git/config" ;
+    my $config = parse_config( ".git/config" );
+
+    # git://github.com/miyagawa/Tatsumaki.git
+    for my $remote ( values %{ $config->{remote} } ) {
+        if ( $remote->{url} =~ m{git://github.com/(.*?)/(.*?).git} 
+            || $remote->{url} =~ m{git\@github.com:(.*?)/(.*?).git} ) 
+        {
+            my ( $my, $repo ) = ( $1, $2 );
+            my $uri = sprintf( qq(git://github.com/%s/%s.git) , $acc , $repo );
+            qx(git pull $uri);
+            last;
+        }
+    }
+
+}
 elsif( $act eq 'list' ) 
 {
     my $acc = shift;
