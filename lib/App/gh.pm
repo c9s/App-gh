@@ -47,13 +47,42 @@ sub get_github_auth {
     return $config->{github};
 }
 
-
-
 __END__
 
 =head1 NAME
 
-App::gh - An apt-like Github clone utility.
+App::gh - An apt-like Github utility.
+
+=head1 DESCRIPTIONS
+
+App-gh provides an interface for you clone, fork, search github repository very
+easily. You can even clone all repositories from an author , for example:
+
+    $ gh cloneall miyagawa
+
+this will clone all repositories of miyagawa.
+
+Or you can search repository:
+
+    $ gh search AnyEvent
+
+Or list all repository of an author:
+
+    $ gh list c9s
+
+You may clone a repository from an author, then you might want to fork the repository:
+
+    $ gh clone gugod Social
+    $ cd Social
+    $ gh fork
+
+This will fork gugod/Social into yourID/Social. and will add a remote name
+called 'c9s' (your fork).
+
+And you might want to show all forks of this repository:
+
+    $ gh network
+
 
 =head1 SYNOPSIS
 
@@ -159,7 +188,5 @@ See http://dev.perl.org/licenses/ for more information.
 
 
 =cut
-
-
 
 1; # End of App::gh
