@@ -2,18 +2,78 @@ App-gh
 
 SYNOPSIS
 
-    $ gh list c9s
 
-    $ gh clone miyagawa/Plack
+    App::gh
 
-    $ gh clone miyagawa/Plack ssh
+    show help message;
 
-    $ gh search Plack
+        $ gh help
 
-    $ gh cloneall miyagawa 
+    * list:
 
-    $ gh cloneall miyagawa ro
+        list all repository of c9s:
 
+            $ gh list c9s
+
+        if you want text wrapped:
+
+            $ WRAP=1 gh list c9s
+
+    * clone:
+
+        clone Plack repository from miyagawa:
+
+            $ gh clone miyagawa/Plack   # default: read-only 
+
+        or:
+
+            $ gh clone miyagawa Plack
+
+            $ gh clone gugod Social http
+
+            $ gh clone clkao Web-Hippie ro
+
+        clone from read-only uri:
+
+            $ gh clone miyagawa/Plack ro 
+
+        clone from ssh uri:
+
+            $ gh clone miyagawa/Plack ssh  
+
+    * search:
+
+        search repository:
+
+            $ gh search Plack
+
+    * cloneall:
+
+        to clone all repository of miyagawa:
+
+            $ gh cloneall miyagawa 
+
+            $ gh cloneall clkao ro  # read-only
+
+    * fork;
+
+        to fork project:
+
+            $ gh fork clkao AnyMQ
+
+        to fork current project:
+            
+            $ cd clkao/AnyMQ
+            $ gh fork
+
+    * network:
+
+        to show fork network:
+
+            $ cd App-gh/
+            $ gh network
+                c9s/App-gh - watchers(4) forks(1)
+            gugod/App-gh - watchers(1) forks(0)
 
 INSTALLATION
 
