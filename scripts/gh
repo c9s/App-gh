@@ -203,6 +203,7 @@ elsif( $act eq 'clone' || $act eq 'c' ) {
 elsif( $act eq 'pullfork' || $act eq 'pf' ) 
 {
     my $acc  = shift;
+    my $branch = shift || 'master';
 
     die "git config not found." if  ! -e ".git/config" ;
     my $config = parse_config( ".git/config" );
@@ -214,7 +215,7 @@ elsif( $act eq 'pullfork' || $act eq 'pf' )
         {
             my ( $my, $repo ) = ( $1, $2 );
             my $uri = sprintf( qq(git://github.com/%s/%s.git) , $acc , $repo );
-            qx(git pull $uri);
+            qx(git pull $uri $branch);
             last;
         }
     }
