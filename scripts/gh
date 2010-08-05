@@ -256,13 +256,13 @@ elsif( $act eq 'cloneall' || $act eq 'ca' ) {
     my $acc = shift;
     my $attr = shift || 'ro';
 
+    _info "Getting repository list from github: $acc";
     my $json = get 'http://github.com/api/v2/json/repos/show/' . $acc;
     my $data = decode_json( $json );
 
-
     _info "Will clone repositories below:";
     for my $repo ( @{ $data->{repositories} } ) {
-        print $repo->{name} . "\n";
+        print "  " . $repo->{name} . "\n";
     }
 
 
