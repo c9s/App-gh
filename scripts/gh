@@ -259,6 +259,13 @@ elsif( $act eq 'cloneall' || $act eq 'ca' ) {
     my $json = get 'http://github.com/api/v2/json/repos/show/' . $acc;
     my $data = decode_json( $json );
 
+
+    _info "Will clone repositories below:";
+    for my $repo ( @{ $data->{repositories} } ) {
+        print $repo->{name} . "\n";
+    }
+
+
     for my $repo ( @{ $data->{repositories} } ) {
         my $repo_name = $repo->{name};
         my $local_repo_name = $repo_name;
