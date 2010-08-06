@@ -401,7 +401,7 @@ $VAR1 = {
     print "  Pushed at:     " . $data->{pushed_at} . "\n";
     print "  Fork:          " . $data->{'fork'} . "\n";
     print "  URL:           " . $data->{url} . "\n";
-    print "  Homepage:      " . $data->{homepage} . "\n";
+    print "  Homepage:      " . ($data->{homepage}||'') . "\n";
 }
 
 
