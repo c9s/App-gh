@@ -1,6 +1,6 @@
-App-gh
+# App-gh
 
-SYNOPSIS
+## SYNOPSIS
 
 
     App::gh
@@ -75,7 +75,7 @@ SYNOPSIS
                 c9s/App-gh - watchers(4) forks(1)
             gugod/App-gh - watchers(1) forks(0)
 
-INSTALLATION
+## INSTALLATION
 
 To install this module, run the following commands:
 
@@ -87,7 +87,11 @@ To install this module, run the following commands:
 	make test
 	make install
 
-SUPPORT AND DOCUMENTATION
+## DEVELOPMENT
+
+please keep the dependency simple and less.
+
+## SUPPORT AND DOCUMENTATION
 
 After installing, you can find documentation for this module with the
 perldoc command.
@@ -109,7 +113,7 @@ You can also look for information at:
         http://search.cpan.org/dist/App-gh/
 
 
-LICENSE AND COPYRIGHT
+## LICENSE AND COPYRIGHT
 
 Copyright (C) 2010 Cornelius
 
