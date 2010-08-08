@@ -62,7 +62,7 @@ SYNOPSIS
             $ gh fork clkao AnyMQ
 
         to fork current project:
-            
+
             $ cd clkao/AnyMQ
             $ gh fork
 
@@ -78,6 +78,9 @@ SYNOPSIS
 INSTALLATION
 
 To install this module, run the following commands:
+
+    # Makefile.PL needs this
+    cpan Module::Install::AuthorTests
 
 	perl Makefile.PL
 	make
