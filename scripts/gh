@@ -342,24 +342,25 @@ elsif( $act eq 'fork' ) {
             my $config = parse_config( ".git/config" );
             for my $remote ( values %{ $config->{remote} } ) {
                 # git://github.com/miyagawa/Tatsumaki.git
-                if ( $remote->{url} 
-                        =~ m{git://github.com/(.*?)/(.*?).git}  ) {
-                        if( $1 && $2 ) {
-                            ($user,$repo) = ( $1 , $2 );
+                if ( $remote->{url} =~ m{git://github.com/(.*?)/(.*?).git} 
+                    || $remote->{url} =~ m{git\@github.com:(.*?)/(.*?).git} ) 
+                {
+                    die unless( $1 || $2 );
 
-                            _info "Found GitHub repository of $user/$repo";
+                    ($user,$repo) = ( $1 , $2 );
 
-                            my $remote_uri = qq( git\@github.com:@{[ $auth->{user} ]}/$repo.git);
+                    _info "Found GitHub repository of $user/$repo";
 
-                            _info "Adding remote '@{[ $auth->{user} ]}' => $remote_uri";
+                    my $remote_uri = qq( git\@github.com:@{[ $auth->{user} ]}/$repo.git);
 
-                            # url = git@github.com:c9s/App-gh.git
-                            my $cmd = qq( git remote add @{[ $auth->{user} ]} $remote_uri);
-                            _debug $cmd;
-                            qx($cmd);
+                    _info "Adding remote '@{[ $auth->{user} ]}' => $remote_uri";
 
-                            _info "Remote added.";
-                        }
+                    # url = git@github.com:c9s/App-gh.git
+                    my $cmd = qq( git remote add @{[ $auth->{user} ]} $remote_uri);
+                    _debug $cmd;
+                    qx($cmd);
+
+                    _info "Remote added.";
                 }
             }
         }
