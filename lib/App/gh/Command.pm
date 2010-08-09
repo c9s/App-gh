@@ -11,7 +11,7 @@ sub require_github_auth { 0 }
 
 sub new {
     my $class = shift;
-    return bless $class , {};
+    return bless {}, $class;
 }
 
 sub global_help {
@@ -109,37 +109,47 @@ sub help {
     print "$cmd command doesnt have help message.\n";
 }
 
-sub dispatch {
-    my ($class,$cmd,@args) = @_;
+sub get_cmd_class {
+    my $cmd = shift;
+    return __PACKAGE__ . "::" . ucfirst( $cmd );
+}
 
+sub new_xd {
+    my $cmd = shift;
+    my $cmd_class = get_cmd_class($cmd);
+
+    eval "use $cmd_class;";
+    if( $@ ) {
+        die "No such gh command.\n";
+    }
+    my $xd = $cmd_class->new();
+    return $xd;
+}
+
+sub dispatch {
+    my ( $class, $cmd, @args ) = @_;
     if( $cmd eq 'help' ) {
-        my $arg = shift @args;
-        ($cmd,$arg) = ($arg,$cmd);
-        @args = ( $arg );
-        #  'command' 'help'
+        my $subcmd = shift @args;
+        my $xd;
+        if( $subcmd ) {
+            $xd = new_xd( $subcmd );
+            $xd->help( $subcmd , @args );
+        }
+        else {
+            global_help();
+        }
+        return 0;
     }
 
-    my $cmd_class = __PACKAGE__ . "::" . ucfirst( $cmd );
-
+    my $xd = new_xd( $cmd );
     # eval "require $cmd_class.pm;";
-    my $xd = $cmd_class->new();
-
     if( $xd->require_local_gitconfig ) {
         die "Git config not found." if ( ! -e ".git/config" );
     }
     if( $xd->require_github_auth ) {
         # XXX:
-
     }
-
-    if( $cmd eq 'help' )
-    {
-        @args ? $xd->help( @args ) : global_help();
-    }
-    else {
-        $xd->run( @args );
-    }
-
+    $xd->run( @args );
 }
 
 

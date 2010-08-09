@@ -6,6 +6,7 @@ use warnings;
 use constant debug => $ENV{DEBUG};
 use App::gh;
 use App::gh::Utils;
+use App::gh::Command;
 
 $|++;
 binmode STDOUT, ':utf8';
@@ -79,10 +80,8 @@ $SIG{INT} = sub {
 
 if( ! $act || $act eq 'help' ) 
 {
-    print <<'END';
-END
+    App::gh::Command->dispatch( 'help' , @ARGV );
     exit;
-
 }
 elsif( $act eq 'search' || $act eq 's' ) {
     my $keyword = shift;
@@ -127,7 +126,7 @@ elsif( $act eq 'clone' || $act eq 'c' ) {
 
 elsif( $act eq 'pullfork' || $act eq 'pull' || $act eq 'pf' ) 
 {
-    App::gh::command->dispatch('pull', @_ );
+    App::gh::Command->dispatch('pull', @_ );
 }
 elsif( $act eq 'list' ) 
 {
@@ -184,8 +183,8 @@ elsif( $act eq 'cloneall' || $act eq 'ca' ) {
 }
 elsif( $act eq 'network' ) {
     die "Git config not found." if ( ! -e ".git/config" );
-    App::gh::command->dispatch('network', @_ );
+    App::gh::Command->dispatch('network', @_ );
 }
 elsif( $act eq 'fork' ) {
-    App::gh::command->dispatch('fork', @_ );
+    App::gh::Command->dispatch('fork', @_ );
 }
