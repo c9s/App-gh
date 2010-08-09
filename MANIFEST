@@ -1,5 +1,4 @@
 Changes
-lib/App/gh.pm
 Makefile.PL
 MANIFEST
 META.yml
@@ -21,3 +20,9 @@ inc/Module/Install/Base.pm
 inc/Module/Install/Include.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/Can.pm
+lib/App/gh.pm
+lib/App/gh/Command.pm
+lib/App/gh/Command/Pull.pm
+lib/App/gh/Command/Fork.pm
+lib/App/gh/Command/Network.pm
+lib/App/gh/Utils.pm
