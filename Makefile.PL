@@ -9,7 +9,7 @@ license  'perl';
 build_requires 'Test::More';
 
 requires 'JSON';
-requires 'JSON::XS';
+# requires 'JSON::XS';
 requires 'LWP::Simple';
 requires 'File::Temp';
 requires 'Exporter::Lite';
