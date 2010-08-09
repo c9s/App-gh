@@ -218,24 +218,7 @@ elsif( $act eq 'clone' || $act eq 'c' ) {
 
 elsif( $act eq 'pullfork' || $act eq 'pull' || $act eq 'pf' ) 
 {
-    my $acc  = shift;
-    my $branch = shift || 'master';
-
-    die "git config not found." if  ! -e ".git/config" ;
-    my $config = parse_config( ".git/config" );
-
-    # git://github.com/miyagawa/Tatsumaki.git
-    for my $remote ( values %{ $config->{remote} } ) {
-        if ( $remote->{url} =~ m{git://github.com/(.*?)/(.*?).git} 
-            || $remote->{url} =~ m{git\@github.com:(.*?)/(.*?).git} ) 
-        {
-            my ( $my, $repo ) = ( $1, $2 );
-            my $uri = sprintf( qq(git://github.com/%s/%s.git) , $acc , $repo );
-            qx(git pull $uri $branch);
-            last;
-        }
-    }
-
+    App::gh::command->dispatch('pull', @_ );
 }
 elsif( $act eq 'list' ) 
 {
