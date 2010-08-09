@@ -3,6 +3,18 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 
+
+sub parse_remote_param {
+    my $uri = shift;
+    if ( $uri =~ m{(?:git|https?)://github.com/(.*?)/(.*?).git} 
+        || $uri =~ m{git\@github.com:(.*?)/(.*?).git} ) 
+    {
+        return ( $1 , $2 )
+            if( $1 && $2 );
+    }
+    return undef;
+}
+
 sub run {
     my $self = shift;
     my $acc  = shift;
@@ -13,10 +25,8 @@ sub run {
 
     # git://github.com/miyagawa/Tatsumaki.git
     for my $remote ( values %{ $config->{remote} } ) {
-        if ( $remote->{url} =~ m{git://github.com/(.*?)/(.*?).git} 
-            || $remote->{url} =~ m{git\@github.com:(.*?)/(.*?).git} ) 
+        if( my ($my, $repo) = parse_remote_param( $remote->{url} ) )
         {
-            my ( $my, $repo ) = ( $1, $2 );
             my $uri = sprintf( qq(git://github.com/%s/%s.git) , $acc , $repo );
             qx(git pull $uri $branch);
             last;

@@ -313,11 +313,13 @@ elsif( $act eq 'fork' ) {
         $repo = shift;
     }
 
+
     my $auth = get_github_auth();
 
     unless( $auth ) {
         die "Github authtoken not found. Can not fork repository.\n";
     }
+
 
     unless ( $repo ) {
         # detect .git directory
@@ -335,8 +337,12 @@ elsif( $act eq 'fork' ) {
 
                     _info "Found GitHub repository of $user/$repo";
 
-                    my $remote_uri = qq( git\@github.com:@{[ $auth->{user} ]}/$repo.git);
+                    my $_remotes = qx(git remote | grep @{[ $auth->{user} ]});
+                    if( $_remotes ) {
+                        die "Remote @{[ $auth->{user} ]} exists.\n";
+                    }
 
+                    my $remote_uri = qq( git\@github.com:@{[ $auth->{user} ]}/$repo.git);
                     _info "Adding remote '@{[ $auth->{user} ]}' => $remote_uri";
 
                     # url = git@github.com:c9s/App-gh.git

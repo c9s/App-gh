@@ -1,5 +1,4 @@
 Changes
-ignore.txt
 inc/Module/AutoInstall.pm
 inc/Module/Install.pm
 inc/Module/Install/AutoInstall.pm
@@ -16,7 +15,7 @@ lib/App/gh.pm
 Makefile.PL
 MANIFEST
 META.yml
-README
+README.mkd
 scripts/gh
 t/00-load.t
 t/manifest.t
