@@ -10,8 +10,8 @@ build_requires 'Test::More';
 
 requires 'JSON';
 # requires 'JSON::XS';
+# requires 'File::Temp';
 requires 'LWP::Simple';
-requires 'File::Temp';
 requires 'Exporter::Lite';
 
 install_script 'scripts/gh';
