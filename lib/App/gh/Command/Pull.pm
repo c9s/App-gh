@@ -1,7 +1,8 @@
-package App::Command::Pull;
+package App::gh::Command::Pull;
 use warnings;
 use strict;
 use base qw(App::gh::Command);
+use App::gh::Utils;
 
 
 sub parse_remote_param {
