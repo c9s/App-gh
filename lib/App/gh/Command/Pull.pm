@@ -28,7 +28,7 @@ sub run {
     for my $remote ( values %{ $config->{remote} } ) {
         if( my ($my, $repo) = parse_remote_param( $remote->{url} ) )
         {
-            my $uri = sprintf( qq(git://github.com/%s/%s.git) , $acc , $repo );
+            my $uri = sprintf( qq(git://github.com/%s/%s.git) , $my , $repo );
             qx(git pull $uri $branch);
             last;
         }
