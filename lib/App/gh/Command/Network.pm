@@ -2,6 +2,8 @@ package App::gh::Command::Network;
 use warnings;
 use strict;
 use base qw(App::gh::Command);
+use LWP::Simple;
+use JSON;
 use App::gh::Utils;
 
 sub require_local_gitconfig { 1 }
