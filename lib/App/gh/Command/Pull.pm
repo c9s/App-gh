@@ -19,9 +19,8 @@ sub parse_remote_param {
 }
 
 sub run {
-    my $self = shift;
-    my $acc  = shift;
-    my $branch = shift || 'master';
+    my ($self,$acc,$branch) = @_;
+    $branch ||= 'master';
 
     die "git config not found." if  ! -e ".git/config" ;
     my $config = parse_config( ".git/config" );
