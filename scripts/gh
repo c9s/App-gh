@@ -126,7 +126,7 @@ elsif( $act eq 'clone' || $act eq 'c' ) {
 
 elsif( $act eq 'pullfork' || $act eq 'pull' || $act eq 'pf' ) 
 {
-    App::gh::Command->dispatch('pull', @_ );
+    App::gh::Command->dispatch('pull', @ARGV );
 }
 elsif( $act eq 'list' ) 
 {
