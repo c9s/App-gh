@@ -30,7 +30,6 @@ sub run {
         if( my ($my, $repo) = parse_remote_param( $remote->{url} ) )
         {
             my $uri = sprintf( qq(git://github.com/%s/%s.git) , $acc , $repo );
-            print STDERR $uri , "\n";
             qx(git pull $uri $branch);
             last;
         }
