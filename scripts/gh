@@ -30,32 +30,10 @@ elsif( $act eq 'search' || $act eq 's' ) {
     exit;
 }
 elsif( $act eq 'clone' || $act eq 'c' ) {
-    my $user;
-    my $repo;
-
-    $user = shift;
-    if( $user =~ /\// ) {
-        ($user,$repo) = split /\//,$user;
-    }
-    else {
-        $repo = shift;
-    }
-
-    my $attr = shift || 'ro';
-    my $uri;
-    if( $attr eq 'ro' ) {
-        $uri = sprintf "git://github.com/%s/%s.git" , $user , $repo;
-    }
-    elsif( $attr eq 'ssh' ) {
-        $uri = sprintf "git\@github.com:%s/%s.git" , $user , $repo;
-    }
-    print $uri . "\n";
-    system( qq{git clone $uri} );
+    App::gh::Command->dispatch( 'clone' , @ARGV );
+    exit;
 }
-
-
-
-elsif( $act eq 'pullfork' || $act eq 'pull' || $act eq 'pf' ) 
+elsif( $act eq 'pull' )
 {
     App::gh::Command->dispatch('pull', @ARGV );
 }
