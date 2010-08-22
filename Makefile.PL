@@ -17,6 +17,8 @@ install_script 'scripts/gh';
 
 author_tests('xt');
 
+repository 'http://github.com/c9s/App-gh';
+
 auto_install;
 
 WriteAll;
