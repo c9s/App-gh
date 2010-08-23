@@ -95,5 +95,5 @@ elsif( $act eq 'network' ) {
     App::gh::Command->dispatch('network', @_ );
 }
 elsif( $act eq 'fork' ) {
-    App::gh::Command->dispatch('fork', @_ );
+    App::gh::Command->dispatch('fork', @ARGV );
 }
