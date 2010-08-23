@@ -33,16 +33,29 @@ $VAR1 = {
         };
 =cut
 
+
+sub _parse_github_links {
+  my $link=shift;
+  
+}
+
 sub run {
+    my $self=shift;
     my $user;
     my $repo;
 
-    $user = shift;
-    if( $user && $user =~ /\// ) {
-        ($user,$repo) = split /\//,$user;
-    }
-    else {
-        $repo = shift;
+    if (@_) {
+        $user = shift;
+    
+       #copied from Github::Fork::Parent
+       if ($user && $user=~m#^(?:\Qgit://github.com/\E|git\@github\.com:\E|\Qhttp://github.com/\E)([^/]+)/([^/]+)(?:\.git)?$#) {
+            ($user,$repo)=($1,$2);
+        } elsif( $user && $user =~ /\// ) {
+            ($user,$repo) = split /\//,$user;
+        }
+        else {
+            $repo = shift;
+        }
     }
 
 
