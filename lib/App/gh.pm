@@ -3,7 +3,7 @@ use warnings;
 use strict;
 use Exporter::Lite;
 
-our $VERSION = '0.116';
+our $VERSION = '0.117';
 
 our @EXPORT = qw(parse_config parse_options get_github_auth);
 
@@ -150,7 +150,6 @@ automatically be notified of progress on your bug as I make changes.
 You can find documentation for this module with the perldoc command.
 
     perldoc App::gh
-
 
 You can also look for information at:
 
