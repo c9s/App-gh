@@ -30,7 +30,7 @@ if( ! $act
     || $act eq 'network'
 ) 
 {
-    App::gh::Command->dispatch( ($act || 'help') , @ARGV );
+    App::gh::Command->invoke( ($act || 'help') , @ARGV );
     exit;
 }
 elsif( $act eq 'list' ) 

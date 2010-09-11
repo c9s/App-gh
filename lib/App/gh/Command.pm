@@ -2,16 +2,25 @@ package App::gh::Command;
 use warnings;
 use strict;
 use App::gh::Utils;
+use base qw(App::CLI App::CLI::Command);
 
-sub require_global_gitconfig { 0 }
+sub alias {
+    (
+        "s" => "server",
+        "p" => "parse",
+        "l" => "lang",
+    );
+}
 
-sub require_local_gitconfig { 0 }
-
-sub require_github_auth { 0 }
-
-sub new {
-    my $class = shift;
-    return bless {}, $class;
+sub invoke {
+    my ($pkg, $cmd, @args) = @_;
+    local *ARGV = [$cmd, @args];
+    my $ret = eval {
+        $pkg->dispatch();
+    };
+    if( $@ ) {
+        warn $@;
+    }
 }
 
 sub global_help {
@@ -103,54 +112,5 @@ show help message;
 
 END
 }
-
-sub help {
-    my ($self,$cmd,@args) = @_;
-    print "$cmd command doesnt have help message.\n";
-}
-
-sub get_cmd_class {
-    my $cmd = shift;
-    return __PACKAGE__ . "::" . ucfirst( $cmd );
-}
-
-sub new_xd {
-    my $cmd = shift;
-    my $cmd_class = get_cmd_class($cmd);
-
-    eval "use $cmd_class;";
-    if( $@ ) {
-        die "No such gh command.\n";
-    }
-    my $xd = $cmd_class->new();
-    return $xd;
-}
-
-sub dispatch {
-    my ( $class, $cmd, @args ) = @_;
-    if( $cmd eq 'help' ) {
-        my $subcmd = shift @args;
-        my $xd;
-        if( $subcmd ) {
-            $xd = new_xd( $subcmd );
-            $xd->help( $subcmd , @args );
-        }
-        else {
-            global_help();
-        }
-        return 0;
-    }
-
-    my $xd = new_xd( $cmd );
-    # eval "require $cmd_class.pm;";
-    if( $xd->require_local_gitconfig ) {
-        die "Git config not found." if ( ! -e ".git/config" );
-    }
-    if( $xd->require_github_auth ) {
-        # XXX:
-    }
-    $xd->run( @args );
-}
-
 
 1;

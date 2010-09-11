@@ -10,6 +10,7 @@ my $screen_width = 92;
 our @EXPORT = qw(_debug _info
     parse_config parse_options get_github_auth print_list);
 
+# XXX: move this to logger....... orz
 sub _debug {
     print STDERR @_,"\n" if debug;
 }
