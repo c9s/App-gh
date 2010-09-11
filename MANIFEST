@@ -15,6 +15,7 @@ inc/Module/Install/WriteAll.pm
 lib/App/gh.pm
 lib/App/gh/Command.pm
 lib/App/gh/Command/Clone.pm
+lib/App/gh/Command/Cloneall.pm
 lib/App/gh/Command/Fork.pm
 lib/App/gh/Command/Network.pm
 lib/App/gh/Command/Pull.pm
