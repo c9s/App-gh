@@ -7,7 +7,6 @@ use LWP::Simple qw(get);
 use App::gh::Utils;
 use JSON;
 
-
 sub run {
     my ($self) = shift;
     my $user;

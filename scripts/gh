@@ -20,22 +20,18 @@ $SIG{INT} = sub {
     exit;
 };
 
-if( ! $act || $act eq 'help' ) 
+if( ! $act 
+    || $act eq 'help' 
+    || $act eq 'search'
+    || $act eq 'clone'
+    || $act eq 'cloneall'
+    || $act eq 'pull'
+    || $act eq 'fork'
+    || $act eq 'network'
+) 
 {
-    App::gh::Command->dispatch( 'help' , @ARGV );
+    App::gh::Command->dispatch( ($act || 'help') , @ARGV );
     exit;
-}
-elsif( $act eq 'search' || $act eq 's' ) {
-    App::gh::Command->dispatch( 'search' , @ARGV );
-    exit;
-}
-elsif( $act eq 'clone' || $act eq 'c' ) {
-    App::gh::Command->dispatch( 'clone' , @ARGV );
-    exit;
-}
-elsif( $act eq 'pull' )
-{
-    App::gh::Command->dispatch('pull', @ARGV );
 }
 elsif( $act eq 'list' ) 
 {
@@ -52,48 +48,7 @@ elsif( $act eq 'list' )
     }
     print_list @lines;
 }
-elsif( $act eq 'cloneall' || $act eq 'ca' ) {
-    my $acc = shift;
-    my $attr = shift || 'ro';
-
-    _info "Getting repository list from github: $acc";
-    my $json = get 'http://github.com/api/v2/json/repos/show/' . $acc;
-    my $data = decode_json( $json );
-
-    _info "Will clone repositories below:";
-    for my $repo ( @{ $data->{repositories} } ) {
-        print "  " . $repo->{name} . "\n";
-    }
-
-
-    for my $repo ( @{ $data->{repositories} } ) {
-        my $repo_name = $repo->{name};
-        my $local_repo_name = $repo_name;
-        $local_repo_name =~ s/\.git$//;
-
-        my $uri;
-        if( $attr eq 'ro' ) {
-            $uri = sprintf "git://github.com/%s/%s.git" , $acc , $repo_name;
-        }
-        elsif( $attr eq 'ssh' ) {
-            $uri = sprintf "git\@github.com:%s/%s.git" , $acc , $repo_name;
-        }
-        print $uri . "\n";
-
-        if( -e $local_repo_name ) {
-            print "Updating " . $local_repo_name . " ...\n";
-            qx{ cd $local_repo_name ; git pull origin master };
-        }
-        else {
-            print "Cloning " . $repo->{name} . " ...\n";
-            qx{ git clone -q $uri };
-        }
-    }
-}
 elsif( $act eq 'network' ) {
     die "Git config not found." if ( ! -e ".git/config" );
     App::gh::Command->dispatch('network', @_ );
-}
-elsif( $act eq 'fork' ) {
-    App::gh::Command->dispatch('fork', @ARGV );
 }
