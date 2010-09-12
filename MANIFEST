@@ -24,7 +24,6 @@ lib/App/gh/Utils.pm
 Makefile.PL
 MANIFEST
 META.yml
-read-auth.pl
 README.mkd
 scripts/gh
 t/00-load.t
