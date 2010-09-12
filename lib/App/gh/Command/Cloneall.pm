@@ -34,6 +34,8 @@ sub run {
     my $json = get 'http://github.com/api/v2/json/repos/show/' . $acc;
     my $data = decode_json( $json );
 
+    return if ! $data || @{ $data->{repositories} } == 0;
+
     _info "Will clone repositories below:";
     print " " x 8 . join " " , map { $_->{name} } @{ $data->{repositories} };
     print "\n";
