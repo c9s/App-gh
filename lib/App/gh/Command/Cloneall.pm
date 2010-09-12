@@ -31,7 +31,7 @@ sub run {
     my $data = decode_json( $json );
 
     _info "Will clone repositories below:";
-    print join " " , map { $_->{name} } @{ $data->{repositories} };
+    print " " x 8 . join " " , map { $_->{name} } @{ $data->{repositories} };
     print "\n";
 
     for my $repo ( @{ $data->{repositories} } ) {
