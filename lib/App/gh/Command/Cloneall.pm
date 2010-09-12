@@ -21,20 +21,20 @@ sub run {
 
     $self->{into} ||= $acc;
 
-    if( $self->{into} ) {
-        _info "Cloning all repositories into @{[ $self->{into} ]}";
-
-        mkpath [ $self->{into} ];
-        chdir  $self->{into};
-    }
-
     die 'need id' unless $acc;
 
     _info "Getting repository list from github: $acc" if $self->{verbose};
     my $json = get 'http://github.com/api/v2/json/repos/show/' . $acc;
     my $data = decode_json( $json );
 
+
     return if ! $data || @{ $data->{repositories} } == 0;
+
+    if( $self->{into} ) {
+        _info "Cloning all repositories into @{[ $self->{into} ]}";
+        mkpath [ $self->{into} ];
+        chdir  $self->{into};
+    }
 
     _info "Will clone repositories below:";
     print " " x 8 . join " " , map { $_->{name} } @{ $data->{repositories} };
