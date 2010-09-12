@@ -57,6 +57,10 @@
 
             $ gh all perl6 --into perl6-stuff
 
+            $ gh all perl6 --into perl6-stuff --prompt 
+
+            $ gh all perl6 --into perl6-stuff --verbose --prompt 
+
             $ gh all clkao ro  # read-only
 
     * fork;
