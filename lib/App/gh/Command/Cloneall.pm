@@ -50,7 +50,7 @@ sub run {
 
         if( -e $local_repo_name ) {
             print "Updating " . $local_repo_name . " ...\n";
-            qx{ cd $local_repo_name ; git pull origin master };
+            qx{ cd $local_repo_name ; git pull --rebase origin master };
         }
         else {
             print "Cloning " . $repo->{name} . " ...\n";
