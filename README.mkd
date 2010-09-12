@@ -47,13 +47,17 @@
 
             $ gh search Plack
 
-    * cloneall:
+    * all | cloneall:
 
         to clone all repository of miyagawa:
 
-            $ gh cloneall miyagawa 
+            $ gh all miyagawa 
 
-            $ gh cloneall clkao ro  # read-only
+            $ gh all facebook --into facebook
+
+            $ gh all perl6 --into perl6-stuff
+
+            $ gh all clkao ro  # read-only
 
     * fork;
 
