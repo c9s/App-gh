@@ -1,4 +1,5 @@
 package App::gh::Command::Cloneall;
+use utf8;
 use warnings;
 use strict;
 use base qw(App::gh::Command);
@@ -9,6 +10,7 @@ use JSON;
 
 sub options { (
         "verbose" => "verbose",
+        "prompt" => "prompt",
         "into=s" => "into"
     ) }
 
@@ -16,6 +18,8 @@ sub run {
     my $self = shift;
     my $acc = shift;
     my $attr = shift || 'ro';
+
+    $self->{into} ||= $acc;
 
     if( $self->{into} ) {
         _info "Cloning all repositories into @{[ $self->{into} ]}";
@@ -34,10 +38,27 @@ sub run {
     print " " x 8 . join " " , map { $_->{name} } @{ $data->{repositories} };
     print "\n";
 
+    if( $self->{prompt} ) {
+        print "Clone them [Y/n] ? ";
+        my $ans = <STDIN>;
+        chomp( $ans );
+        $ans ||= 'Y';
+        return if( $ans =~ /n/ );
+    }
+
+
     for my $repo ( @{ $data->{repositories} } ) {
         my $repo_name = $repo->{name};
         my $local_repo_name = $repo_name;
         $local_repo_name =~ s/\.git$//;
+
+        if( $self->{prompt} ) {
+            print "Clone $repo_name [Y/n] ? ";
+            my $ans = <STDIN>;
+            chomp( $ans );
+            $ans ||= 'Y';
+            next if( $ans =~ /n/ );
+        }
 
         my $uri;
         if( $attr eq 'ro' ) {
@@ -47,6 +68,8 @@ sub run {
             $uri = sprintf "git\@github.com:%s/%s.git" , $acc , $repo_name;
         }
         print $uri . "\n" if $self->{verbose};
+
+
 
         if( -e $local_repo_name ) {
             print "Updating " . $local_repo_name . " ...\n";
