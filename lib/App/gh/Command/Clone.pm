@@ -14,7 +14,7 @@ sub run {
 
     $user = shift;
     if( $user =~ /\// ) {
-        ($user,$repo) = split /\//,$user;
+        ( $user, $repo ) = split /\//, $user;
     }
     else {
         $repo = shift;

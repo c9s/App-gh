@@ -24,6 +24,7 @@ if( ! $act
     || $act eq 'help' 
     || $act eq 'search'
     || $act eq 'clone'
+    || $act eq 'all'
     || $act eq 'cloneall'
     || $act eq 'pull'
     || $act eq 'fork'

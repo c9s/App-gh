@@ -25,6 +25,8 @@ sub run {
         chdir  $self->{into};
     }
 
+    die 'need id' unless $acc;
+
     _info "Getting repository list from github: $acc";
     my $json = get 'http://github.com/api/v2/json/repos/show/' . $acc;
     my $data = decode_json( $json );

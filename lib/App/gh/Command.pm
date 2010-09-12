@@ -6,9 +6,7 @@ use base qw(App::CLI App::CLI::Command);
 
 sub alias {
     (
-        "s" => "server",
-        "p" => "parse",
-        "l" => "lang",
+        "all" => "cloneall"
     );
 }
 
