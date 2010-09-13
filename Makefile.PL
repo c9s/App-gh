@@ -9,9 +9,10 @@ build_requires 'Test::More';
 
 requires 'JSON';
 # requires 'JSON::XS';
-# requires 'File::Temp';
+requires 'File::Temp';
 requires 'App::CLI';
 requires 'File::Path';
+requires 'File::Spec';
 requires 'LWP::Simple';
 requires 'Exporter::Lite';
 
