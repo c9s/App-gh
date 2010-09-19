@@ -31,6 +31,7 @@ sub run {
         {
             my $uri = sprintf( qq(git://github.com/%s/%s.git) , $acc , $repo );
             qx(git pull $uri $branch);
+            qx(git remote add $acc $uri);
             last;
         }
     }
