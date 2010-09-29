@@ -9,6 +9,10 @@
 
         $ gh help
 
+    * recent:
+        
+        get github recent activities.
+
     * list:
 
         list all repository of c9s:
