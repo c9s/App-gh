@@ -3,7 +3,7 @@ use warnings;
 use strict;
 use Exporter::Lite;
 
-our $VERSION = '0.161';
+our $VERSION = '0.162';
 
 our @EXPORT = qw(parse_config parse_options get_github_auth);
 
