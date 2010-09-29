@@ -102,10 +102,7 @@ sub run {
     }
 
     _info "Forking...";
-
-    my $uri = sprintf("http://github.com/api/v2/json/repos/fork/%s/%s?login=%s&token=%s", $user , $repo , $auth->{user} , $auth->{token} );
-    my $json = get( $uri );
-    my $data = decode_json( $json );
+    my $data = api_request( sprintf("repos/fork/%s/%s?login=%s&token=%s", $user , $repo , $auth->{user} , $auth->{token} ));
 
     use Data::Dumper; 
     _debug Dumper( $data );

@@ -24,11 +24,8 @@ sub run {
     die 'need id' unless $acc;
 
     _info "Getting repository list from github: $acc" if $self->{verbose};
-    my $json = get 'http://github.com/api/v2/json/repos/show/' . $acc;
-    my $data = decode_json( $json );
-
-
-    return if ! $data || @{ $data->{repositories} } == 0;
+    my $data = api_request(  "repos/show/$acc" );
+    return if @{ $data->{repositories} } == 0;
 
     if( $self->{into} ) {
         _info "Cloning all repositories into @{[ $self->{into} ]}";

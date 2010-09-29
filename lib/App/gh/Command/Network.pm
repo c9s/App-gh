@@ -17,13 +17,9 @@ sub run {
             || $remote->{url} =~ m{git\@github.com:(.*?)/(.*?).git} ) 
         {
             my ($acc,$repo) = ($1,$2);
-            # curl http://github.com/api/v2/yaml/repos/show/schacon/ruby-git/network
-            my $url = qq(http://github.com/api/v2/json/repos/show/$acc/$repo/network);
-            my $json = get $url;
-            my $objs = decode_json($json);
-            # use Data::Dumper; warn Dumper( $objs );
-            my $networks = $objs->{network};
 
+            my $objs = api_request(qq(repos/show/$acc/$repo/network));
+            my $networks = $objs->{network};
             for my $net ( @$networks ) {
                 _info sprintf( "% 17s - watchers(%d) forks(%d)"
                     , $net->{owner} . '/' . $net->{name}

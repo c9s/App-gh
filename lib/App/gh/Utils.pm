@@ -2,13 +2,14 @@ package App::gh::Utils;
 use warnings;
 use strict;
 use base qw(Exporter);
+use URI;
 
 use constant debug => $ENV{DEBUG};
 
 my $screen_width = 92;
 
 our @EXPORT = qw(_debug _info
-    parse_config parse_options get_github_auth print_list);
+    parse_config parse_options get_github_auth print_list api_request);
 
 # XXX: move this to logger....... orz
 sub _debug {
@@ -114,6 +115,34 @@ sub print_list {
         }
 
     }
+}
+
+require LWP::UserAgent;
+use JSON::XS;
+
+sub api_request {
+    my ($rest) = shift;
+    my $ua = LWP::UserAgent->new;
+    $ua->timeout(10);
+    $ua->env_proxy;
+    my $url = URI->new('http://github.com/api/v2/json/' . $rest);
+    my $response = $ua->get( $url );
+    if ( ! $response->is_success) {
+        die $response->status_line;
+    }
+    my $json = $response->decoded_content;  # or whatever
+    my $data;
+    eval {
+        $data = decode_json( $json );
+    };
+    if( $@ ) {
+        die "JSON Error:" . $!;
+    }
+
+    unless( $data ) {
+        die "Empty response";
+    }
+    return $data;
 }
 
 

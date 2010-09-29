@@ -1,6 +1,8 @@
 #!perl
+use warnings;
+use strict;
 use lib 'lib';
-use Test::More tests => 9;
+use Test::More tests => 10;
 
 BEGIN {
     use_ok( 'App::gh' ) || print "Bail out!
@@ -18,3 +20,4 @@ use_ok( 'App::gh::Command::Recent');
 use_ok( 'App::gh::Command::Cloneall');
 use_ok( 'App::gh::Command::Clone');
 use_ok( 'App::gh::Command::Search');
+use_ok( 'App::gh::Utils');
