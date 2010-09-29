@@ -1,4 +1,5 @@
 #!/usr/bin/env perl
+use lib 'lib';
 use LWP::Simple;
 use JSON;
 use utf8;
@@ -10,10 +11,6 @@ use App::gh::Command;
 
 $|++;
 binmode STDOUT, ':utf8';
-
-
-# my $config = parse_config $ENV{HOME} . "/.gitconfig";
-# use Data::Dumper; warn Dumper( $config );
 
 my $act = shift;
 $SIG{INT} = sub {
@@ -29,8 +26,7 @@ if( ! $act
     || $act eq 'pull'
     || $act eq 'fork'
     || $act eq 'network'
-) 
-{
+) {
     App::gh::Command->invoke( ($act || 'help') , @ARGV );
     exit;
 }
@@ -49,7 +45,7 @@ elsif( $act eq 'list' )
     }
     print_list @lines;
 }
-elsif( $act eq 'network' ) {
-    die "Git config not found." if ( ! -e ".git/config" );
-    App::gh::Command->dispatch('network', @_ );
+else {
+    App::gh::Command->invoke( ($act || 'help') , @ARGV );
+    exit;
 }

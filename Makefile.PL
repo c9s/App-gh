@@ -15,6 +15,12 @@ requires 'File::Path';
 requires 'File::Spec';
 requires 'LWP::Simple';
 requires 'Exporter::Lite';
+requires 'POE';
+requires 'Component::AtomAggregator';
+requires 'POE::Component::SSLify';
+requires 'Text::Wrap';
+requires 'XML::Atom::Feed';
+requires 'URI';
 
 install_script 'scripts/gh';
 
