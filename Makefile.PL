@@ -21,6 +21,7 @@ requires 'Exporter::Lite';
 requires 'Text::Wrap';
 requires 'XML::Atom::Feed';
 requires 'URI';
+requires 'HTML::Strip';
 
 install_script 'scripts/gh';
 
