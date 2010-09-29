@@ -7,6 +7,8 @@ use JSON;
 use XML::Atom::Feed;
 use URI;
 use Text::Wrap;
+use IO::Pager;
+
 
 sub options {
     ( "c|color" => "color" )
@@ -19,6 +21,8 @@ sub run {
     my $user  = $config->{github}->{user};
     my $feed_uri = "https://github.com/$user.private.atom?token=$token";
     my $feed = XML::Atom::Feed->new(URI->new( $feed_uri ));
+
+    local  $STDOUT = new IO::Pager       *STDOUT;
 
     $Text::Wrap::columns = 90;
 

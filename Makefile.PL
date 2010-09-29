@@ -22,6 +22,7 @@ requires 'Text::Wrap';
 requires 'XML::Atom::Feed';
 requires 'URI';
 requires 'HTML::Strip';
+requires 'IO::Pager';
 
 install_script 'scripts/gh';
 
