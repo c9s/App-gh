@@ -8,7 +8,9 @@ use XML::Atom::Feed;
 use URI;
 use Text::Wrap;
 
-sub options { }
+sub options {
+    ( "c|color" => "color" )
+}
 
 sub run {
     my ($self) = shift;
@@ -33,7 +35,12 @@ sub run {
         # $text =~ s{(committed.*?http\S+)}{$1\n        }g;
 
         my $title = $entry->title;
-        print $title , "\n";
+        if( $self->{color} ) {
+            print "\e[1;32m" , $title , "\e[0m\n";
+        }
+        else {
+            print $title , "\n";
+        }
         print wrap( "  ", "  ", $text ) , "\n\n";
     }
 
