@@ -6,4 +6,10 @@ Revision history for App-gh
         * add new command `recent`.
         * update repository with `git pull --rebase --all`
 
+0.0165  Áù 10/ 2 21:19:28 2010
+        * provide a --skip-exists | -s option for command `all`.
+
+            git all c9s -s --into .
+
+          this will clone new repositories only.
 

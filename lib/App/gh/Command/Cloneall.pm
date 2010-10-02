@@ -11,7 +11,8 @@ use JSON;
 sub options { (
         "verbose" => "verbose",
         "prompt" => "prompt",
-        "into=s" => "into"
+        "into=s" => "into",
+        "s|skip-exists" => "skip_exists",
     ) }
 
 sub run {
@@ -21,14 +22,15 @@ sub run {
 
     $self->{into} ||= $acc;
 
-    die 'need id' unless $acc;
+    die 'Need account id.' unless $acc;
 
-    _info "Getting repository list from github: $acc" if $self->{verbose};
+    _info "Getting repository list from github: $acc";
+
     my $data = api_request(  "repos/show/$acc" );
     return if @{ $data->{repositories} } == 0;
 
     if( $self->{into} ) {
-        _info "Cloning all repositories into @{[ $self->{into} ]}";
+        print STDERR "Cloning all repositories into @{[ $self->{into} ]}\n";
         mkpath [ $self->{into} ];
         chdir  $self->{into};
     }
@@ -71,6 +73,9 @@ sub run {
 
 
         if( -e $local_repo_name ) {
+            print("Found $local_repo_name, skipped.\n"),next if $self->{skip_exists};
+
+
             chdir $local_repo_name;
             print "Updating $local_repo_name from remotes ...\n";
             qx{ git pull --rebase --all };
