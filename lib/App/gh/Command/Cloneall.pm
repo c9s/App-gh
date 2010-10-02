@@ -71,8 +71,16 @@ sub run {
 
 
         if( -e $local_repo_name ) {
-            print "Updating " . $local_repo_name . " ...\n";
-            qx{ cd $local_repo_name ; git pull --rebase origin master };
+            chdir $local_repo_name;
+            print "Updating $local_repo_name from remotes ...\n";
+            qx{ git pull --rebase --all };
+#             my @remotes = split /\n/,qx{git remote 2>&1 };
+#             for my $r ( @remotes ) {
+#                 print "  Updating [$r]  ";
+#                 qx{git pull --rebase $r master };
+#                 print "  - ok\n";
+#             }
+            chdir "../";
         }
         else {
             print "Cloning " . $repo->{name} . " ...\n";
