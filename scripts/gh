@@ -18,20 +18,26 @@ $SIG{INT} = sub {
     exit;
 };
 
-if( ! $act 
-    || $act eq 'help' 
-    || $act eq 'search'
-    || $act eq 'clone'
-    || $act eq 'all'
-    || $act eq 'cloneall'
-    || $act eq 'pull'
-    || $act eq 'fork'
-    || $act eq 'network'
-) {
-    App::gh::Command->invoke( ($act || 'help') , @ARGV );
+unless( $act ) {
+    print <<END;
+App::gh
+
+Available commands:
+
+    search [keyword]
+    clone [userid] [repository]
+    all [userid]
+    pull [userid]
+    fork [userid]
+    list [userid]
+    network
+    recent
+
+END
     exit;
 }
-elsif( $act eq 'list' ) 
+
+if( $act && $act eq 'list' ) 
 {
     my $acc = shift;
     my $json = get 'http://github.com/api/v2/json/repos/show/' . $acc;
