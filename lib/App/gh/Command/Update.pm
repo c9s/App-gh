@@ -15,6 +15,12 @@ Simply run git remote update --prune , git pull --all , then push back to writab
 
 sub run {
     my $self = shift;
+
+    unless ( -d ".git" ) {
+        die "Not a repository";
+    }
+
+
     my @lines = split /\n/,qx{ git remote -v | grep '(fetch)'};
 
     _info "Running update --prune";
