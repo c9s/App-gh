@@ -20,6 +20,10 @@ sub run {
         $repo = shift;
     }
 
+    unless( $user && $repo ) {
+        die "Usage [user] [repo]";
+    }
+
     my $attr = shift || 'ro';
     my $uri;
     if( $attr eq 'ro' ) {
