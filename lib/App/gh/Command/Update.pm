@@ -9,7 +9,7 @@ use App::gh::Utils;
 
 =head1 DESCRIPTION
 
-simply run git pull --all , and push
+Simply run git remote update --prune , git pull --all , then push back to writable remotes.
 
 =cut
 
@@ -32,7 +32,7 @@ sub run {
         }
     }
 
-
+    _info "Done";
 }
 
 1;
