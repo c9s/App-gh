@@ -67,6 +67,12 @@
 
             $ gh all clkao ro  # read-only
 
+    * update:
+
+        run (pull/push) repository changes from/to remotes, and `git remote update --prune`
+
+            $ gh update
+
     * fork;
 
         to fork project:
