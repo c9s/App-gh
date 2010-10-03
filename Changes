@@ -2,9 +2,8 @@ Revision history for App-gh
 
         Understand link to github in fork command (CHORNY)
 
-0.0164  ม๙ 10/ 2 21:11:39 2010
-        * add new command `recent`.
-        * update repository with `git pull --rebase --all`
+0.0166  ค้ 10/ 3 13:40:33 2010
+        * show available commands
 
 0.0165  ม๙ 10/ 2 21:19:28 2010
         * provide a --skip-exists | -s option for command `all`.
@@ -12,4 +11,9 @@ Revision history for App-gh
             git all c9s -s --into .
 
           this will clone new repositories only.
+
+
+0.0164  ม๙ 10/ 2 21:11:39 2010
+        * add new command `recent`.
+        * update repository with `git pull --rebase --all`
 
