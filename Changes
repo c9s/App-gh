@@ -2,6 +2,10 @@ Revision history for App-gh
 
         Understand link to github in fork command (CHORNY)
 
+
+0.017   Mon 04 Oct 2010 01:08:19 PM CST
+        * Add push command.
+
 0.0167  Mon 04 Oct 2010 02:57:20 AM CST
         * Add new command: `gh update` to update current repository
 
