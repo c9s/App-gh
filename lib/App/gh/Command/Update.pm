@@ -5,6 +5,8 @@ use base qw(App::gh::Command);
 use App::gh::Utils;
 
 
+# XXX: improve me
+
 =head1 NAME
 
 =head1 DESCRIPTION
@@ -30,7 +32,7 @@ sub run {
         my ( $remote , $uri , $type ) = ($line =~ m{^(\w+)\s+(\S+)\s+\((\w+)\)} );
         # use Data::Dumper; warn Dumper( $remote , $uri , $type );
         _info "Updating from $remote ...";
-        qx{ git pull $remote };
+        qx{ git pull --rebase $remote };
 
         if( $uri =~ /^git\@github\.com/ ) {
             _info "Pushing changes to $remote : $uri";
