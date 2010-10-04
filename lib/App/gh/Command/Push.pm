@@ -1,44 +1,43 @@
-package App::gh::Command::Update;
+package App::gh::Command::Push;
 use warnings;
 use strict;
 use base qw(App::gh::Command);
 use App::gh::Utils;
 
 
-=head1 NAME
-
 =head1 DESCRIPTION
 
-Simply run git remote update --prune , git pull --all , then push back to writable remotes.
+Push current branch to writable github remotes.
 
 =cut
 
 sub run {
     my $self = shift;
 
-    unless ( -d ".git" ) {
-        die "Not a repository";
-    }
+    die unless( -e ".git/HEAD" );
 
+    open FH , "<" , ".git/HEAD";
+    my $ref = <FH>;
+    close FH;
+    chomp( $ref );
 
-
-    _info "Running update --prune";
-    qx{ git remote update --prune  };
+    my ($branch) = ( $ref =~ m{ref:\s(\S+)} );
 
     my @lines = split /\n/,qx{ git remote -v | grep '(fetch)'};
     for my $line ( @lines ) {
         my ( $remote , $uri , $type ) = ($line =~ m{^(\w+)\s+(\S+)\s+\((\w+)\)} );
-        # use Data::Dumper; warn Dumper( $remote , $uri , $type );
         _info "Updating from $remote ...";
-        qx{ git pull $remote };
+        qx{ git pull --rebase $remote $branch};
 
         if( $uri =~ /^git\@github\.com/ ) {
             _info "Pushing changes to $remote : $uri";
-            qx{ git push  $remote };
+            qx{ git push $remote $branch};
         }
     }
-
-    _info "Done";
 }
+
+
+
+
 
 1;
