@@ -6,7 +6,6 @@ use App::gh::Utils;
 use LWP::Simple qw(get);
 use JSON;
 
-
 sub parse_remote_param {
     my $uri = shift;
     if ( $uri =~ m{(?:git|https?)://github.com/(.*?)/(.*?).git} 

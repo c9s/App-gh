@@ -7,7 +7,6 @@ license  'perl';
 
 build_requires 'Test::More';
 
-requires 'JSON';
 requires 'File::Temp';
 requires 'App::CLI';
 requires 'File::Path';
@@ -18,6 +17,8 @@ requires 'URI';
 requires 'Text::Wrap';
 requires 'XML::Atom::Feed';
 requires 'URI';
+requires 'JSON';
+requires 'JSON::XS';
 requires 'HTML::Strip';
 requires 'IO::Pager';
 
