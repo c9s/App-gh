@@ -21,6 +21,24 @@ sub invoke {
     }
 }
 
+sub gen_uri {
+    my ($self,$acc,$repo) = @_;
+
+    if( $self->{protocal_ssh} ) {
+        return sprintf( 'git@github.com:%s/%s.git' , $acc, $repo );
+    }
+    elsif( $self->{protocal_http} ) {
+        return sprintf( 'http://github.com/%s/%s.git' , $acc , $repo );
+    }
+    elsif( $self->{protocal_https}) {
+        return sprintf( 'https://github.com/%s/%s.git' , $acc , $repo );
+    }
+    elsif( $self->{protocal_git} ) {
+        return sprintf( 'git://github.com/%s/%s.git', $acc, $repo );
+    }
+    return;
+}
+
 sub global_help {
     # XXX: scan command classes
     print <<'END';

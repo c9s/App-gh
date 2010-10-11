@@ -7,6 +7,17 @@ use LWP::Simple qw(get);
 use App::gh::Utils;
 use JSON;
 
+
+sub options { (
+    "verbose" => "verbose",
+    "ssh" => "protocal_ssh",    # git@github.com:c9s/repo.git
+    "http" => "protocal_http",  # http://github.com/c9s/repo.git
+    "https" => "https",         # https://github.com/c9s/repo.git
+    "git|ro"   => "git"         # git://github.com/c9s/repo.git
+) }
+
+
+
 sub run {
     my ($self) = shift;
     my $user;
@@ -24,14 +35,7 @@ sub run {
         die "Usage [user] [repo]";
     }
 
-    my $attr = shift || 'ro';
-    my $uri;
-    if( $attr eq 'ro' ) {
-        $uri = sprintf "git://github.com/%s/%s.git" , $user , $repo;
-    }
-    elsif( $attr eq 'ssh' ) {
-        $uri = sprintf "git\@github.com:%s/%s.git" , $user , $repo;
-    }
+    my $uri = $self->gen_uri( $user, $repo );
     print $uri . "\n";
     system( qq{git clone $uri} );
 }

@@ -7,10 +7,15 @@ use LWP::Simple qw(get);
 use JSON;
 
 
+=head1 NAME
 
-# curl -F 'login=schacon' -F 'token=XXX' http://github.com/api/v2/yaml/repos/fork/dim/retrospectiva
+=head1 DESCRIPTION
+
+=head1 USAGE
 
 =pod
+
+curl -F 'login=schacon' -F 'token=XXX' http://github.com/api/v2/yaml/repos/fork/dim/retrospectiva
 
 $VAR1 = {
           'repository' => {
@@ -33,9 +38,16 @@ $VAR1 = {
         };
 =cut
 
+sub options { (
+    "verbose" => "verbose",
+    "ssh" => "protocal_ssh",    # git@github.com:c9s/repo.git
+    "http" => "protocal_http",  # http://github.com/c9s/repo.git
+    "https" => "https",         # https://github.com/c9s/repo.git
+    "git|ro"   => "git"         # git://github.com/c9s/repo.git
+) }
 
 sub _parse_github_links {
-  my $link=shift;
+    my $link=shift;
   
 }
 
