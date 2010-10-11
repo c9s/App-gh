@@ -36,7 +36,7 @@ sub gen_uri {
     elsif( $self->{protocal_git} ) {
         return sprintf( 'git://github.com/%s/%s.git', $acc, $repo );
     }
-    return;
+    return sprintf( 'git://github.com/%s/%s.git', $acc, $repo );
 }
 
 sub global_help {

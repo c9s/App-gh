@@ -8,7 +8,6 @@ use App::gh::Utils;
 
 sub require_local_gitconfig { 1 }
 
-
 sub run {
     my $config = parse_config( ".git/config" );
     for my $remote ( values %{ $config->{remote} } ) {
