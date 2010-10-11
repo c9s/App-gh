@@ -37,6 +37,8 @@ or:
 
     $ gh clone gugod Social --http
 
+    $ gh clone gugod Social --https
+
     $ gh clone clkao Web-Hippie --ro
 
 clone from read-only uri:
@@ -67,7 +69,7 @@ to clone all repository of miyagawa:
 
     $ gh all perl6 --into perl6-stuff --verbose --prompt 
 
-    $ gh all clkao ro  # read-only
+    $ gh all clkao --ro  # read-only
 
 ### update
 
