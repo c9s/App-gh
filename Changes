@@ -1,6 +1,14 @@
 Revision history for App-gh
 
-        Understand link to github in fork command (CHORNY)
+
+0.018
+
+    Change the pull command behavior
+
+    - Merge from fork repository if --merge option is specified.
+    - Create a branch from fork/master (default branch master) for fork.
+    - Checkout the branch fork/master (default branch master).
+    - Pull changes from fork repository to the branch
 
 
 0.017   Mon 04 Oct 2010 01:08:19 PM CST
@@ -18,6 +26,8 @@ Revision history for App-gh
             git all c9s -s --into .
 
           this will clone new repositories only.
+
+        * Understand link to github in fork command (CHORNY)
 
 
 0.0164  Áù 10/ 2 21:11:39 2010
