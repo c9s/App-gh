@@ -13,12 +13,19 @@ sub options { (
         "prompt" => "prompt",
         "into=s" => "into",
         "s|skip-exists" => "skip_exists",
+
+        "ssh" => "protocal_ssh",    # git@github.com:c9s/repo.git
+        "http" => "protocal_http",  # http://github.com/c9s/repo.git
+        "https" => "https",         # https://github.com/c9s/repo.git
+        "git|ro"   => "git"         # git://github.com/c9s/repo.git
     ) }
 
 sub run {
     my $self = shift;
-    my $acc = shift;
+    my $acc  = shift;
     my $attr = shift || 'ro';
+
+    $attr ||= 'ro';
 
     $self->{into} ||= $acc;
 
