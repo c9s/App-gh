@@ -86,7 +86,7 @@ to fork current project:
     $ cd clkao/AnyMQ
     $ gh fork
 
-### network:
+### network
 
 to show fork network:
 
@@ -94,6 +94,33 @@ to show fork network:
     $ gh network
         c9s/App-gh - watchers(4) forks(1)
       gugod/App-gh - watchers(1) forks(0)
+
+
+### pull
+
+Pull command behavior
+
+    - Merge from fork repository if --merge option is specified.
+    - Create a branch from fork/master (default branch master) for fork.
+    - Checkout the branch fork/master (default branch master).
+    - Pull changes from fork repository to the branch
+
+first , switch path to your repository:
+
+    $ cd App-gh/
+
+to merge gugod/master to local/master branch
+
+    $ gh pull gugod
+
+to merge gugod/feature1 to local/feature1 
+
+    $ gh pull gugod feature1
+
+to merge gugod/feature1 to local/master 
+
+    $ gh pull gugod feature1
+
 
 ## INSTALLATION
 
