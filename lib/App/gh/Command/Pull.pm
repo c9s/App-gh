@@ -40,26 +40,39 @@ sub get_current_repo {
 }
 
 sub run {
-    my ($self,$acc,$branch) = @_;
+    my ($self,$acc,$from_branch,$to_branch) = @_;
 
-    $branch ||= 'master';
+    $from_branch ||= 'master';
+    $to_branch   ||= $from_branch;
+
+    if( qx(git diff) ) {
+        die "Your repository is diryt\n";
+    }
 
     die "git config not found." if  ! -e ".git/config" ;
 
-
-    # check if fork branch exists
-    my $fork_branch_name = "$acc/$branch";
-    unless( qx(git branch | grep $fork_branch_name) ) {
-        print "Creating fork branch $fork_branch_name...\n";
-        qx(git branch $fork_branch_name master);
-    }
-
+    my $fork_branch_name = "$acc/$from_branch";
     my $current_repo = $self->get_current_repo();
     my $fork_uri = $self->gen_uri( $acc , $current_repo );
 
+    if( $self->{merge} ) {
+        print "Merging changes from [$fork_uri / $from_branch] to $to_branch\n";
+        qx(git checkout $to_branch);
+        qx(git pull $fork_uri $from_branch);
+    }
+
+    # check if fork branch exists
+    unless( qx(git branch | grep $fork_branch_name) ) {
+        print "Creating branch $fork_branch_name from $to_branch...\n";
+        qx(git branch $fork_branch_name $to_branch);
+    }
+
+    print "Checking out $fork_branch_name\n";
+    qx(git checkout $fork_branch_name );
+
     print "Pulling changes from [$fork_uri]\n";
-    qx(git pull $fork_uri $fork_branch_name);
-    
+    qx(git pull $fork_uri $from_branch);
+
     print "Adding remote [$acc] for [$fork_uri]\n";
     qx(git remote add $acc $fork_uri);
 
