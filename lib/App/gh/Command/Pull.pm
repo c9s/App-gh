@@ -56,11 +56,9 @@ sub run {
 
     my $current_repo = $self->get_current_repo();
     my $fork_uri = $self->gen_uri( $acc , $current_repo );
-    my $uri = sprintf( qq(git://github.com/%s/%s.git) , $acc , $repo );
 
     print "Pulling changes from [$fork_uri]\n";
     qx(git pull $fork_uri $fork_branch_name);
-
     
     print "Adding remote [$acc] for [$fork_uri]\n";
     qx(git remote add $acc $fork_uri);
