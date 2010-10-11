@@ -40,7 +40,9 @@ sub get_current_repo {
 }
 
 sub run {
-    my ($self,$acc,$from_branch,$to_branch) = @_;
+    my ( $self, $acc, $from_branch, $to_branch ) = @_;
+
+    die "require user id" unless $acc;
 
     $from_branch ||= 'master';
     $to_branch   ||= $from_branch;
