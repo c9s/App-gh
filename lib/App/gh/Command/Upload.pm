@@ -2,6 +2,7 @@ package App::gh::Command::Upload;
 use warnings;
 use strict;
 use base qw(App::gh::Command);
+use Net::GitHub::Upload;
 use App::gh::Utils;
 
 =head1 USAGE

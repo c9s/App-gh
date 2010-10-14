@@ -17,18 +17,6 @@ sub options { (
         "git|ro"   => "git"         # git://github.com/c9s/repo.git
     ) }
 
-sub parse_remote_param {
-    my $uri = shift;
-    if ( $uri =~ m{(?:git|https?)://github.com/(.*?)/(.*?).git} 
-        || $uri =~ m{git\@github.com:(.*?)/(.*?).git} ) 
-    {
-        return ( $1 , $2 )
-            if( $1 && $2 );
-    }
-    return undef;
-}
-
-
 sub run {
     my ( $self, $acc, $from_branch, $to_branch ) = @_;
 

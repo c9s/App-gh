@@ -21,6 +21,18 @@ sub invoke {
     }
 }
 
+sub parse_remote_param {
+    my $uri = shift;
+    if ( $uri =~ m{(?:git|https?)://github.com/(.*?)/(.*?).git} 
+        || $uri =~ m{git\@github.com:(.*?)/(.*?).git} ) 
+    {
+        return ( $1 , $2 )
+            if( $1 && $2 );
+    }
+    return undef;
+}
+
+
 sub get_current_repo {
     my $self = shift;
     my $config = parse_config( ".git/config" );
