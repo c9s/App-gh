@@ -20,7 +20,7 @@ sub run {
         die "Github authtoken not found.\n";
     }
 
-    print "Uploading $fiel to $repo\n";
+    print "Uploading $file to $repo\n";
     my $gh = Net::GitHub::Upload->new(
         login => $auth->{user},
         token => $auth->{token},
