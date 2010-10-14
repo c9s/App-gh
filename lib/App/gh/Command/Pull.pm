@@ -8,6 +8,7 @@ use JSON;
 
 sub options { (
         "m|merge" => "merge",
+        "b|branch" => "branch",
         "verbose" => "verbose",
 
         "ssh" => "protocal_ssh",    # git@github.com:c9s/repo.git
@@ -27,17 +28,6 @@ sub parse_remote_param {
     return undef;
 }
 
-sub get_current_repo {
-    my $self = shift;
-    my $config = parse_config( ".git/config" );
-    for my $remote ( values %{ $config->{remote} } ) {
-        if( my ($my, $repo) = parse_remote_param( $remote->{url} ) )
-        {
-            return ($my,$repo);
-        }
-    }
-
-}
 
 sub run {
     my ( $self, $acc, $from_branch, $to_branch ) = @_;
@@ -62,6 +52,7 @@ sub run {
         qx(git checkout $to_branch);
         qx(git pull $fork_uri $from_branch);
     }
+
 
     # check if fork branch exists
     unless( qx(git branch | grep $fork_branch_name) ) {

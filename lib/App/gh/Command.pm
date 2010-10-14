@@ -21,6 +21,18 @@ sub invoke {
     }
 }
 
+sub get_current_repo {
+    my $self = shift;
+    my $config = parse_config( ".git/config" );
+    for my $remote ( values %{ $config->{remote} } ) {
+        if( my ($my, $repo) = parse_remote_param( $remote->{url} ) )
+        {
+            return ($my,$repo);
+        }
+    }
+}
+
+
 sub gen_uri {
     my ($self,$acc,$repo) = @_;
 
