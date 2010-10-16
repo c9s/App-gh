@@ -16,6 +16,8 @@ sub run {
     my ($self,$repo) = @_;
     my $auth = get_github_auth();
 
+    $repo =~ s{::}{-}g;
+
     unless( $auth ) {
         die "Github authtoken not found. Can not fork repository.\n";
     }
