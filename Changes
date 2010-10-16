@@ -34,3 +34,8 @@ Revision history for App-gh
         * add new command `recent`.
         * update repository with `git pull --rebase --all`
 
+0.0167  Sat 16 Oct 2010 11:47:28 AM JST
+        * add upload command 
+        * --cpan option for upload command to use CPAN::Uploader
+
+
