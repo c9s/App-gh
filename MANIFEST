@@ -22,6 +22,7 @@ lib/App/gh/Command/Pull.pm
 lib/App/gh/Command/Search.pm
 lib/App/gh/Command/Upload.pm
 lib/App/gh/Command/Recent.pm
+lib/App/gh/Command/Drop.pm
 lib/App/gh/Command/Update.pm
 lib/App/gh/Command/Push.pm
 lib/App/gh/Utils.pm
