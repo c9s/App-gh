@@ -21,6 +21,8 @@ sub run {
     }
     die unless $repo;
 
+    print "Deleting @{[ $auth->{user} ]}/@{[ $repo ]}\n";
+
     # repos/delete/:user/:repo
     my $uri = sprintf( qq{repos/delete/%s/%s?login=%s&token=%s}, $auth->{user}, $repo, $auth->{user}, $auth->{token} );
     my $ret = api_request($uri);
