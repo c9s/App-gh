@@ -8,6 +8,15 @@ use App::gh::Utils;
 use LWP::Simple qw(get);
 use JSON;
 
+
+=head1 NAME
+
+App::gh::Cloneall - clone all repositories from one
+
+=head1 OPTIONS
+
+=cut
+
 sub options { (
         "verbose" => "verbose",
         "prompt" => "prompt",

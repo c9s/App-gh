@@ -6,6 +6,14 @@ use LWP::Simple;
 use JSON;
 use App::gh::Utils;
 
+
+
+=head1 NAME
+
+App::gh::Command::Network - show network
+
+=cut
+
 sub require_local_gitconfig { 1 }
 
 sub run {

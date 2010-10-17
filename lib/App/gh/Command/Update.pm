@@ -9,9 +9,12 @@ use App::gh::Utils;
 
 =head1 NAME
 
+App::gh::Command::Update - remote update --prune
+
 =head1 DESCRIPTION
 
-Simply run git remote update --prune , git pull --all , then push back to writable remotes.
+Simply run git remote update --prune , git pull --all , then push back to
+writable remotes.
 
 =cut
 

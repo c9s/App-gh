@@ -6,6 +6,12 @@ use App::gh::Utils;
 use LWP::Simple qw(get);
 use JSON;
 
+=head1 NAME
+
+App::gh::Command::Pull - pull changes from other forks.
+
+=cut
+
 sub options { (
         "m|merge" => "merge",
         "b|branch" => "branch",

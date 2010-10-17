@@ -9,6 +9,8 @@ use JSON;
 
 =head1 NAME
 
+App::gh::Command::Fork - fork current repository.
+
 =head1 DESCRIPTION
 
 =head1 USAGE

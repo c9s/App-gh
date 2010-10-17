@@ -5,6 +5,20 @@ use base qw(App::gh::Command);
 use Net::GitHub::Upload;
 use App::gh::Utils;
 
+=head1 NAME
+
+App::gh::Command::Upload - upload file to github.
+
+=head1 OPTIONS
+
+=for 4
+
+=item 
+
+--cpan
+
+=back
+
 =head1 USAGE
 
     gh upload {file} [{repo}]

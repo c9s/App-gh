@@ -5,9 +5,9 @@ use base qw(App::gh::Command);
 use App::gh::Utils;
 
 
-=head1 DESCRIPTION
+=head1 NAME
 
-Push current branch to writable github remotes.
+App::gh::Command::Push - push changes to writable github remotes
 
 =cut
 

@@ -6,6 +6,12 @@ use App::gh::Utils;
 use JSON;
 
 
+=head1 NAME
+
+App::gh::Command::Search - search repositories
+
+=cut
+
 sub run {
     my ($self,$keyword) = @_;
     my $result = api_request(qq(repos/search/$keyword));
