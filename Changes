@@ -1,5 +1,9 @@
 Revision history for App-gh
 
+0.236 
+
+    XML::Feed is optional dependency.
+
 0.235
 
     Provide more command help message and fixed App::CLI.
