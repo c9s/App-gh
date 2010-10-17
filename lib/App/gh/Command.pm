@@ -4,11 +4,9 @@ use strict;
 use App::gh::Utils;
 use base qw(App::CLI App::CLI::Command);
 
-sub alias {
-    (
-        "all" => "cloneall"
-    );
-}
+use constant global_options => ( 'help' => 'help' );
+
+sub alias { ( "all" => "cloneall" ) }
 
 sub invoke {
     my ($pkg, $cmd, @args) = @_;

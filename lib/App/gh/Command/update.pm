@@ -4,7 +4,6 @@ use strict;
 use base qw(App::gh::Command);
 use App::gh::Utils;
 
-
 # XXX: improve me
 
 =head1 NAME

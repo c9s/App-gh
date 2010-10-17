@@ -11,6 +11,10 @@ use JSON;
 
 App::gh::Command::Clone - clone repository
 
+=head1 DESCRIPTION
+
+balh
+
 =head1 OPTIONS
 
     --verbose
@@ -31,6 +35,7 @@ sub options { (
 
 sub run {
     my ($self) = shift;
+
     my $user;
     my $repo;
 

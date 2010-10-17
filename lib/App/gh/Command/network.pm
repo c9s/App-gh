@@ -6,8 +6,6 @@ use LWP::Simple;
 use JSON;
 use App::gh::Utils;
 
-
-
 =head1 NAME
 
 App::gh::Command::Network - show network
