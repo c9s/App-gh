@@ -37,7 +37,7 @@ sub run {
 
     die "git config not found." if  ! -e ".git/config" ;
 
-    my $fork_branch_name = "$acc/$from_branch";
+    my $fork_branch_name = "$acc-$from_branch";
     my $current_repo = $self->get_current_repo();
     my $fork_uri = $self->gen_uri( $acc , $current_repo );
 
