@@ -21,6 +21,15 @@ sub options {
 
 sub run {
     my ($self) = shift;
+
+
+    eval {
+        require XML::Atom::Feed;
+    };
+    die 'Please install XML::Atom::Feed to enable this command.' if $@;
+
+
+
     my $config = parse_config $ENV{HOME} . "/.gitconfig";
     my $token = $config->{github}->{token};
     my $user  = $config->{github}->{user};

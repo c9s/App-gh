@@ -15,7 +15,6 @@ requires 'LWP::Simple';
 requires 'Exporter::Lite';
 requires 'URI';
 requires 'Text::Wrap';
-requires 'XML::Atom::Feed';
 requires 'URI';
 requires 'JSON';
 requires 'JSON::XS';
