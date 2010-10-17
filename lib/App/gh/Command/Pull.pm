@@ -10,6 +10,10 @@ use JSON;
 
 App::gh::Command::Pull - pull changes from other forks.
 
+=head1 USAGE
+
+    $ gh pull [id]
+
 =cut
 
 sub options { (
