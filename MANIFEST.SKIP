@@ -4,4 +4,4 @@
 ^Makefile$
 ^\.git
 MYMETA.yml
-test.pl
+.tar.gz$

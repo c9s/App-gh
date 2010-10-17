@@ -29,8 +29,10 @@ lib/App/gh/Command/Push.pm
 lib/App/gh/Utils.pm
 Makefile.PL
 MANIFEST
+MANIFEST.SKIP
 META.yml
 README.mkd
+.shipit
 scripts/gh
 t/00-load.t
 t/manifest.t

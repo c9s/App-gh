@@ -1,5 +1,8 @@
 Revision history for App-gh
 
+0.235
+
+    Provide more command help message and fixed App::CLI.
 
 0.018
 

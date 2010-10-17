@@ -9,16 +9,6 @@ use App::gh::Utils;
 
 App::gh::Command::Upload - upload file to github.
 
-=head1 OPTIONS
-
-=for 4
-
-=item 
-
---cpan
-
-=back
-
 =head1 USAGE
 
     gh upload {file} [{repo}]
