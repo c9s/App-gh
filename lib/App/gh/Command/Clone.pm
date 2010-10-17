@@ -7,6 +7,15 @@ use LWP::Simple qw(get);
 use App::gh::Utils;
 use JSON;
 
+=head1 OPTIONS
+
+    --verbose
+    --ssh
+    --http
+    --https
+    --git|ro
+
+=cut
 
 sub options { (
     "verbose" => "verbose",
