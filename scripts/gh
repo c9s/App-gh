@@ -18,26 +18,6 @@ $SIG{INT} = sub {
     exit;
 };
 
-unless( $act ) {
-    print <<END;
-App::gh
-
-Available commands:
-
-    search [keyword]                - search repositories
-    clone [userid] [repository]     - clone repository
-    all [userid]                    - clone all repositories from one
-    pull [userid]                   - pull changes from one's fork
-    fork [userid]                   - fork one's repository
-    list [userid]                   - list one's repositories
-    update                          - update current repository from remotes
-    network                         - show current network
-    recent                          - show recent news from github
-
-END
-    exit;
-}
-
 if( $act && $act eq 'list' ) 
 {
     my $acc = shift;
