@@ -80,13 +80,14 @@ search repository:
 
 to clone all repository of miyagawa:
 
-    $ gh cloneall miyagawa 
-
-    $ gh cloneall clkao --ro  # read-only
+    $ gh all miyagawa 
+    $ gh all clkao --ro  # read-only
+    $ gh all clkao --into path/to/clkao
 
 to fork project:
 
-    $ gh fork clkao AnyMQ
+    $ cd AnyMQ
+    $ gh fork clkao
 
 to fork current project:
 
