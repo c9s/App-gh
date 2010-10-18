@@ -12,7 +12,6 @@ requires 'App::CLI';
 requires 'File::Path';
 requires 'File::Spec';
 requires 'LWP::Simple';
-requires 'Exporter::Lite';
 requires 'URI';
 requires 'Text::Wrap';
 requires 'URI';
