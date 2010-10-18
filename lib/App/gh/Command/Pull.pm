@@ -12,7 +12,19 @@ App::gh::Command::Pull - pull changes from other forks.
 
 =head1 USAGE
 
-    $ gh pull [id]
+First you show up all fork network:
+
+    $ gh network
+
+Then you can pull changes from one:
+
+    $ gh pull [id] (from branch) (to branch)
+
+For example:
+
+    $ gh pull gugod
+
+This will create a gugod-master branch:
 
 =cut
 
@@ -45,6 +57,10 @@ sub run {
     my $current_repo = $self->get_current_repo();
     my $fork_uri = $self->gen_uri( $acc , $current_repo );
 
+    print "Adding remote [$acc] for [$fork_uri]\n";
+    qx(git remote add $acc $fork_uri);
+
+
     if( $self->{merge} ) {
         print "Merging changes from [$fork_uri / $from_branch] to $to_branch\n";
         qx(git checkout $to_branch);
@@ -64,8 +80,6 @@ sub run {
     print "Pulling changes from [$fork_uri]\n";
     qx(git pull $fork_uri $from_branch);
 
-    print "Adding remote [$acc] for [$fork_uri]\n";
-    qx(git remote add $acc $fork_uri);
 
     print "Done\n";
 }
