@@ -27,6 +27,7 @@ lib/App/gh/Command/Drop.pm
 lib/App/gh/Command/Update.pm
 lib/App/gh/Command/Push.pm
 lib/App/gh/Utils.pm
+completion/gh.sh
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
