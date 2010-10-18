@@ -35,9 +35,9 @@ or:
 
     $ gh clone miyagawa Plack
 
-    $ gh clone gugod Social --http
+    $ gh clone foo Social --http
 
-    $ gh clone gugod Social --https
+    $ gh clone foo Social --https
 
     $ gh clone clkao Web-Hippie --ro
 
@@ -90,7 +90,7 @@ to show fork network:
     $ cd App-gh/
     $ gh network
         c9s/App-gh - watchers(4) forks(1)
-      gugod/App-gh - watchers(1) forks(0)
+      foo/App-gh - watchers(1) forks(0)
 
 ### pull
 
@@ -110,30 +110,29 @@ Show up the network by running pull command with no arguments:
     $ gh pull
     .... 
 
-To pull from gugod and add remote:
+To pull from foo and add remote:
 
-    $ gh pull gugod
-    $ git log gugod/master   # to show changes
+    $ gh pull foo
+    $ git log foo/master   # to show changes
 
-To pull from gugod and merge changes:
+To pull from foo and merge changes:
 
-    $ gh pull gugod -m
+    $ gh pull foo -m
 
-To merge gugod/feature1 to local/master 
+To merge foo/feature1 to local/master 
 
-    $ gh pull gugod feature1 -m
+    $ gh pull foo feature1 -m
 
-To merge changes from gugod/master and create a tracked branch:
+To merge changes from foo/master and create a tracked branch:
 
-    $ gh pull gugod --merge --branch
-    $ gh pull gugod -m -b
+    $ gh pull foo --merge --branch
+    $ gh pull foo -m -b
 
 ### update
 
 Run (pull/push) repository changes from/to remotes, and `git remote update --prune`
 
     $ gh update
-
 
 ## INSTALLATION
 
