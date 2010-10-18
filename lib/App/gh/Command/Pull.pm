@@ -26,11 +26,17 @@ For example:
 
 This will create a gugod-master branch:
 
-=cut
+=head1 OPTIONS
 
-=pod
+    --branch 
+    
+    create tracked branch for fork.
 
-Github Steps:
+    --merge
+
+    merge changes from fork.
+
+=head3 Github Steps:
 
 Step 1: Check out a new branch to test the changes — run this from your project directory
 
@@ -49,12 +55,12 @@ Step 3: Merge the changes and update the server
 =cut
 
 sub options { (
-        "m|merge" => "merge",
-        "verbose" => "verbose",
-
-        "ssh" => "protocal_ssh",    # git@github.com:c9s/repo.git
-        "http" => "protocal_http",  # http://github.com/c9s/repo.git
-        "https" => "https",         # https://github.com/c9s/repo.git
+        "m|merge"  => "merge",
+        "b|branch" => "branch",
+        "verbose"  => "verbose",
+        "ssh"      => "protocal_ssh",    # git@github.com:c9s/repo.git
+        "http"     => "protocal_http",  # http://github.com/c9s/repo.git
+        "https"    => "https",         # https://github.com/c9s/repo.git
         "git|ro"   => "git"         # git://github.com/c9s/repo.git
     ) }
 
@@ -95,17 +101,23 @@ sub run {
 
     die "git config not found." if  ! -e ".git/config" ;
 
+    my $remote_name      = $acc;
     my $fork_branch_name = "$acc-$from_branch";
-    my $current_repo = $self->get_current_repo();
-    my $fork_uri = $self->gen_uri( $acc , $current_repo );
+    my $current_repo     = $self->get_current_repo();
+    my $fork_uri         = $self->gen_uri( $acc , $current_repo );
 
-    unless( qx(git remote | grep $acc ) ) {
-        print "Adding remote [$acc] for [$fork_uri]\n";
-        qx(git remote add $acc $fork_uri);
+    unless( qx(git remote | grep $remote_name ) ) {
+        print "Adding remote [$remote_name] for [$fork_uri]\n";
+        qx(git remote add $remote_name $fork_uri);
     }
 
     print "Fetching $acc ...\n";
     print qx(git fetch $acc);
+
+    if( $self->{branch} ) {
+        print "Creating track branch for $acc/$from_branch\n";
+        print qx(git checkout --track -b $fork_branch_name $acc/$from_branch);
+    }
 
     if( $self->{merge} ) {
         print "Checking out $to_branch ...\n";
