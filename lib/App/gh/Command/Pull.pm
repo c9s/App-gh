@@ -28,6 +28,26 @@ This will create a gugod-master branch:
 
 =cut
 
+=pod
+
+Github Steps:
+
+Step 1: Check out a new branch to test the changes — run this from your project directory
+
+    git checkout -b chocolateboy-optional_dep_and_warnings_fixes master
+
+Step 2: Bring in chocolateboy's changes and test
+
+    git pull http://github.com/chocolateboy/App-gh.git optional_dep_and_warnings_fixes
+
+Step 3: Merge the changes and update the server
+
+    git checkout master
+    git merge chocolateboy-optional_dep_and_warnings_fixes
+    git push origin master
+
+=cut
+
 sub options { (
         "m|merge" => "merge",
         "verbose" => "verbose",
