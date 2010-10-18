@@ -114,10 +114,6 @@ sub run {
     print "Fetching $acc ...\n";
     print qx(git fetch $acc);
 
-    if( $self->{branch} ) {
-        print "Creating track branch for $acc/$from_branch\n";
-        print qx(git checkout --track -b $fork_branch_name $acc/$from_branch);
-    }
 
     if( $self->{merge} ) {
         print "Checking out $to_branch ...\n";
@@ -126,6 +122,12 @@ sub run {
         print "Merging changes from [$acc/$from_branch] to $to_branch\n";
         print qx(git merge $acc/$from_branch);
     }
+
+    if( $self->{branch} ) {
+        print "Creating track branch for $acc/$from_branch\n";
+        print qx(git checkout --track -b $fork_branch_name $acc/$from_branch);
+    }
+
     print "Done\n";
 }
 
