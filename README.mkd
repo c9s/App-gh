@@ -71,11 +71,6 @@ to clone all repository of miyagawa:
 
     $ gh all clkao --ro  # read-only
 
-### update
-
-run (pull/push) repository changes from/to remotes, and `git remote update --prune`
-
-    $ gh update
 
 ### fork
 
@@ -97,31 +92,47 @@ to show fork network:
         c9s/App-gh - watchers(4) forks(1)
       gugod/App-gh - watchers(1) forks(0)
 
-
 ### pull
 
 Pull command behavior
 
-    - Merge from fork repository if --merge option is specified.
-    - Create a branch from fork/master (default branch master) for fork.
-    - Checkout the branch fork/master (default branch master).
-    - Pull changes from fork repository to the branch
+    - Add remote for a fork
+    - Fetch remote
+    - Merge from fork branch if --merge option is specified.
+    - Create a branch if --branch is specified.
 
-first , switch path to your repository:
+First , switch path to your repository:
 
     $ cd App-gh/
 
-to merge gugod/master to local/master branch
+Show up the network by running pull command with no arguments:
+
+    $ gh pull
+    .... 
+
+To pull from gugod and add remote:
 
     $ gh pull gugod
+    $ git log gugod/master   # to show changes
 
-to merge gugod/feature1 to local/feature1 
+To pull from gugod and merge changes:
 
-    $ gh pull gugod feature1
+    $ gh pull gugod -m
 
-to merge gugod/feature1 to local/master 
+To merge gugod/feature1 to local/master 
 
-    $ gh pull gugod feature1
+    $ gh pull gugod feature1 -m
+
+To merge changes from gugod/master and create a tracked branch:
+
+    $ gh pull gugod --merge --branch
+    $ gh pull gugod -m -b
+
+### update
+
+Run (pull/push) repository changes from/to remotes, and `git remote update --prune`
+
+    $ gh update
 
 
 ## INSTALLATION
