@@ -5,7 +5,6 @@ use JSON;
 use utf8;
 use warnings;
 use constant debug => $ENV{DEBUG};
-use App::gh;
 use App::gh::Utils;
 use App::gh::Command;
 
