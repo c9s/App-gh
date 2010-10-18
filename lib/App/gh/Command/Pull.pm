@@ -30,7 +30,6 @@ This will create a gugod-master branch:
 
 sub options { (
         "m|merge" => "merge",
-        "b|branch" => "branch",
         "verbose" => "verbose",
 
         "ssh" => "protocal_ssh",    # git@github.com:c9s/repo.git
@@ -45,7 +44,7 @@ sub run {
     die "require user id" unless $acc;
 
     $from_branch ||= 'master';
-    $to_branch   ||= $from_branch;
+    $to_branch   ||= 'master';
 
     if( qx(git diff) ) {
         die "Your repository is diryt\n";
