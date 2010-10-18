@@ -15,7 +15,8 @@ App::gh - An apt-like Github utility.
 App-gh provides an interface for you clone, fork, search github repository very
 easily. You can even clone all repositories from an author , for example:
 
-    $ gh cloneall miyagawa
+    $ gh all miyagawa
+    $ gh all miyagawa --into path/
 
 this will clone all repositories of miyagawa.
 
@@ -40,16 +41,18 @@ And you might want to show all forks of this repository:
 
     $ gh network
 
+to pull changes from one fork.
+
+    $ gh pull gugod [branch]
+
+This will pull changes from gugod/[branch].  specify --merge to merge these
+changes. --branch if you want the forked branch to be checked out.
 
 =head1 SYNOPSIS
 
 list all repository of c9s:
 
     $ gh list c9s
-
-if you want text wrapped:
-
-    $ WRAP=1 gh list c9s
 
 clone Plack repository from miyagawa:
 
@@ -59,17 +62,17 @@ or:
 
     $ gh clone miyagawa Plack
 
-    $ gh clone gugod Social http
+    $ gh clone gugod Social --http
 
-    $ gh clone clkao Web-Hippie ro
+    $ gh clone clkao Web-Hippie --ro
 
 clone from read-only uri:
 
-    $ gh clone miyagawa/Plack ro 
+    $ gh clone miyagawa/Plack --ro 
 
 clone from ssh uri:
 
-    $ gh clone miyagawa/Plack ssh  
+    $ gh clone miyagawa/Plack --ssh  
 
 search repository:
 
@@ -79,7 +82,7 @@ to clone all repository of miyagawa:
 
     $ gh cloneall miyagawa 
 
-    $ gh cloneall clkao ro  # read-only
+    $ gh cloneall clkao --ro  # read-only
 
 to fork project:
 
