@@ -62,27 +62,16 @@ sub run {
         qx(git remote add $acc $fork_uri);
     }
 
+    print "Fetching $acc ...\n";
+    qx(git fetch $acc);
 
     if( $self->{merge} ) {
-        print "Merging changes from [$fork_uri / $from_branch] to $to_branch\n";
+        print "Checking out $to_branch ...\n";
         qx(git checkout $to_branch);
-        qx(git pull $fork_uri $from_branch);
+
+        print "Merging changes from [$acc/$from_branch] to $to_branch\n";
+        qx(git merge $acc/$from_branch);
     }
-
-
-    # check if fork branch exists
-    unless( qx(git branch | grep $fork_branch_name) ) {
-        print "Creating branch $fork_branch_name from $to_branch...\n";
-        qx(git branch $fork_branch_name $to_branch);
-    }
-
-    print "Checking out $fork_branch_name\n";
-    qx(git checkout $fork_branch_name );
-
-    print "Pulling changes from [$fork_uri]\n";
-    qx(git pull $fork_uri $from_branch);
-
-
     print "Done\n";
 }
 
