@@ -1,5 +1,14 @@
 Revision history for App-gh
 
+0.24
+    
+    Pull command should:
+        add fork remote 
+        fetch fork remote 
+        merge it fi --merge option is given.
+
+    show networks if arg is not given.
+
 0.236 
 
     XML::Feed is optional dependency.
