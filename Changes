@@ -1,9 +1,13 @@
 Revision history for App-gh
 
+0.252 
+
+    Remove IO::Pager from dependency.
+
 0.251
     
     Update document.
-    Remove Exporter::Lite dependency
+    Remove Exporter::Lite from dependency
 
 0.25 
     Add --branch , --merge option to pull command.
