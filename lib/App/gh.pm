@@ -2,7 +2,7 @@ package App::gh;
 use warnings;
 use strict;
 
-our $VERSION = '0.252';
+our $VERSION = '0.253';
 
 __END__
 
