@@ -1,4 +1,8 @@
 
+# Author: Cornelius
+# Usage:
+#   source gh.sh
+
 function _gh()
 {
     local cur
