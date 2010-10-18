@@ -4,7 +4,6 @@ use strict;
 use base qw(App::gh::Command);
 use App::gh::Utils;
 use JSON;
-use XML::Atom::Feed;
 use URI;
 use Text::Wrap;
 use IO::Pager;
