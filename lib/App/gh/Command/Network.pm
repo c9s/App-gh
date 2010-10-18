@@ -23,10 +23,12 @@ sub run {
         {
             my ($acc,$repo) = ($1,$2);
 
+
+            # XXX: refactor this ... XD
             my $objs = api_request(qq(repos/show/$acc/$repo/network));
             my $networks = $objs->{network};
             for my $net ( @$networks ) {
-                _info sprintf( "% 17s - watchers(%d) forks(%d)"
+                print sprintf( "% 17s - watchers(%d) forks(%d)\n"
                     , $net->{owner} . '/' . $net->{name}
                     , $net->{watchers}
                     , $net->{forks}
