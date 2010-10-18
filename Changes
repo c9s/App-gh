@@ -1,5 +1,10 @@
 Revision history for App-gh
 
+0.25 
+    Add --branch , --merge option to pull command.
+
+    Update documentation.
+
 0.24
     
     Pull command should:

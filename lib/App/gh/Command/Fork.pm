@@ -40,7 +40,6 @@ $VAR1 = {
         };
 =cut
 
-<<<<<<< HEAD
 sub options { (
     "verbose" => "verbose",
     "ssh" => "protocal_ssh",    # git@github.com:c9s/repo.git
