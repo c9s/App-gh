@@ -1,5 +1,9 @@
 Revision history for App-gh
 
+0.254 
+    
+    Add simple bash completion support.
+
 0.253
 
     Add --id option to network
