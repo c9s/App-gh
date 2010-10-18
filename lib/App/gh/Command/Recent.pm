@@ -24,8 +24,9 @@ sub run {
 
     eval {
         require XML::Atom::Feed;
+        require IO::Pager;
     };
-    die 'Please install XML::Atom::Feed to enable this command.' if $@;
+    die 'Please install XML::Atom::Feed and IO::Pager to enable this command.' if $@;
 
 
 
