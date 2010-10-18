@@ -54,4 +54,3 @@ Revision history for App-gh
         * add upload command 
         * --cpan option for upload command to use CPAN::Uploader
 
-

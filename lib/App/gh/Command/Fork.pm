@@ -40,6 +40,7 @@ $VAR1 = {
         };
 =cut
 
+<<<<<<< HEAD
 sub options { (
     "verbose" => "verbose",
     "ssh" => "protocal_ssh",    # git@github.com:c9s/repo.git
@@ -48,10 +49,6 @@ sub options { (
     "git|ro"   => "git"         # git://github.com/c9s/repo.git
 ) }
 
-sub _parse_github_links {
-    my $link=shift;
-  
-}
 
 sub run {
     my $self=shift;

@@ -5,3 +5,4 @@
 ^\.git
 MYMETA.yml
 .tar.gz$
+test*
