@@ -105,14 +105,14 @@ sub run {
     }
 
     print "Fetching $acc ...\n";
-    qx(git fetch $acc);
+    print qx(git fetch $acc);
 
     if( $self->{merge} ) {
         print "Checking out $to_branch ...\n";
         qx(git checkout $to_branch);
 
         print "Merging changes from [$acc/$from_branch] to $to_branch\n";
-        qx(git merge $acc/$from_branch);
+        print qx(git merge $acc/$from_branch);
     }
     print "Done\n";
 }
