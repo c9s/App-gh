@@ -17,11 +17,18 @@ sub run {
 
     die "Nothing to commit" unless qx(git diff);
 
+
+    print "=========== Current Change Status ===========\n";
     system( qq(git status) );
+
+    print "\n";
+    print "=========== GH Commit Interface ===========\n";
+    print "diff(d). status(s). status with untracked files (ss).\n";
+    print "commit(c). quit(q).\n";
 
     # print qx(git diff --color=auto);
     my $term = Term::ReadLine->new('Simple');
-    my $prompt = "Diff(d), Status(s), Commit(c), Quit(q): ";
+    my $prompt = "Diff(d), Status(s/ss), Commit(c), Quit(q): ";
 
     my $OUT = $term->OUT || \*STDOUT;
     my $res; 
@@ -30,8 +37,11 @@ sub run {
         if ( $res =~ /^d/ ) {
             system( qq(git diff --color=always) );
         }
-        elsif( $res =~ /^s/ ) {
-            system( qq(git status) );
+        elsif( $res =~ /^\s*ss\s*$/ ) {
+            system( qq(git status -unormal) );
+        }
+        elsif( $res =~ /^\s*s\s*$/ ) {
+            system( qq(git status -uno) );
         }
         elsif( $res =~ /^c/ ) {
             # read commit messages
