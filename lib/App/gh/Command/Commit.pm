@@ -15,6 +15,8 @@ use Term::ReadLine;
 sub run {
     my ($self) = @_;
 
+    die "Nothing to commit" unless qx(git diff);
+
     system( qq(git status) );
 
     # print qx(git diff --color=auto);
