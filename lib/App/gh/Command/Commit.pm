@@ -12,6 +12,22 @@ use JSON;
 use File::Temp;
 use Term::ReadLine;
 
+=head1 NAME
+
+App::gh::Command::Commit
+
+=head1 DESCRIPTION
+
+gh commit command provides a normal commit process. (show status, diff, then commit in few
+strokes)
+
+=head1 USAGE
+
+
+    $ gh commit
+
+=cut
+
 sub run {
     my ($self) = @_;
 
@@ -34,6 +50,7 @@ sub run {
     my $res; 
     while ( defined ($res = $term->readline($prompt)) ) {
         chomp($res);
+
         if ( $res =~ /^d/ ) {
             system( qq(git diff --color=always) );
         }
