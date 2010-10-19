@@ -6,7 +6,14 @@ use App::gh::Utils;
 
 use constant global_options => ( 'help' => 'help' );
 
-sub alias { ( "all" => "cloneall" ) }
+sub alias { (
+        "a"  => "all",
+        "u"  => "update",
+        "pu" => "pull",
+        "f"  => "fork",
+        "n"  => "network",
+        "s"  => "search"
+        ) }
 
 sub invoke {
     my ($pkg, $cmd, @args) = @_;

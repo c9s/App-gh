@@ -1,4 +1,4 @@
-package App::gh::Command::Cloneall;
+package App::gh::Command::All;
 use utf8;
 use warnings;
 use strict;

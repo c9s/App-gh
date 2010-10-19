@@ -134,6 +134,15 @@ Run (pull/push) repository changes from/to remotes, and `git remote update --pru
 
     $ gh update
 
+## COMMAND ALIAS
+
+    "a"  => "all"
+    "u"  => "update"
+    "pu" => "pull"
+    "f"  => "fork"
+    "n"  => "network"
+    "s"  => "search"
+
 ## INSTALLATION
 
 To install this module, run the following commands:
