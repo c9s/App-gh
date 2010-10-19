@@ -13,6 +13,7 @@ sub alias { (
         "fo"  => "fork",
         "ne"  => "network",
         "se"  => "search",
+        "ci"  => "commit",
         ) }
 
 sub invoke {
