@@ -8,11 +8,11 @@ use constant global_options => ( 'help' => 'help' );
 
 sub alias { (
         "a"  => "all",
-        "u"  => "update",
+        "up"  => "update",
         "pu" => "pull",
-        "f"  => "fork",
-        "n"  => "network",
-        "s"  => "search"
+        "fo"  => "fork",
+        "ne"  => "network",
+        "se"  => "search",
         ) }
 
 sub invoke {
