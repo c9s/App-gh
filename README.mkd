@@ -2,7 +2,6 @@
 
 ## SYNOPSIS
 
-
     show help message;
 
         $ gh help
