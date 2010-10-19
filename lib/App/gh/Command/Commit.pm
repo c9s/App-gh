@@ -10,8 +10,6 @@ use App::gh::Utils;
 use LWP::Simple qw(get);
 use JSON;
 use File::Temp;
-
-# use IO::Pager;
 use Term::ReadLine;
 
 sub run {
@@ -21,7 +19,7 @@ sub run {
 
     # print qx(git diff --color=auto);
     my $term = Term::ReadLine->new('Simple');
-    my $prompt = "Show Diff(d), Status(s), Commit(c), Quit(q) :";
+    my $prompt = "Diff(d), Status(s), Commit(c), Quit(q): ";
 
     my $OUT = $term->OUT || \*STDOUT;
     my $res; 
@@ -49,6 +47,9 @@ sub run {
 
             use File::Temp qw(tempfile);
             my ($fh, $filename) = tempfile( ".gh_commit_XXXX" , SUFFIX => '.msg');
+
+            $term->addhistory( join "\n" , @lines );
+
             print $fh join "\n",  @lines;
             system( "git commit -a -F " . $filename ) == 0 or 
                 die "Commit message saved to $filename.\n";
@@ -60,10 +61,6 @@ sub run {
             print "Skipped\n";
             last;
         }
-# #         my $res = eval($_);
-# #         warn $@ if $@;
-# #         print $OUT $res, "\n" unless $@;
-#         # $term->addhistory($_) if /\S/;
     }
 
 }

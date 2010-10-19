@@ -15,7 +15,7 @@ inc/Module/Install/WriteAll.pm
 lib/App/gh.pm
 lib/App/gh/Command.pm
 lib/App/gh/Command/Clone.pm
-lib/App/gh/Command/Cloneall.pm
+lib/App/gh/Command/All.pm
 lib/App/gh/Command/Fork.pm
 lib/App/gh/Command/Network.pm
 lib/App/gh/Command/Pull.pm
@@ -24,10 +24,12 @@ lib/App/gh/Command/Search.pm
 lib/App/gh/Command/Upload.pm
 lib/App/gh/Command/Recent.pm
 lib/App/gh/Command/Drop.pm
+lib/App/gh/Command/Commit.pm
 lib/App/gh/Command/Update.pm
 lib/App/gh/Command/Push.pm
 lib/App/gh/Utils.pm
 completion/gh.sh
+completion/gh.zsh
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP

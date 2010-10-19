@@ -19,6 +19,7 @@ requires 'URI';
 requires 'JSON';
 requires 'JSON::XS';
 requires 'HTML::Strip';
+requires 'Term::ReadLine';
 # requires 'IO::Pager';
 
 install_script 'scripts/gh';
