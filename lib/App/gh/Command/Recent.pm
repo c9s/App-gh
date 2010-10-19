@@ -6,7 +6,6 @@ use App::gh::Utils;
 use JSON;
 use URI;
 use Text::Wrap;
-use IO::Pager;
 
 =head1 NAME
 
