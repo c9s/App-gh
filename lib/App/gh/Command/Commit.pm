@@ -28,11 +28,17 @@ strokes)
 
 =cut
 
+
+sub options {
+    (
+        'e|editor' => 'with_editor',
+    )
+}
+
 sub run {
     my ($self) = @_;
 
     die "Nothing to commit" unless qx(git diff);
-
 
     print "=========== Current Change Status ===========\n";
     system( qq(git status) );
@@ -42,7 +48,6 @@ sub run {
     print "diff(d). status(s). status with untracked files (ss).\n";
     print "commit(c). quit(q).\n";
 
-    # print qx(git diff --color=auto);
     my $term = Term::ReadLine->new('Simple');
     my $prompt = "Diff(d), Status(s/ss), Commit(c), Quit(q): ";
 
@@ -51,18 +56,19 @@ sub run {
     while ( defined ($res = $term->readline($prompt)) ) {
         chomp($res);
 
+        $res =~ s{^\s*(\S*)\s*$}{$1};
+
         if ( $res =~ /^d/ ) {
-            system( qq(git diff --color=always) );
+            system( qq(git diff --color=auto) );
         }
-        elsif( $res =~ /^\s*ss\s*$/ ) {
+        elsif( $res =~ /^ss$/ ) {
             system( qq(git status -unormal) );
         }
-        elsif( $res =~ /^\s*s\s*$/ ) {
+        elsif( $res =~ /^s$/ ) {
             system( qq(git status -uno) );
         }
-        elsif( $res =~ /^c/ ) {
+        elsif( $res =~ /^c$/ ) {
             # read commit messages
-
             print "Please enter commit messages below (empty line to finish):\n";
             my @lines = qw();
             my $line;
