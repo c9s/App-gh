@@ -1,5 +1,9 @@
 Revision history for App-gh
 
+0.255
+    
+    Add Commit command to provide a shipit-like step.
+
 0.254 
     
     Add simple bash completion support.

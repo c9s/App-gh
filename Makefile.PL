@@ -10,6 +10,7 @@ build_requires 'Test::More';
 requires 'File::Temp';
 requires 'App::CLI';
 requires 'File::Path';
+requires 'File::Temp';
 requires 'File::Spec';
 requires 'LWP::Simple';
 requires 'URI';

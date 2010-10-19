@@ -8,6 +8,26 @@
 
 ## COMMANDS
 
+
+### commit
+
+commit process:
+
+    % gh commit 
+    # On branch master
+    # Your branch is ahead of 'origin/master' by 3 commits.
+    #
+    # Changed but not updated:
+    #   (use "git add <file>..." to update what will be committed)
+    #   (use "git checkout -- <file>..." to discard changes in working directory)
+    #
+    #	modified:   Changes
+    #	modified:   Makefile.PL
+    #	modified:   README.mkd
+    #
+    no changes added to commit (use "git add" and/or "git commit -a")
+    Show Diff(d), Status(s), Commit(c), Quit(q) :___
+
 ### recent
 
 get github recent activities.
