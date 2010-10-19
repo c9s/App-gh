@@ -72,13 +72,15 @@ sub run {
             print "Please enter commit messages below (empty line to finish):\n";
             my @lines = qw();
             my $line;
+            my $cnt = 0;
             while( defined ($line = $term->readline(">> ")) ) {
-                last unless $line;
                 chomp $line;
+                $cnt++ unless $line;
+                last if $cnt > 2;
                 push @lines , $line;
             }
 
-            last unless @lines;
+            last unless grep { $_ } @lines;
 
             use File::Temp qw(tempfile);
             my ($fh, $filename) = tempfile( ".gh_commit_XXXX" , SUFFIX => '.msg');
