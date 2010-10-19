@@ -76,20 +76,24 @@ sub run {
             while( defined ($line = $term->readline(">> ")) ) {
                 chomp $line;
                 $cnt++ unless $line;
-                last if $cnt > 2;
+                last if $cnt > 1;
                 push @lines , $line;
             }
 
-            last unless grep { $_ } @lines;
+            last unless grep { $_ } @lines;  # skip commit if those lines are empty.
 
+            # create a tempfile and put messages into the temp file.
             use File::Temp qw(tempfile);
             my ($fh, $filename) = tempfile( ".gh_commit_XXXX" , SUFFIX => '.msg');
 
+            # put messages into history.
             $term->addhistory( join "\n" , @lines );
 
             print $fh join "\n",  @lines;
+
             system( "git commit -a -F " . $filename ) == 0 or 
-                die "Commit message saved to $filename.\n";
+                die "Commit failed. \nCommit message is saved to $filename.\n"
+                   ."You can use 'git commit -F $filename' to commit again";
 
             unlink( $filename );
             last;
