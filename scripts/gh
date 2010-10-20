@@ -13,26 +13,10 @@ $|=1;
 binmode STDOUT, ':utf8';
 
 my $act = shift;
+
 $SIG{INT} = sub {
     exit;
 };
 
-if( $act && $act eq 'list' ) 
-{
-    my $acc = shift;
-    my $json = get 'http://github.com/api/v2/json/repos/show/' . $acc;
-    my $data = decode_json( $json );
-    my @lines = ();
-    for my $repo ( @{ $data->{repositories} } ) {
-        my $repo_name = $repo->{name};
-        push @lines , [  
-            $acc . "/" . $repo->{name} ,
-            ($repo->{description}||"")
-        ];
-    }
-    print_list @lines;
-}
-else {
-    App::gh::Command->invoke( ($act || 'help') , @ARGV );
-    exit;
-}
+App::gh::Command->invoke( ($act || 'help') , @ARGV );
+exit;
