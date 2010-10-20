@@ -26,7 +26,7 @@ function _gh()
             return 0
         elif [[ $subcmd == "clone" ]] ; then
             local userid=$cur
-            userid=${userid/\/\w+$/}
+            userid=$( echo $userid | sed -e 's/\/[0-9a-zA-Z.]*$//')
             repo_list=$( gh list $userid --name )
             COMPREPLY=( $( compgen -W "$repo_list" -- $cur ) )
             return 0
