@@ -25,12 +25,11 @@ function _gh()
             COMPREPLY=( $( compgen -A file -- $cur ) )
             return 0
         elif [[ $subcmd == "clone" ]] ; then
-            local userid
-            if [[ $cur =~ '/$' ]] ; then
-                userid=${cur/\/$//}
-            fi
-            repo_list=$(gh list $userid | cut -d'-' -f1 | cut -d/ f1 )
-            COMPREPLY=( $(  ) )
+            local userid=$cur
+            userid=${userid/\/\w+$/}
+            repo_list=$( gh list $userid --name )
+            COMPREPLY=( $( compgen -W "$repo_list" -- $cur ) )
+            return 0
         fi
     fi
     if [[ $COMP_WORDS > 1 && $cur =~ ^-- ]] ; then

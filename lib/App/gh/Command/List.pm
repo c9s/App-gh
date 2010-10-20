@@ -25,7 +25,7 @@ sub run {
         my $repo_name = $repo->{name};
 
         if( $self->{name} ) {
-            print $repo->{name} , "\n";
+            print $acc . "/" . $repo->{name} , "\n";
         }
         else {
             push @lines , [  
