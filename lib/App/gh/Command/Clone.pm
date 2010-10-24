@@ -68,7 +68,7 @@ sub run {
             my $acc = $net->{owner};
             my $url = $net->{url};
 
-            print qq{Adding remote $acc\n};
+            print qq{Adding remote $acc => $url.git\n};
             qx(git remote add $acc $url.git);
 
             print qq{Fetching remote $acc\n};
