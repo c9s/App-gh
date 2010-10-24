@@ -33,7 +33,7 @@ sub options { (
     "http" => "protocal_http",  # http://github.com/c9s/repo.git
     "https" => "https",         # https://github.com/c9s/repo.git
     "git|ro"   => "git",        # git://github.com/c9s/repo.git
-    "k|forks"  => 'with_fork',
+    "k|forks|fork"  => 'with_fork',
 ) }
 
 sub run {
