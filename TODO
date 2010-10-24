@@ -1,0 +1,6 @@
+
+* Fetch command
+
+    # fetch gugod's fork
+    gh fetch gugod
+
