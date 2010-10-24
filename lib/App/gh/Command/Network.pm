@@ -19,35 +19,24 @@ sub options { (
 
 sub require_local_gitconfig { 1 }
 
+use App::gh;
+
 sub run {
     my $self = shift;
-
-    my $config = parse_config( ".git/config" );
-    for my $remote ( values %{ $config->{remote} } ) {
-        # git://github.com/miyagawa/Tatsumaki.git
-        if ( $remote->{url} =~ m{git://github.com/(.*?)/(.*?).git} 
-            || $remote->{url} =~ m{git\@github.com:(.*?)/(.*?).git} ) 
-        {
-            my ($acc,$repo) = ($1,$2);
-
-            # XXX: refactor this ... XD
-            my $objs = api_request(qq(repos/show/$acc/$repo/network));
-            my $networks = $objs->{network};
-            for my $net ( @$networks ) {
-                if( $self->{id_only} ) {
-                    print $net->{owner} . "\n";
-                }
-                else {
-                    printf( "% 17s - watchers(%d) forks(%d)\n"
-                    , $net->{owner} . '/' . $net->{name}
-                    , $net->{watchers}
-                    , $net->{forks}
-                    );
-                }
-            }
-            last;
+    my $networks = App::gh->get_networks;
+    for my $net ( @$networks ) {
+        if( $self->{id_only} ) {
+            print $net->{owner} . "\n";
+        }
+        else {
+            printf( "% 17s - watchers(%d) forks(%d)\n"
+            , $net->{owner} . '/' . $net->{name}
+            , $net->{watchers}
+            , $net->{forks}
+            );
         }
     }
+
 }
 
 1;

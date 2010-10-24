@@ -4,6 +4,28 @@ use strict;
 
 our $VERSION = '0.254';
 
+
+
+# XXX: move to othere place
+use App::gh::Utils;
+sub get_networks {
+    my $class = shift;
+    my $config = parse_config( ".git/config" );
+
+    my ( $name , $url ) = split( /\s+/ , qx( git remote -v | grep origin | grep push ) );
+
+    # git://github.com/miyagawa/Tatsumaki.git
+    if ( $url && ( $url =~ m{git://github.com/(.*?)/(.*?).git} 
+            || $url =~ m{git\@github.com:(.*?)/(.*?).git} ) ) {
+
+        my ($acc,$repo) = ($1,$2);
+        my $objs = api_request(qq(repos/show/$acc/$repo/network));
+        return $objs->{network};
+    }
+}
+
+
+
 __END__
 
 =head1 NAME

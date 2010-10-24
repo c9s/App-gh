@@ -126,9 +126,19 @@ sub api_request {
     $ua->timeout(10);
     $ua->env_proxy;
     my $url = URI->new('http://github.com/api/v2/json/' . $rest);
-    my $response = $ua->get( $url );
+
+    my $config = parse_config $ENV{HOME} . '/.gitconfig';
+
+    die 'config error' unless $config;
+    die 'config error' unless $config->{github};
+
+    my $response = $ua->post( $url, { 
+            login => $config->{github}->{user} ,
+            token => $config->{github}->{token} ,
+        } );
+
     if ( ! $response->is_success) {
-        die $response->status_line;
+        die $response->status_line . ': ' . $response->decoded_content;
     }
     my $json = $response->decoded_content;  # or whatever
     my $data;
@@ -137,6 +147,10 @@ sub api_request {
     };
     if( $@ ) {
         die "JSON Error:" . $!;
+    }
+
+    if( $data->{error} ) {
+        die $data->{error};
     }
 
     unless( $data ) {
