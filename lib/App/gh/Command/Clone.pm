@@ -4,8 +4,8 @@ use strict;
 use base qw(App::gh::Command);
 use App::gh::Utils;
 use LWP::Simple qw(get);
-use App::gh::Utils;
 use JSON;
+use App::gh;
 
 =head1 NAME
 
@@ -22,6 +22,8 @@ balh
     --http
     --https
     --git|ro
+    -k | --forks     also fetch forks.
+
 
 =cut
 
@@ -30,7 +32,8 @@ sub options { (
     "ssh" => "protocal_ssh",    # git@github.com:c9s/repo.git
     "http" => "protocal_http",  # http://github.com/c9s/repo.git
     "https" => "https",         # https://github.com/c9s/repo.git
-    "git|ro"   => "git"         # git://github.com/c9s/repo.git
+    "git|ro"   => "git",        # git://github.com/c9s/repo.git
+    "k|forks"  => 'with_fork',
 ) }
 
 sub run {
@@ -54,6 +57,24 @@ sub run {
     my $uri = $self->gen_uri( $user, $repo );
     print $uri . "\n";
     system( qq{git clone $uri} );
+
+    if( $self->{with_fork} ) {
+        my ( $dirname ) = ( $uri =~ m/([a-zA-Z0-9-]+)\.git$/ );
+        chdir $dirname;
+
+        # get networks
+        my $networks = App::gh->get_networks;
+        for my $net ( @$networks ) {
+            my $acc = $net->{owner};
+            my $url = $net->{url};
+
+            print qq{Adding remote $acc\n};
+            qx(git remote add $acc $url.git);
+
+            print qq{Fetching remote $acc\n};
+            qx(git fetch $acc);
+        }
+    }
 }
 
 1;
