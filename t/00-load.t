@@ -2,7 +2,7 @@
 use warnings;
 use strict;
 use lib 'lib';
-use Test::More tests => 10;
+use Test::More tests => 9;
 
 BEGIN {
     use_ok( 'App::gh' ) || print "Bail out!
