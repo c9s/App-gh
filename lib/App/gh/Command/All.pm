@@ -14,6 +14,22 @@ App::gh::Command::All - clone all repositories from one
 
 =head1 OPTIONS
 
+Genernal Options:
+
+    --prompt 
+
+    --into
+
+    --verbose
+
+Clone URL format:
+
+    --http
+
+    --https
+
+    --git
+
 =cut
 
 sub options { (
