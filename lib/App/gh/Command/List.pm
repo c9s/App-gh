@@ -8,6 +8,16 @@ use LWP::Simple qw(get);
 use JSON;
 
 
+=head1 NAME
+
+App::gh::Command::List - list repository from one.
+
+=head1 USAGE
+
+    $ gh list [user id]
+
+=cut
+
 sub options {
     ( 'n|name' => 'name' )
 }

@@ -10,6 +10,10 @@ use JSON;
 
 App::gh::Command::Search - search repositories
 
+=head1 USAGE
+
+    $ gh search perl6
+
 =cut
 
 sub run {

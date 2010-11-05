@@ -14,7 +14,7 @@ use Term::ReadLine;
 
 =head1 NAME
 
-App::gh::Command::Commit
+App::gh::Command::Commit - quick commit process (show status, diff, then commitCloneall)
 
 =head1 DESCRIPTION
 

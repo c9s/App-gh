@@ -10,6 +10,11 @@ use App::gh::Utils;
 
 App::gh::Command::Network - show network
 
+=head1 USAGE
+
+    $ cd App-gh
+    $ gh network
+
 =cut
 
 
