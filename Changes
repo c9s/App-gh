@@ -1,5 +1,9 @@
 Revision history for App-gh
 
+0.256
+
+    Update help messages
+
 0.255
     
     Add Commit command to provide a shipit-like step.
