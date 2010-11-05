@@ -118,12 +118,7 @@ sub run {
 
             qx{ git pull $flags --rebase --all };
 
-#             my @remotes = split /\n/,qx{git remote 2>&1 };
-#             for my $r ( @remotes ) {
-#                 print "  Updating [$r]  ";
-#                 qx{git pull --rebase $r master };
-#                 print "  - ok\n";
-#             }
+            # switch back
             chdir "../";
         }
         else {
