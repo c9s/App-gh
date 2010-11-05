@@ -18,6 +18,20 @@ If you need a mirror of repos from one, you will need this command.
 
 If repos exists, clone command will pull changes for these repos from remotes.
 
+=head1 USAGE
+
+    $ mkdir github
+    $ cd github
+
+To clone c9s' repos:
+
+    $ gh all c9s
+
+Once you have all repos cloned, to update them, you only need to run all
+command again:
+
+    $ gh all c9s
+
 =head1 OPTIONS
 
 Genernal Options:
