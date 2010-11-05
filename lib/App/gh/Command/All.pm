@@ -10,15 +10,21 @@ use JSON;
 
 =head1 NAME
 
-App::gh::Command::All - clone all repositories from one
+App::gh::Command::All - clone/update all repositories from one
+
+=head1 DESCRIPTION
+
+If you need a mirror of repos from one, you will need this command.
+
+If repos exists, clone command will pull changes for these repos from remotes.
 
 =head1 OPTIONS
 
 Genernal Options:
 
-    --prompt 
+    --prompt        - prompt when cloning every repository.
 
-    --into
+    --into          - a path for repositories.
 
     --verbose
 
