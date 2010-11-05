@@ -22,13 +22,20 @@ If repos exists, clone command will pull changes for these repos from remotes.
 
 Genernal Options:
 
-    --prompt        - prompt when cloning every repository.
+    --prompt        
+        prompt when cloning every repo.
 
-    --into          - a path for repositories.
+    --into          
+        a path for repos.
+
+    --skip-exists, -s
+        skip existed repos.
 
     --verbose
 
 Clone URL format:
+
+    --ssh
 
     --http
 
@@ -105,7 +112,12 @@ sub run {
 
             chdir $local_repo_name;
             print "Updating $local_repo_name from remotes ...\n";
-            qx{ git pull --rebase --all };
+
+            my $flags = qq();
+            $flags .= qq{ -q } unless $self->{verbose};
+
+            qx{ git pull $flags --rebase --all };
+
 #             my @remotes = split /\n/,qx{git remote 2>&1 };
 #             for my $r ( @remotes ) {
 #                 print "  Updating [$r]  ";
@@ -116,7 +128,11 @@ sub run {
         }
         else {
             print "Cloning " . $repo->{name} . " ...\n";
-            qx{ git clone -q $uri };
+
+            my $flags = qq();
+            $flags .= qq{ -q } unless $self->{verbose};
+
+            qx{ git clone $flags $uri };
         }
     }
 
