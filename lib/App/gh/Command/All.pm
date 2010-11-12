@@ -68,7 +68,8 @@ sub options { (
         "ssh" => "protocal_ssh",    # git@github.com:c9s/repo.git
         "http" => "protocal_http",  # http://github.com/c9s/repo.git
         "https" => "https",         # https://github.com/c9s/repo.git
-        "git|ro"   => "git"         # git://github.com/c9s/repo.git
+        "git|ro"   => "git",         # git://github.com/c9s/repo.git
+        "bare" => "bare",
     ) }
 
 
@@ -129,6 +130,7 @@ sub run {
 
             my $flags = qq();
             $flags .= qq{ -q } unless $self->{verbose};
+            $flags .= qq{ --bare } if $self->{bare};
 
             qx{ git pull $flags --rebase --all };
 
@@ -140,6 +142,7 @@ sub run {
 
             my $flags = qq();
             $flags .= qq{ -q } unless $self->{verbose};
+            $flags .= qq{ --bare } if $self->{bare};
 
             qx{ git clone $flags $uri };
         }
