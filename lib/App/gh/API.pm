@@ -45,7 +45,7 @@ sub request {
 }
 
 
-sub get_networks {
+sub network {
     my $class = shift;
     my $config = $class->config->current();
     my ( $name , $url ) = split( /\s+/ , qx( git remote -v | grep origin | grep push ) );
