@@ -19,9 +19,6 @@ sub _info {
     print STDERR @_,"\n";
 }
 
-
-
-
 sub prop_line {
     my ( $label, $value ) = @_;
     printf "%15s: %s\n", $label, $value;

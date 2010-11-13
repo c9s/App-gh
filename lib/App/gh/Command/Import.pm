@@ -18,8 +18,6 @@ sub run {
     my ($self) = @_;
     my $remote = $self->{remote} || 'origin';
     my $config = App::gh->config->current();
-    # use Data::Dumper; warn Dumper( $config );
-
     my $basename = basename( getcwd() );
     my $reponame = $self->{name} || $basename;
     my %args = ( 

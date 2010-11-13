@@ -28,6 +28,7 @@ lib/App/gh/Command/Drop.pm
 lib/App/gh/Command/Commit.pm
 lib/App/gh/Command/Update.pm
 lib/App/gh/Command/Push.pm
+lib/App/gh/Command/Import.pm
 lib/App/gh/Utils.pm
 completion/gh.sh
 completion/gh.zsh
