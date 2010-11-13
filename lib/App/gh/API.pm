@@ -61,12 +61,38 @@ sub fork {
     return $class->request( sprintf("repos/fork/%s/%s?login=%s&token=%s", $user , $repo , $gh_id , $gh_token ));
 }
 
-sub network {
+sub repo_network {
     my ( $class, $user, $repo ) = @_;
     my $ret = $class->request(qq(repos/show/$user/$repo/network));
     return $ret->{network};
 }
 
+sub repo_info {
+    my ( $class, $user, $repo ) = @_;
+    my $ret = $class->request(qq{repos/show/$user/$repo});
+    return $ret->{repository};
+}
+
+=pod
+
+       {
+            'owner' => 'c9s',
+            'has_downloads' => bless( do{\(my $o = 1)}, 'JSON::XS::Boolean' ),
+            'has_issues' => $VAR1->{'repository'}{'has_downloads'},
+            'name' => 'App-gh',
+            'private' => bless( do{\(my $o = 0)}, 'JSON::XS::Boolean' ),
+            'has_wiki' => $VAR1->{'repository'}{'has_downloads'},
+            'pushed_at' => '2010/11/13 09:15:44 -0800',
+            'description' => 'Powerful GitHub Helper Utility in Perl.',
+            'forks' => 6,
+            'watchers' => 23,
+            'fork' => $VAR1->{'repository'}{'private'},
+            'created_at' => '2010/07/20 22:58:00 -0700',
+            'url' => 'https://github.com/c9s/App-gh',
+            'open_issues' => 4
+        }
+
+=cut
 
 sub user_info {
     my ($class,$user) = @_;
@@ -78,6 +104,7 @@ sub user_repos {
     my $ret = $class->user_info( $user );
     return $ret->{repositories};
 }
+
 
 
 

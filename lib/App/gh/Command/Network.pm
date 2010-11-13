@@ -36,7 +36,7 @@ sub get_networks {
             || $url =~ m{git\@github.com:(.*?)/(.*?).git} ) ) {
 
         my ( $acc, $repo ) = ( $1, $2 );
-        return App::gh->api->network( $acc , $repo );
+        return App::gh->api->repo_network( $acc , $repo );
     }
 }
 
