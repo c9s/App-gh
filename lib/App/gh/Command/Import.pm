@@ -11,10 +11,12 @@ sub options {
     'd|description' => 'description',
     'homepage' => 'homepage',
     'p|private' => 'private',
+    'r|remote' => 'remote',
 }
 
 sub run {
     my ($self) = @_;
+    my $remote = $self->{remote} || 'origin';
     my $config = App::gh->config->current();
     # use Data::Dumper; warn Dumper( $config );
 
@@ -33,11 +35,13 @@ sub run {
 
     my $gh_id = App::gh->config->github_id();
 
-    print "Adding remote [origin].\n";
-    qx( git remote add origin git\@github.com:$gh_id/$reponame.git);
+    print "Adding remote [$remote].\n";
+    qx( git remote add $remote git\@github.com:$gh_id/$reponame.git);
 
-    print "Pushing to remote [origin]\n";
-    qx( git push origin master );
+    print "Pushing to remote [$remote]\n";
+    qx( git push $remote master );
+
+    print "Done.\n";
 }
 
 1;
@@ -45,6 +49,23 @@ __END__
 =head1 NAME
 
 App::gh::Command::Import - create and import a repository.
+
+=head1 USAGE
+
+    --name, -n
+            repository name.
+
+    --description, -d
+            description.
+
+    --homepage
+            homepage URL.
+
+    --private
+            to be a private repository.
+
+    --remote, -r
+            new remote name.
 
 =head1 Github Import steps
 
