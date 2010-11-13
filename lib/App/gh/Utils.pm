@@ -19,6 +19,32 @@ sub _info {
     print STDERR @_,"\n";
 }
 
+
+
+
+sub prop_line {
+    my ( $label, $value ) = @_;
+    printf "%15s: %s\n", $label, $value;
+}
+
+sub print_repo_info {
+    my ( $class, $ret ) = @_;
+    prop_line "Name" , $ret->{name};
+    prop_line "Description" , $ret->{description};
+    prop_line "Owner" , $ret->{owner};
+    prop_line "URL"   , $ret->{url};
+
+    prop_line "Watchers"   , $ret->{watchers};
+    prop_line "Forks"      , $ret->{forks};
+    prop_line "Open Issues"     , $ret->{open_issues};
+    prop_line "Created at" , $ret->{created_at};
+    prop_line "Pushed at"  , $ret->{pushed_at};
+
+    print ' ' x 15 . "* Is private\n"    if $ret->{private};
+    print ' ' x 15 . "* Has downloads\n" if $ret->{has_downloads};
+    print ' ' x 15 . "* Has issues\n"    if $ret->{has_issues};
+}
+
 sub print_list {
     my @lines = @_;
 

@@ -8,6 +8,7 @@ license  'perl';
 build_requires 'Test::More';
 
 requires 'File::Temp';
+requires 'File::Basename';
 requires 'App::CLI';
 requires 'File::Path';
 requires 'File::Temp';
