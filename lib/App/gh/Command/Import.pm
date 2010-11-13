@@ -29,9 +29,7 @@ sub run {
 
     my $ret = App::gh->api->repo_create(  %args );
     print "Repository created: \n";
-    use Data::Dumper; warn Dumper( $ret );
     App::gh::Utils->print_repo_info( $ret );
-
 
     my $gh_id = App::gh->config->github_id();
 
