@@ -48,4 +48,9 @@ sub run {
 
 
 1;
+__END__
+=head1 NAME
 
+App::gh::Command::Import - create and import a repository.
+
+=cut
