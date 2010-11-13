@@ -66,12 +66,14 @@ sub repo_info {
 
 sub repo_create {
     my ($class,%args) = @_;
-    return $class->request( qq{repos/create} , %args );
+    my $ret = $class->request( qq{repos/create} , %args );
+    return $ret->{repository};
 }
 
 sub user_info {
     my ($class,$user) = @_;
-    return $class->request( qq{repos/show/$user} );
+    my $ret =  $class->request( qq{repos/show/$user} );
+    return $ret;
 }
 
 sub user_repos {
