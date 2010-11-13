@@ -69,9 +69,9 @@ sub run {
     }
 
 
-    my $auth = get_github_auth();
-
-    unless( $auth ) {
+	my $gh_id = App::gh->config->github_id;
+	my $gh_token = App::gh->config->github_token;
+    unless( $gh_id && $gh_token ) {
         die "Github authtoken not found. Can not fork repository.\n";
     }
 
@@ -92,16 +92,16 @@ sub run {
 
                     _info "Found GitHub repository of $user/$repo";
 
-                    my $_remotes = qx(git remote | grep @{[ $auth->{user} ]});
+                    my $_remotes = qx(git remote | grep @{[ $gh_id ]});
                     if( $_remotes ) {
-                        die "Remote @{[ $auth->{user} ]} exists.\n";
+                        die "Remote @{[ $gh_id ]} exists.\n";
                     }
 
-                    my $remote_uri = qq( git\@github.com:@{[ $auth->{user} ]}/$repo.git);
-                    _info "Adding remote '@{[ $auth->{user} ]}' => $remote_uri";
+                    my $remote_uri = qq( git\@github.com:@{[ $gh_id ]}/$repo.git);
+                    _info "Adding remote '@{[ $gh_id ]}' => $remote_uri";
 
                     # url = git@github.com:c9s/App-gh.git
-                    my $cmd = qq( git remote add @{[ $auth->{user} ]} $remote_uri);
+                    my $cmd = qq( git remote add @{[ $gh_id ]} $remote_uri);
                     _debug $cmd;
                     qx($cmd);
 
@@ -112,7 +112,7 @@ sub run {
     }
 
     _info "Forking...";
-    my $data = api_request( sprintf("repos/fork/%s/%s?login=%s&token=%s", $user , $repo , $auth->{user} , $auth->{token} ));
+    my $data = App::gh->api->request( sprintf("repos/fork/%s/%s?login=%s&token=%s", $user , $repo , $gh_id , $gh_token ));
 
     use Data::Dumper; 
     _debug Dumper( $data );

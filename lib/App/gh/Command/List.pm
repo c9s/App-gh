@@ -28,6 +28,8 @@ sub run {
 
     $acc =~ s{/$}{};
 
+	# TODO: use api class.
+
     my $json = get 'http://github.com/api/v2/json/repos/show/' . $acc;
     my $data = decode_json( $json );
     my @lines = ();

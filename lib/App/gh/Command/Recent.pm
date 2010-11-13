@@ -27,11 +27,8 @@ sub run {
     };
     die 'Please install XML::Atom::Feed and IO::Pager to enable this command.' if $@;
 
-
-
-    my $config = parse_config $ENV{HOME} . "/.gitconfig";
-    my $token = $config->{github}->{token};
-    my $user  = $config->{github}->{user};
+    my $user  = App::gh->config->github_id();
+    my $token = App::gh->config->github_token();
     my $feed_uri = "https://github.com/$user.private.atom?token=$token";
     my $feed = XML::Atom::Feed->new(URI->new( $feed_uri ));
 

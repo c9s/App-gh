@@ -8,57 +8,6 @@ use App::gh::Utils;
 use LWP::Simple qw(get);
 use JSON;
 
-=head1 NAME
-
-App::gh::Command::All - clone/update all repositories from one
-
-=head1 DESCRIPTION
-
-If you need a mirror of repos from one, you will need this command.
-
-If repos exists, clone command will pull changes for these repos from remotes.
-
-=head1 USAGE
-
-    $ mkdir github
-    $ cd github
-
-To clone c9s' repos:
-
-    $ gh all c9s
-
-Once you have all repos cloned, to update them, you only need to run all
-command again:
-
-    $ gh all c9s
-
-=head1 OPTIONS
-
-Genernal Options:
-
-    --prompt        
-        prompt when cloning every repo.
-
-    --into          
-        a path for repos.
-
-    --skip-exists, -s
-        skip existed repos.
-
-    --verbose
-
-Clone URL format:
-
-    --ssh
-
-    --http
-
-    --https
-
-    --git
-
-=cut
-
 sub options { (
         "verbose" => "verbose",
         "prompt" => "prompt",
@@ -83,7 +32,8 @@ sub run {
 
     _info "Getting repository list from github: $acc";
 
-    my $data = api_request(  "repos/show/$acc" );
+    my $data = App::gh->api->request(  "repos/show/$acc" );
+
     return if @{ $data->{repositories} } == 0;
 
     if( $self->{into} ) {
@@ -154,3 +104,54 @@ sub run {
 
 
 1;
+__END__
+=head1 NAME
+
+App::gh::Command::All - clone/update all repositories from one
+
+=head1 DESCRIPTION
+
+If you need a mirror of repos from one, you will need this command.
+
+If repos exists, clone command will pull changes for these repos from remotes.
+
+=head1 USAGE
+
+    $ mkdir github
+    $ cd github
+
+To clone c9s' repos:
+
+    $ gh all c9s
+
+Once you have all repos cloned, to update them, you only need to run all
+command again:
+
+    $ gh all c9s
+
+=head1 OPTIONS
+
+Genernal Options:
+
+    --prompt        
+        prompt when cloning every repo.
+
+    --into          
+        a path for repos.
+
+    --skip-exists, -s
+        skip existed repos.
+
+    --verbose
+
+Clone URL format:
+
+    --ssh
+
+    --http
+
+    --https
+
+    --git
+
+=cut

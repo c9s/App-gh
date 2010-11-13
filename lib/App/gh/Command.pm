@@ -41,7 +41,7 @@ sub parse_remote_param {
 
 sub get_current_repo {
     my $self = shift;
-    my $config = parse_config( ".git/config" );
+	my $config = App::gh->config->current();
     for my $remote ( values %{ $config->{remote} } ) {
         if( my ($my, $repo) = parse_remote_param( $remote->{url} ) )
         {

@@ -28,7 +28,7 @@ use App::gh;
 
 sub run {
     my $self = shift;
-    my $networks = App::gh->get_networks;
+    my $networks = App::gh->api->get_networks;
     for my $net ( @$networks ) {
         if( $self->{id_only} ) {
             print $net->{owner} . "\n";
