@@ -34,6 +34,7 @@ sub options { (
     "https" => "https",         # https://github.com/c9s/repo.git
     "git|ro"   => "git",        # git://github.com/c9s/repo.git
     "k|forks|fork"  => 'with_fork',
+    "bare" => "bare",
 ) }
 
 sub run {
@@ -55,8 +56,11 @@ sub run {
     }
 
     my $uri = $self->gen_uri( $user, $repo );
+    my $flags = q{};
+    $flags .= qq{ --bare } if $self->{bare};
+
     print $uri . "\n";
-    system( qq{git clone $uri} );
+    system( qq{git clone $flags $uri} );
 
     if( $self->{with_fork} ) {
         my ( $dirname ) = ( $uri =~ m/([a-zA-Z0-9-]+)\.git$/ );
