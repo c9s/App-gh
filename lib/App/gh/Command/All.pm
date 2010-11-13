@@ -74,6 +74,7 @@ sub run {
         my $local_repo_dir = $self->{bare} ? "$local_repo_name.git" : $local_repo_name;
         if( -e $local_repo_dir ) {
             print("Found $local_repo_dir, skipped.\n"),next if $self->{skip_exists};
+            print("$local_repo_dir: git-pull cannot be used for bare repository, skipped.\n"),next if $self->{bare};
 
             chdir $local_repo_dir;
             print "Updating $local_repo_dir from remotes ...\n";
