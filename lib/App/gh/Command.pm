@@ -1,8 +1,11 @@
 package App::gh::Command;
 use warnings;
 use strict;
+use App::gh;
+use App::gh::Config;
+use App::gh::API;
 use App::gh::Utils;
-    use base qw(App::CLI App::CLI::Command);
+use base qw(App::CLI App::CLI::Command);
 
 use constant global_options => ( 'help' => 'help' );
 
