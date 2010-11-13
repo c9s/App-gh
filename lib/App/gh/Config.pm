@@ -1,6 +1,8 @@
 package App::gh::Config;
 use warnings;
 use strict;
+use File::Path;
+use File::Spec;
 
 sub _parse_options {
     my $part = shift;
@@ -43,7 +45,7 @@ sub parse {
 
 sub current {
     my $class = shift;
-    my $path = File::Path->join(".git","config");
+    my $path = File::Spec->join(".git","config");
     return unless -e $path;
 
     # TODO: prevent error
@@ -67,7 +69,7 @@ sub github_id {
 
 sub global {
     my $class = shift;
-    my $path = File::Path->join($ENV{HOME} , ".git" , "config"); # TODO: support windows
+    my $path = File::Spec->join($ENV{HOME} , ".gitconfig"); # TODO: support windows
     return unless -e $path;
     return $class->parse( $path );
 }

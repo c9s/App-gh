@@ -112,7 +112,7 @@ sub run {
     }
 
     _info "Forking...";
-    my $data = App::gh->api->request( sprintf("repos/fork/%s/%s?login=%s&token=%s", $user , $repo , $gh_id , $gh_token ));
+    my $data = App::gh->api->fork($user , $repo);
 
     use Data::Dumper; 
     _debug Dumper( $data );

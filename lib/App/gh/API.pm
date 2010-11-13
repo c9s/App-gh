@@ -15,12 +15,13 @@ sub new_ua {
 }
 
 sub request {
-    my ( $class, $rest ) = @_;
+    my ( $class, $query , %args ) = @_;
     my $ua = $class->new_ua;
-    my $url = URI->new('http://github.com/api/v2/json/' . $rest);
+    my $url = URI->new('http://github.com/api/v2/json/' . $query );
     my $github_id     =  App::gh->config->github_id();
     my $github_token  =  App::gh->config->github_token();
-    my $response      =  $ua->post( $url, { login => $github_id, token => $github_token } );
+
+    my $response      =  $ua->post( $url, { login => $github_id, token => $github_token , %args } );
 
     if ( ! $response->is_success) {
         die $response->status_line . ': ' . $response->decoded_content;
@@ -45,20 +46,39 @@ sub request {
 }
 
 
-sub network {
-    my $class = shift;
-    my $config = $class->config->current();
-    my ( $name , $url ) = split( /\s+/ , qx( git remote -v | grep origin | grep push ) );
-
-    # git://github.com/miyagawa/Tatsumaki.git
-    if ( $url && ( $url =~ m{git://github.com/(.*?)/(.*?).git} 
-            || $url =~ m{git\@github.com:(.*?)/(.*?).git} ) ) {
-
-        my ($acc,$repo) = ($1,$2);
-        my $objs = api_request(qq(repos/show/$acc/$repo/network));
-        return $objs->{network};
-    }
+sub search {
+    my ($class,$query) = @_;
+    return $class->request(qq{repos/search/$query});
 }
+
+sub fork {
+    my ( $class, $user, $repo) = @_;
+	my $gh_id = App::gh->config->github_id;
+	my $gh_token = App::gh->config->github_token;
+    unless( $gh_id && $gh_token ) {
+        die "Github authtoken not found. Can not fork repository.\n";
+    }
+    return $class->request( sprintf("repos/fork/%s/%s?login=%s&token=%s", $user , $repo , $gh_id , $gh_token ));
+}
+
+sub network {
+    my ( $class, $user, $repo ) = @_;
+    my $ret = $class->request(qq(repos/show/$user/$repo/network));
+    return $ret->{network};
+}
+
+
+sub user_info {
+    my ($class,$user) = @_;
+    return $class->request( qq{repos/show/$user} );
+}
+
+sub user_repositories {
+    my ($class,$user) = @_;
+    my $ret = $class->user_info( $user );
+    return $ret->{repositories};
+}
+
 
 
 
@@ -67,5 +87,15 @@ __END__
 =head1 NAME
 
 App::gh::API - Github API class
+
+=head1 FUNCTIONS
+
+=head2 fork ([Str] user, [Str] repo)
+
+To fork [repo] from [user].
+
+=head2 network( [Str] user, [Str] repo)
+
+Show repository networks of [user]'s [repo].
 
 =cut

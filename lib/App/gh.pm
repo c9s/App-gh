@@ -2,6 +2,8 @@ package App::gh;
 use warnings;
 use strict;
 our $VERSION = '0.256';
+use App::gh::Config;
+use App::gh::API;
 
 sub config {
     return "App::gh::Config";
