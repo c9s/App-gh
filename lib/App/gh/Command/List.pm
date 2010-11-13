@@ -29,9 +29,9 @@ sub run {
     $acc =~ s{/$}{};
 
 	# TODO: use api class.
-	my $repos = App::gh->api->user_repositories( $acc );
+	my $repolist = App::gh->api->user_repos( $acc );
     my @lines = ();
-    for my $repo ( @{ $repos } ) {
+    for my $repo ( @$repolist ) {
         my $repo_name = $repo->{name};
 
         if( $self->{name} ) {

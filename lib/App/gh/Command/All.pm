@@ -32,9 +32,8 @@ sub run {
 
     _info "Getting repository list from github: $acc";
 
-    my $data = App::gh->api->request(  "repos/show/$acc" );
-
-    return if @{ $data->{repositories} } == 0;
+    my $repolist = App::gh->api->user_repos( $acc );
+    return if @{ $repolist } == 0;
 
     if( $self->{into} ) {
         print STDERR "Cloning all repositories into @{[ $self->{into} ]}\n";
@@ -43,7 +42,7 @@ sub run {
     }
 
     _info "Will clone repositories below:";
-    print " " x 8 . join " " , map { $_->{name} } @{ $data->{repositories} };
+    print " " x 8 . join " " , map { $_->{name} } @{ $repolist };
     print "\n";
 
     if( $self->{prompt} ) {
@@ -55,7 +54,7 @@ sub run {
     }
 
 
-    for my $repo ( @{ $data->{repositories} } ) {
+    for my $repo ( @{ $repolist } ) {
         my $repo_name = $repo->{name};
         my $local_repo_name = $repo_name;
         $local_repo_name =~ s/\.git$//;

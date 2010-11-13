@@ -73,7 +73,7 @@ sub user_info {
     return $class->request( qq{repos/show/$user} );
 }
 
-sub user_repositories {
+sub user_repos {
     my ($class,$user) = @_;
     my $ret = $class->user_info( $user );
     return $ret->{repositories};
