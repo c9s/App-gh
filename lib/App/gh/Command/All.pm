@@ -71,11 +71,13 @@ sub run {
         print $uri . "\n" if $self->{verbose};
 
 
-        if( -e $local_repo_name ) {
-            print("Found $local_repo_name, skipped.\n"),next if $self->{skip_exists};
+        my $local_repo_dir = $self->{bare} ? "$local_repo_name.git" : $local_repo_name;
+        if( -e $local_repo_dir ) {
+            print("Found $local_repo_dir, skipped.\n"),next if $self->{skip_exists};
+            print("$local_repo_dir: git-pull cannot be used for bare repository, skipped.\n"),next if $self->{bare};
 
-            chdir $local_repo_name;
-            print "Updating $local_repo_name from remotes ...\n";
+            chdir $local_repo_dir;
+            print "Updating $local_repo_dir from remotes ...\n";
 
             my $flags = qq();
             $flags .= qq{ -q } unless $self->{verbose};
