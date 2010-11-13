@@ -1,5 +1,11 @@
 Revision history for App-gh
 
+0.26
+
+    - Added info command. 
+    - Refactor api,config stuff.
+
+
 0.256
 
     Update help messages

@@ -42,3 +42,11 @@ t/00-load.t
 t/manifest.t
 t/pod.t
 TODO
+lib/App/gh/API.pm
+lib/App/gh/Command/Info.pm
+lib/App/gh/Config.pm
+lib/App/gh/Logger.pm
+lib/App/gh/API.pm
+lib/App/gh/Command/Info.pm
+lib/App/gh/Config.pm
+lib/App/gh/Logger.pm
