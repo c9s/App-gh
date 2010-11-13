@@ -3,7 +3,6 @@ use warnings;
 use strict;
 use LWP::UserAgent;
 use JSON::XS;
-# XXX: move to othere place
 use App::gh::Utils;
 
 sub new_ua {
@@ -31,24 +30,16 @@ sub request {
     eval {
         $data = decode_json( $json );
     };
-    if( $@ ) {
-        die "JSON Error:" . $!;
-    }
 
-    if( $data->{error} ) {
-        die $data->{error};
-    }
-
-    unless( $data ) {
-        die "Empty response";
-    }
+    die "JSON Error:" . $!  if $@ ;
+    die $data->{error} if $data->{error};
+    die "Empty response" unless( $data );
     return $data;
 }
 
-
 sub search {
-    my ($class,$query) = @_;
-    return $class->request(qq{repos/search/$query});
+    my ( $class, $query, %args ) = @_;
+    return $class->request( qq{repos/search/$query}, %args );
 }
 
 sub fork {
@@ -73,26 +64,6 @@ sub repo_info {
     return $ret->{repository};
 }
 
-=pod
-
-       {
-            'owner' => 'c9s',
-            'has_downloads' => bless( do{\(my $o = 1)}, 'JSON::XS::Boolean' ),
-            'has_issues' => $VAR1->{'repository'}{'has_downloads'},
-            'name' => 'App-gh',
-            'private' => bless( do{\(my $o = 0)}, 'JSON::XS::Boolean' ),
-            'has_wiki' => $VAR1->{'repository'}{'has_downloads'},
-            'pushed_at' => '2010/11/13 09:15:44 -0800',
-            'description' => 'Powerful GitHub Helper Utility in Perl.',
-            'forks' => 6,
-            'watchers' => 23,
-            'fork' => $VAR1->{'repository'}{'private'},
-            'created_at' => '2010/07/20 22:58:00 -0700',
-            'url' => 'https://github.com/c9s/App-gh',
-            'open_issues' => 4
-        }
-
-=cut
 
 sub user_info {
     my ($class,$user) = @_;
@@ -106,9 +77,6 @@ sub user_repos {
 }
 
 
-
-
-
 1;
 __END__
 =head1 NAME
@@ -117,12 +85,41 @@ App::gh::API - Github API class
 
 =head1 FUNCTIONS
 
+=head2 search( [Str] query )
+
+Search repositories
+
 =head2 fork ([Str] user, [Str] repo)
 
 To fork [repo] from [user].
 
-=head2 network( [Str] user, [Str] repo)
+=head2 repo_network( [Str] user, [Str] repo)
 
 Show repository networks of [user]'s [repo].
+
+=head2 user_info( [Str] user )
+
+Show user info
+
+=head2 repo_info( [Str] user, [Str] repo)
+
+Which returnes a hashref:
+
+    {
+        'owner' => 'c9s',
+        'has_downloads' => bless( do{\(my $o = 1)}, 'JSON::XS::Boolean' ),
+        'has_issues' => $VAR1->{'repository'}{'has_downloads'},
+        'name' => 'App-gh',
+        'private' => bless( do{\(my $o = 0)}, 'JSON::XS::Boolean' ),
+        'has_wiki' => $VAR1->{'repository'}{'has_downloads'},
+        'pushed_at' => '2010/11/13 09:15:44 -0800',
+        'description' => 'Powerful GitHub Helper Utility in Perl.',
+        'forks' => 6,
+        'watchers' => 23,
+        'fork' => $VAR1->{'repository'}{'private'},
+        'created_at' => '2010/07/20 22:58:00 -0700',
+        'url' => 'https://github.com/c9s/App-gh',
+        'open_issues' => 4
+    }
 
 =cut
