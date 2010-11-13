@@ -130,7 +130,6 @@ sub run {
 
             my $flags = qq();
             $flags .= qq{ -q } unless $self->{verbose};
-            $flags .= qq{ --bare } if $self->{bare};
 
             qx{ git pull $flags --rebase --all };
 
