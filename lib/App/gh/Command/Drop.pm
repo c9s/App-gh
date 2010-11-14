@@ -30,7 +30,7 @@ sub run {
 
     die unless $repo;
 
-    print "Deleting @{[ $auth->{user} ]}/@{[ $repo ]}\n";
+    print "Deleting @{[ $gh_id ]}/@{[ $repo ]}\n";
 
     # repos/delete/:user/:repo
     my $uri = sprintf( qq{repos/delete/%s/%s?login=%s&token=%s}, $gh_id , $repo, $gh_id , $gh_token );
