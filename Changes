@@ -1,5 +1,9 @@
 Revision history for App-gh
 
+0.271
+
+    - fix drop command.
+
 0.27
 
     - new Import command for importing repository to github.
