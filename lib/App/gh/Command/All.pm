@@ -12,6 +12,7 @@ sub options { (
         "verbose" => "verbose",
         "prompt" => "prompt",
         "into=s" => "into",
+        "exclude=s@" => "exclude",
         "s|skip-exists" => "skip_exists",
 
         "ssh" => "protocal_ssh",    # git@github.com:c9s/repo.git
@@ -53,6 +54,10 @@ sub run {
         return if( $ans =~ /n/ );
     }
 
+    my $exclude = do {
+        my $arr = ref $self->{exclude} eq 'ARRAY' ? $self->{exclude} : [];
+        +{map { $_ => 1 } @$arr};
+    };
 
     for my $repo ( @{ $repolist } ) {
         my $repo_name = $repo->{name};
@@ -66,6 +71,7 @@ sub run {
             $ans ||= 'Y';
             next if( $ans =~ /n/ );
         }
+        next if exists $exclude->{$local_repo_name};
 
         my $uri = $self->gen_uri( $acc, $repo_name );
         print $uri . "\n" if $self->{verbose};
