@@ -18,6 +18,7 @@ lib/App/gh/Command/Clone.pm
 lib/App/gh/Command/All.pm
 lib/App/gh/Command/Fork.pm
 lib/App/gh/Command/Network.pm
+lib/App/gh/Command/Setup.pm
 lib/App/gh/Command/Pull.pm
 lib/App/gh/Command/Help.pm
 lib/App/gh/Command/Search.pm
