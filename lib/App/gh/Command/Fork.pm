@@ -79,7 +79,7 @@ sub run {
     unless ( $repo ) {
         # detect .git directory
         if ( -e ".git/config" ) {
-            my $config = parse_config( ".git/config" );
+            my $config = App::gh->config->current();
             for my $remote ( values %{ $config->{remote} } ) {
                 # git://github.com/miyagawa/Tatsumaki.git
                 # http://github.com/miyagawa/Tatsumaki.git

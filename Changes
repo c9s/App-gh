@@ -1,5 +1,9 @@
 Revision history for App-gh
 
+0.272 
+
+    - Fix info command.
+
 0.271
 
     - fix drop command.

@@ -7,12 +7,13 @@ use File::Spec;
 sub _parse_options {
     my $part = shift;
     my $options;
-    while(  $part =~ /^\s*(.*?)\s*=\s*(.*?)\s*$/gm ) {
+    while(  $part =~ /^\s*(.+?)\s*=\s*(.*?)\s*$/gm ) {
         my ($name,$value) = ($1,$2);
         $options->{ $name } = $value;
     }
     return $options;
 }
+
 
 sub parse {
     my ( $class, $file ) = @_;
