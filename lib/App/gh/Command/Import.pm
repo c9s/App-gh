@@ -48,7 +48,7 @@ __END__
 
 App::gh::Command::Import - create and import a repository.
 
-=head1 USAGE
+=head1 OPTIONS
 
     --name, -n
             repository name.
@@ -64,6 +64,17 @@ App::gh::Command::Import - create and import a repository.
 
     --remote, -r
             new remote name.
+
+=head1 USAGE
+
+
+    $ cd Foo
+    $ git init 
+    # changes 
+    $ git add .
+    $ git commit -a -m "First commit"
+    $ gh import    # import to github
+
 
 =head1 Github Import steps
 
