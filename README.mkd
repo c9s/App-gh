@@ -187,6 +187,19 @@ To install this module, run the following commands:
 	make test
 	make install
 
+## COMPLETION
+
+### zsh
+
+    $ mkdir ~/.zsh/functions
+    $ cp completion/zsh/_gh  ~/.zsh/functions
+    
+add ~/.zsh/functions to your fpath
+
+    $ vim ~/.zshrc
+
+    fpath=(~/.zsh/functions/ $fpath)
+
 ## DEVELOPMENT
 
 please keep the dependency simple and less.
