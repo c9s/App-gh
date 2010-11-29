@@ -21,7 +21,11 @@ requires 'JSON';
 requires 'JSON::XS';
 requires 'HTML::Strip';
 requires 'Term::ReadLine';
-requires 'IO::Pager';
+
+# `gh recent` support
+recommends 'IO::Pager';
+recommends 'XML::Atom';
+recommends 'IO::Socket::SSL';
 
 install_script 'scripts/gh';
 
