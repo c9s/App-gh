@@ -30,7 +30,8 @@ sub run {
     my $user  = App::gh->config->github_id();
     my $token = App::gh->config->github_token();
     my $feed_uri = "https://github.com/$user.private.atom?token=$token";
-    my $feed = XML::Atom::Feed->new(URI->new( $feed_uri ));
+    my $feed = XML::Atom::Feed->new(URI->new( $feed_uri ))
+        or die XML::Atom::Feed->error;
 
     local  $STDOUT = new IO::Pager       *STDOUT;
 
