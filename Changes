@@ -1,5 +1,8 @@
 Revision history for App-gh
 
+0.29
+    - update makefile for gh recent.
+
 0.28 
 
     - Add setup command.
