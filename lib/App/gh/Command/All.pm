@@ -165,16 +165,17 @@ command again:
 
 Genernal Options:
 
-    --prompt        
+    --prompt
         prompt when cloning every repo.
 
-    --into          
-        a path for repos.
+    --into {path}
+        clone repos into a {path}.
 
     --skip-exists, -s
         skip existed repos.
 
     --verbose
+        verbose output.
 
 Clone URL format:
 
