@@ -80,15 +80,21 @@ sub run {
         my $local_repo_dir = $self->{bare} ? "$local_repo_name.git" : $local_repo_name;
         if( -e $local_repo_dir ) {
             print("Found $local_repo_dir, skipped.\n"),next if $self->{skip_exists};
-            print("$local_repo_dir: git-pull cannot be used for bare repository, skipped.\n"),next if $self->{bare};
 
             chdir $local_repo_dir;
             print "Updating $local_repo_dir from remotes ...\n";
 
-            my $flags = qq();
-            $flags .= qq{ -q } unless $self->{verbose};
+            if ( qx{ git config --get core.bare } =~ /\Atrue\n?\Z/ ) {
+                print "$local_repo_dir: git-pull cannot be used for bare repository, skipped\n";
+                chdir "../";
+                next;
+            }
+            else {
+                my $flags = qq();
+                $flags .= qq{ -q } unless $self->{verbose};
 
-            qx{ git pull $flags --rebase --all };
+                qx{ git pull $flags --rebase --all };
+            }
 
             # switch back
             chdir "../";
