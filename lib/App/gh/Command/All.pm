@@ -86,10 +86,16 @@ sub run {
             my $guard = guard { chdir ".." };    # switch back
             print "Updating $local_repo_dir from remotes ...\n";
 
-            if ( qx{ git config --get core.bare } =~ /\Atrue\n?\Z/ ) {
-                print "$local_repo_dir: git-pull cannot be used for bare repository, skipped\n";
-                chdir "../";
-                next;
+            if( qx{ git config --get core.bare } =~ /\Atrue\n?\Z/ ) {
+                # "Automatic synchronization of 2 git repositories | Pragmatic Source"
+                # http://www.pragmatic-source.com/en/opensource/tips/automatic-synchronization-2-git-repositories
+
+                unless (grep /^origin/, split /\n/, qx{ git remote }) {
+                    print "$local_repo_dir: Need remote 'origin' for updating '$local_repo_dir', skipped.";
+                    next;
+                }
+                qx{ git fetch origin };
+                qx{ git reset --soft refs/remotes/origin/master };
             }
             else {
                 my $flags = qq();
@@ -106,6 +112,12 @@ sub run {
             $flags .= qq{ --bare } if $self->{bare};
 
             qx{ git clone $flags $uri };
+
+            if ($self->{bare}) {
+                chdir $local_repo_dir;
+                my $guard = guard { chdir ".." };    # switch back
+                qx{ git remote add origin $uri };
+            }
         }
     }
 
