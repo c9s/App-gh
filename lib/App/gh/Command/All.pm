@@ -177,6 +177,12 @@ Genernal Options:
     --verbose
         verbose output.
 
+    --bare
+        clone repos as bare repos.
+
+    --force, -f
+        remove existed repos before cloning repos.
+
 Clone URL format:
 
     --ssh
