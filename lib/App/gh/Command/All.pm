@@ -91,12 +91,19 @@ sub run {
                 # "Automatic synchronization of 2 git repositories | Pragmatic Source"
                 # http://www.pragmatic-source.com/en/opensource/tips/automatic-synchronization-2-git-repositories
 
-                unless (grep /^origin/, split /\n/, qx{ git remote }) {
-                    print "$local_repo_dir: Need remote 'origin' for updating '$local_repo_dir', skipped.";
+                my ($branch) = map { s/\A\* (.+)/$1/; $_ } grep /\A\*/, split /\n/, qx{ git branch };
+                my $remote = qx{ git config --get branch.$branch.remote };
+                chomp $remote;
+                if ($remote =~ /\A\s*\Z/) {
+                    print STDERR "branch.$branch.remote is not set, skipped.";
                     next;
                 }
-                qx{ git fetch origin };
-                qx{ git reset --soft refs/remotes/origin/master };
+                unless (grep /^$remote/, split /\n/, qx{ git remote }) {
+                    print "$local_repo_dir: Need remote '$remote' for updating '$local_repo_dir', skipped.";
+                    next;
+                }
+                qx{ git fetch $remote };
+                qx{ git reset --soft refs/remotes/$remote/$branch };
             }
             else {
                 my $flags = qq();
@@ -124,7 +131,8 @@ sub run {
             if ($self->{bare}) {
                 chdir $local_repo_dir;
                 my $guard = guard { chdir ".." };    # switch back
-                qx{ git remote add origin $uri };
+                qx{ git remote add gh-bare $uri };
+                qx{ git config branch.master.remote gh-bare };    # initial branch must be master.
             }
         }
     }
