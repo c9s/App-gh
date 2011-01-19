@@ -3,7 +3,7 @@ use utf8;
 use warnings;
 use strict;
 use base qw(App::gh::Command);
-use File::Path qw(mkpath);
+use File::Path qw(mkpath rmtree);
 use App::gh::Utils;
 use LWP::Simple qw(get);
 use JSON;
@@ -21,6 +21,7 @@ sub options { (
         "https" => "https",         # https://github.com/c9s/repo.git
         "git|ro"   => "git",         # git://github.com/c9s/repo.git
         "bare" => "bare",
+        "f|force" => "force",
     ) }
 
 
@@ -79,7 +80,7 @@ sub run {
 
 
         my $local_repo_dir = $self->{bare} ? "$local_repo_name.git" : $local_repo_name;
-        if( -e $local_repo_dir ) {
+        if( -e $local_repo_dir && !$self->{force} ) {
             print("Found $local_repo_dir, skipped.\n"),next if $self->{skip_exists};
 
             chdir $local_repo_dir;
@@ -106,6 +107,13 @@ sub run {
         }
         else {
             print "Cloning " . $repo->{name} . " ...\n";
+
+            if ($self->{force}) {
+                rmtree $local_repo_dir or do {
+                    print STDERR "could not remove '$local_repo_dir', skipped.";
+                    next;
+                };
+            }
 
             my $flags = qq();
             $flags .= qq{ -q } unless $self->{verbose};
