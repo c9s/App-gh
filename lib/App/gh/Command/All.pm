@@ -7,6 +7,7 @@ use File::Path qw(mkpath);
 use App::gh::Utils;
 use LWP::Simple qw(get);
 use JSON;
+use Scope::Guard qw(guard);
 
 sub options { (
         "verbose" => "verbose",
@@ -82,6 +83,7 @@ sub run {
             print("Found $local_repo_dir, skipped.\n"),next if $self->{skip_exists};
 
             chdir $local_repo_dir;
+            my $guard = guard { chdir ".." };    # switch back
             print "Updating $local_repo_dir from remotes ...\n";
 
             if ( qx{ git config --get core.bare } =~ /\Atrue\n?\Z/ ) {
@@ -95,9 +97,6 @@ sub run {
 
                 qx{ git pull $flags --rebase --all };
             }
-
-            # switch back
-            chdir "../";
         }
         else {
             print "Cloning " . $repo->{name} . " ...\n";
