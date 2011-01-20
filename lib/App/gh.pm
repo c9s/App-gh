@@ -114,7 +114,13 @@ to fork current project:
 
 =head1 AUTHOR
 
-Cornelius, C<< <cornelius.howl at gmail.com> >>
+c9s , C<< <cornelius.howl at gmail.com> >>
+
+=head1 Contributors
+
+tyru
+
+gfx
 
 =head1 BUGS
 
