@@ -1,5 +1,9 @@
 Revision history for App-gh
 
+0.30
+    - support --bare option for 'all' command.
+    - fix the bug of 'clone' -k option.
+
 0.29
     - update makefile for gh recent.
 
