@@ -67,7 +67,7 @@ sub run {
         chdir $dirname;
 
         # get networks
-        my $networks = App::gh->api->repo_network;
+        my $networks = App::gh->api->repo_network( $user , $repo );
         for my $net ( @$networks ) {
             my $acc = $net->{owner};
             my $url = $net->{url};
