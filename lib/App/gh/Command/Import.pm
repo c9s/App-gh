@@ -8,11 +8,11 @@ use Git;
 use Carp;
 
 sub options {
-    'n|name'  => 'name',
-    'd|description' => 'description',
-    'homepage' => 'homepage',
+    'n|name=s'  => 'name',
+    'd|description=s' => 'description',
+    'homepage=s' => 'homepage',
     'p|private' => 'private',
-    'r|remote' => 'remote',
+    'r|remote=s' => 'remote',
 }
 
 sub run {
@@ -25,12 +25,12 @@ sub run {
     my $gh_id = App::gh->config->github_id();
 
     # Check if remote already exists
-    if ($local_repo->config_bool("remote.$remote.fetch")) {
+    if ($local_repo->config("remote.$remote.fetch")) {
         croak "Remote [$remote] already exists. Try specifying another one using --remote.";
     }
 
     # Check if repo already exists
-    my $existing_gh_repo = App::gh->api->repo_info( $gh_id, $reponame );
+    my $existing_gh_repo = eval { App::gh->api->repo_info( $gh_id, $reponame ) };
     if ($existing_gh_repo) {
         # Update existing repo
         my %args = (
@@ -41,7 +41,7 @@ sub run {
             # Don't change visibility of existing repo
             # public => $self->{private} ? 0 : 1 ,
         );
-        my $ret = App::gh->api->repo_set_info( $gh_id, $reponame , %args );
+        my $ret = App::gh->api->repo_set_info( $gh_id, $reponame, %args );
         print "Repository updated: \n";
         App::gh::Utils->print_repo_info( $ret );
     }
@@ -58,12 +58,12 @@ sub run {
         App::gh::Utils->print_repo_info( $ret );
     }
 
-    print "Adding remote [$remote].\n";
+    print "Adding GitHub repo $reponame as remote [$remote].\n";
     $local_repo->command("remote", "add", "$remote",
                          "git\@github.com:${gh_id}/${reponame}.git");
 
     # Only set up branch remote if it isn't already set up.
-    if ($local_repo->config_bool('branch.master.remote')) {
+    if (! $local_repo->config('branch.master.remote')) {
         print "Setting up remote [$remote] for master branch.\n";
         $local_repo->command('config', 'branch.master.remote', "$remote");
         $local_repo->command('config', 'branch.master.merge', 'refs/heads/master');
@@ -80,7 +80,7 @@ __END__
 
 =head1 NAME
 
-App::gh::Command::Import - create and import a repository.
+App::gh::Command::Import - create and import a repository, or add a remote for an existing one.
 
 =head1 OPTIONS
 

@@ -23,8 +23,7 @@ sub request {
     my $response      =  $ua->post( $url, { login => $github_id, token => $github_token , %args } );
 
     if ( ! $response->is_success ) {
-        warn $response->status_line . ': ' . $response->decoded_content;
-        return;
+        die $response->status_line . ': ' . $response->decoded_content;
     }
 
     my $json = $response->decoded_content;  # or whatever
@@ -94,10 +93,12 @@ sub repo_set_public {
 
 sub repo_set_info {
     my ( $class, $user, $repo, %args ) = @_;
-    if (exists $args{private}) {
-        $class->repo_set_visibility( $user, $repo, $args{private} );
-        delete $args{private};
+    if (exists $args{public}) {
+        $class->repo_set_public( $user, $repo, $args{public} );
+        delete $args{public};
     }
+    # Keys must be in the form 'values[key]'
+    %args = map { ("values[$_]" => $args{$_}) } (keys %args);
     my $ret = $class->request( qq{repos/show/$user/$repo} , %args );
     return $ret->{repository};
 }
@@ -155,5 +156,19 @@ Which returnes a hashref:
         'url' => 'https://github.com/c9s/App-gh',
         'open_issues' => 4
     }
+
+=head2 repo_set_info ( [Str] user, [Str] repo, [Hash] args )
+
+Set the info of a repo. Hash can contain the following args:
+
+    description =>
+    homepage =>
+    public => 1 for public , 0 for private.
+
+These are the same args as repo_create, except for name.
+
+=head2 repo_set_public ( [Str] user, [Str] repo, [Bool] public )
+
+Set a repo to be public or private.
 
 =cut
