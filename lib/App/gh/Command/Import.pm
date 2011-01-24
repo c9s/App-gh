@@ -79,7 +79,7 @@ sub run {
 __END__
 =head1 NAME
 
-App::gh::Command::Import - create and import a repository.
+App::gh::Command::Import - create and import a repository, or add a remote for an existing one.
 
 =head1 OPTIONS
 
