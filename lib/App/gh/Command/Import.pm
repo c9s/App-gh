@@ -5,6 +5,7 @@ use base qw(App::gh::Command);
 use File::Basename;
 use Cwd;
 use Git;
+use Carp;
 
 sub options {
     'n|name'  => 'name',
@@ -16,9 +17,10 @@ sub options {
 
 sub run {
     my ($self) = @_;
+    my $local_repo = Git->repository();
     my $remote = $self->{remote} || 'origin';
     my $config = App::gh->config->current();
-    my $basename = basename( Git->repository()->wc_path() );
+    my $basename = basename( $local_repo->wc_path() );
     my $reponame = $self->{name} || $basename;
     my %args = ( 
         name => $reponame,
@@ -32,6 +34,11 @@ sub run {
     App::gh::Utils->print_repo_info( $ret );
 
     my $gh_id = App::gh->config->github_id();
+    # Check if remote already exists
+    if ($local_repo->config_bool("remote.$remote.fetch")) {
+        croak "Remote [$remote] already exists. Try specifying another one using --remote.";
+    }
+
 
     print "Adding remote [$remote].\n";
     $local_repo->command("remote", "add", "$remote",
