@@ -4,7 +4,7 @@ use strict;
 use base qw(App::gh::Command);
 use File::Basename;
 use Cwd;
-
+use Git;
 
 sub options {
     'n|name'  => 'name',
@@ -18,7 +18,7 @@ sub run {
     my ($self) = @_;
     my $remote = $self->{remote} || 'origin';
     my $config = App::gh->config->current();
-    my $basename = basename( getcwd() );
+    my $basename = basename( Git->repository()->wc_path() );
     my $reponame = $self->{name} || $basename;
     my %args = ( 
         name => $reponame,
