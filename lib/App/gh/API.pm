@@ -98,6 +98,8 @@ sub repo_set_info {
         $class->repo_set_public( $user, $repo, $args{public} );
         delete $args{public};
     }
+    # Keys must be in the form 'values[key]'
+    %args = map { ("values[$_]" => $args{$_}) } (keys %args);
     my $ret = $class->request( qq{repos/show/$user/$repo} , %args );
     return $ret->{repository};
 }
