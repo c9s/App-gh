@@ -102,8 +102,8 @@ App::gh::Command::Import - create and import a repository.
 
 
     $ cd Foo
-    $ git init 
-    # changes 
+    $ git init
+    # changes
     $ git add .
     $ git commit -a -m "First commit"
     $ gh import    # import to github
@@ -119,7 +119,7 @@ App::gh::Command::Import - create and import a repository.
   git commit -m 'first commit'
   git remote add origin git@github.com:c9s/Test.git
   git push origin master
-      
+
 Existing Git Repo?
 
   cd existing_git_repo
