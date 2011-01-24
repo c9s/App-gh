@@ -63,7 +63,7 @@ sub run {
                          "git\@github.com:${gh_id}/${reponame}.git");
 
     # Only set up branch remote if it isn't already set up.
-    if ($local_repo->config('branch.master.remote')) {
+    if (! $local_repo->config('branch.master.remote')) {
         print "Setting up remote [$remote] for master branch.\n";
         $local_repo->command('config', 'branch.master.remote', "$remote");
         $local_repo->command('config', 'branch.master.merge', 'refs/heads/master');
