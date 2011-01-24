@@ -156,4 +156,18 @@ Which returnes a hashref:
         'open_issues' => 4
     }
 
+=head2 repo_set_info ( [Str] user, [Str] repo, [Hash] args )
+
+Set the info of a repo. Hash can contain the following args:
+
+    description =>
+    homepage =>
+    public => 1 for public , 0 for private.
+
+These are the same args as repo_create, except for name.
+
+=head2 repo_set_public ( [Str] user, [Str] repo, [Bool] public )
+
+Set a repo to be public or private.
+
 =cut
