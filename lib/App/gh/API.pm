@@ -86,6 +86,7 @@ sub user_repos {
 
 1;
 __END__
+
 =head1 NAME
 
 App::gh::API - Github API class
