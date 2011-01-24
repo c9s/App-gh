@@ -41,7 +41,7 @@ sub run {
             # Don't change visibility of existing repo
             # public => $self->{private} ? 0 : 1 ,
         );
-        my $ret = App::gh->api->repo_set_info( $gh_id, $repo, %args );
+        my $ret = App::gh->api->repo_set_info( $gh_id, $reponame , %args );
         print "Repository updated: \n";
         App::gh::Utils->print_repo_info( $ret );
     }
@@ -53,7 +53,7 @@ sub run {
             homepage => ($self->{homepage} || "" ),
             public => $self->{private} ? 0 : 1 ,
         );
-        $ret = App::gh->api->repo_create( %args );
+        my $ret = App::gh->api->repo_create( %args );
         print "Repository created: \n";
         App::gh::Utils->print_repo_info( $ret );
     }
