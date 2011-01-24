@@ -92,9 +92,9 @@ sub repo_set_public {
 
 sub repo_set_info {
     my ( $class, $user, $repo, %args ) = @_;
-    if (exists $args{private}) {
-        $class->repo_set_visibility( $user, $repo, $args{private} );
-        delete $args{private};
+    if (exists $args{public}) {
+        $class->repo_set_public( $user, $repo, $args{public} );
+        delete $args{public};
     }
     my $ret = $class->request( qq{repos/show/$user/$repo} , %args );
     return $ret->{repository};
