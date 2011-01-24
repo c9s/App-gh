@@ -114,7 +114,7 @@ args:
 
     name =>
     description =>
-    homepage => 
+    homepage =>
     public => 1 for public , 0 for private.
 
 =head2 repo_info( [Str] user, [Str] repo)
