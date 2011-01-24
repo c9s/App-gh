@@ -30,7 +30,7 @@ sub run {
     }
 
     # Check if repo already exists
-    my $existing_gh_repo = App::gh->api->repo_info( $gh_id, $reponame );
+    my $existing_gh_repo = eval { App::gh->api->repo_info( $gh_id, $reponame ) };
     if ($existing_gh_repo) {
         # Update existing repo
         my %args = (
