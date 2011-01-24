@@ -22,6 +22,7 @@ requires 'JSON::XS';
 requires 'HTML::Strip';
 requires 'Term::ReadLine';
 requires 'Scope::Guard';
+requires 'Git';
 
 # `gh recent` support
 recommends 'IO::Pager';
