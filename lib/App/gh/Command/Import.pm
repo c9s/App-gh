@@ -34,10 +34,11 @@ sub run {
     my $gh_id = App::gh->config->github_id();
 
     print "Adding remote [$remote].\n";
-    qx( git remote add $remote git\@github.com:$gh_id/$reponame.git);
+    $local_repo->command("remote", "add", "$remote",
+                         "git\@github.com:${gh_id}/${reponame}.git");
 
     print "Pushing to remote [$remote]\n";
-    qx( git push $remote master );
+    $local_repo->command("push", "$remote", "master");
 
     print "Done.\n";
 }
