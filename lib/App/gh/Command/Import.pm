@@ -22,23 +22,41 @@ sub run {
     my $config = App::gh->config->current();
     my $basename = basename( $local_repo->wc_path() );
     my $reponame = $self->{name} || $basename;
-    my %args = ( 
-        name => $reponame,
-        description => ($self->{description} || ""),
-        homepage => ($self->{homepage} || "" ),
-        public => $self->{private} ? 0 : 1 ,
-    );
-
-    my $ret = App::gh->api->repo_create(  %args );
-    print "Repository created: \n";
-    App::gh::Utils->print_repo_info( $ret );
-
     my $gh_id = App::gh->config->github_id();
+
     # Check if remote already exists
     if ($local_repo->config_bool("remote.$remote.fetch")) {
         croak "Remote [$remote] already exists. Try specifying another one using --remote.";
     }
 
+    # Check if repo already exists
+    my $existing_gh_repo = App::gh->api->repo_info( $gh_id, $reponame );
+    if ($existing_gh_repo) {
+        # Update existing repo
+        my %args = (
+            description => ($self->{description}
+                                || $existing_gh_repo->{description} || ""),
+            homepage => ($self->{homepage}
+                             || $existing_gh_repo->{homepage} || "" ),
+            # Don't change visibility of existing repo
+            # public => $self->{private} ? 0 : 1 ,
+        );
+        my $ret = App::gh->api->repo_set_info( $gh_id, $repo, %args );
+        print "Repository updated: \n";
+        App::gh::Utils->print_repo_info( $ret );
+    }
+    else {
+        # Create new repo
+        my %args = (
+            name => $reponame,
+            description => ($self->{description} || ""),
+            homepage => ($self->{homepage} || "" ),
+            public => $self->{private} ? 0 : 1 ,
+        );
+        $ret = App::gh->api->repo_create( %args );
+        print "Repository created: \n";
+        App::gh::Utils->print_repo_info( $ret );
+    }
 
     print "Adding remote [$remote].\n";
     $local_repo->command("remote", "add", "$remote",
