@@ -22,9 +22,11 @@ sub request {
 
     my $response      =  $ua->post( $url, { login => $github_id, token => $github_token , %args } );
 
-    if ( ! $response->is_success) {
-        die $response->status_line . ': ' . $response->decoded_content;
+    if ( ! $response->is_success ) {
+        warn $response->status_line . ': ' . $response->decoded_content;
+        return;
     }
+
     my $json = $response->decoded_content;  # or whatever
     my $data;
     eval {
@@ -61,19 +63,19 @@ sub repo_network {
 sub repo_info {
     my ( $class, $user, $repo ) = @_;
     my $ret = $class->request(qq{repos/show/$user/$repo});
-    return $ret->{repository};
+    return $ret->{repository} if $ret;
 }
 
 sub repo_create {
     my ($class,%args) = @_;
     my $ret = $class->request( qq{repos/create} , %args );
-    return $ret->{repository};
+    return $ret->{repository} if $ret;
 }
 
 sub user_info {
     my ($class,$user) = @_;
     my $ret =  $class->request( qq{repos/show/$user} );
-    return $ret;
+    return $ret if $ret;
 }
 
 sub user_repos {
