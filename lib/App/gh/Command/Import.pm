@@ -8,11 +8,11 @@ use Git;
 use Carp;
 
 sub options {
-    'n|name'  => 'name',
-    'd|description' => 'description',
-    'homepage' => 'homepage',
+    'n|name=s'  => 'name',
+    'd|description=s' => 'description',
+    'homepage=s' => 'homepage',
     'p|private' => 'private',
-    'r|remote' => 'remote',
+    'r|remote=s' => 'remote',
 }
 
 sub run {
