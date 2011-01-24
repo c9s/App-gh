@@ -82,7 +82,23 @@ sub user_repos {
     return $ret->{repositories};
 }
 
+# Added by RCT
+sub repo_set_public {
+    my ( $class, $user, $repo, $public ) = @_;
+    my $visibility = $public ? "public" : "private";
+    my $ret = $class->request( qq{repos/set/$visibility/$user/$repo} );
+    return $ret;
+}
 
+sub repo_set_info {
+    my ( $class, $user, $repo, %args ) = @_;
+    if (exists $args{private}) {
+        $class->repo_set_visibility( $user, $repo, $args{private} );
+        delete $args{private};
+    }
+    my $ret = $class->request( qq{repos/show/$user/$repo} , %args );
+    return $ret->{repository};
+}
 
 1;
 __END__
