@@ -25,7 +25,7 @@ sub run {
     my $gh_id = App::gh->config->github_id();
 
     # Check if remote already exists
-    if ($local_repo->config_bool("remote.$remote.fetch")) {
+    if ($local_repo->config("remote.$remote.fetch")) {
         croak "Remote [$remote] already exists. Try specifying another one using --remote.";
     }
 
@@ -41,7 +41,7 @@ sub run {
             # Don't change visibility of existing repo
             # public => $self->{private} ? 0 : 1 ,
         );
-        my $ret = App::gh->api->repo_set_info( $gh_id, $repo, %args );
+        my $ret = App::gh->api->repo_set_info( $gh_id, $reponame, %args );
         print "Repository updated: \n";
         App::gh::Utils->print_repo_info( $ret );
     }
@@ -53,7 +53,7 @@ sub run {
             homepage => ($self->{homepage} || "" ),
             public => $self->{private} ? 0 : 1 ,
         );
-        $ret = App::gh->api->repo_create( %args );
+        my $ret = App::gh->api->repo_create( %args );
         print "Repository created: \n";
         App::gh::Utils->print_repo_info( $ret );
     }
@@ -63,7 +63,7 @@ sub run {
                          "git\@github.com:${gh_id}/${reponame}.git");
 
     # Only set up branch remote if it isn't already set up.
-    if ($local_repo->config_bool('branch.master.remote')) {
+    if ($local_repo->config('branch.master.remote')) {
         print "Setting up remote [$remote] for master branch.\n";
         $local_repo->command('config', 'branch.master.remote', "$remote");
         $local_repo->command('config', 'branch.master.merge', 'refs/heads/master');
