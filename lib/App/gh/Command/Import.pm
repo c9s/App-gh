@@ -58,7 +58,7 @@ sub run {
         App::gh::Utils->print_repo_info( $ret );
     }
 
-    print "Adding remote [$remote].\n";
+    print "Adding GitHub repo $reponame as remote [$remote].\n";
     $local_repo->command("remote", "add", "$remote",
                          "git\@github.com:${gh_id}/${reponame}.git");
 
