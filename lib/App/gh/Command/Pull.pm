@@ -28,8 +28,8 @@ This will create a gugod-master branch:
 
 =head1 OPTIONS
 
-    --branch 
-    
+    --branch
+
     create tracked branch for fork.
 
     --merge

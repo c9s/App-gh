@@ -47,8 +47,8 @@ sub print_list {
 
     my $column_w = 0;
 
-    map { 
-        $column_w = length($_->[0]) if length($_->[0]) > $column_w ; 
+    map {
+        $column_w = length($_->[0]) if length($_->[0]) > $column_w ;
     } @lines;
 
     for my $arg ( @lines ) {

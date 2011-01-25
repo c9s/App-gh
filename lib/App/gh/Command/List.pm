@@ -38,7 +38,7 @@ sub run {
             print $acc . "/" . $repo->{name} , "\n";
         }
         else {
-            push @lines , [  
+            push @lines , [
                 $acc . "/" . $repo->{name} ,
                 ($repo->{description}||"")
             ];

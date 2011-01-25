@@ -52,7 +52,7 @@ sub run {
     my $prompt = "Diff(d), Status(s/ss), Commit(c), Quit(q): ";
 
     my $OUT = $term->OUT || \*STDOUT;
-    my $res; 
+    my $res;
     while ( defined ($res = $term->readline($prompt)) ) {
         chomp($res);
 
@@ -91,7 +91,7 @@ sub run {
 
             print $fh join "\n",  @lines;
 
-            system( "git commit -a -F " . $filename ) == 0 or 
+            system( "git commit -a -F " . $filename ) == 0 or
                 die "Commit failed. \nCommit message is saved to $filename.\n"
                    ."You can use 'git commit -F $filename' to commit again";
 

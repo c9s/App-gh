@@ -56,7 +56,7 @@ sub run {
 
     if (@_) {
         $user = shift;
-    
+
        #copied from Github::Fork::Parent
        if ($user && $user=~m#^(?:\Qgit://github.com/\E|git\@github\.com:\E|\Qhttp://github.com/\E)([^/]+)/([^/]+)(?:\.git)?$#) {
             ($user,$repo)=($1,$2);
@@ -83,8 +83,8 @@ sub run {
             for my $remote ( values %{ $config->{remote} } ) {
                 # git://github.com/miyagawa/Tatsumaki.git
                 # http://github.com/miyagawa/Tatsumaki.git
-                if ( $remote->{url} =~ m{(?:git|https?)://github.com/(.*?)/(.*?).git} 
-                    || $remote->{url} =~ m{git\@github.com:(.*?)/(.*?).git} ) 
+                if ( $remote->{url} =~ m{(?:git|https?)://github.com/(.*?)/(.*?).git}
+                    || $remote->{url} =~ m{git\@github.com:(.*?)/(.*?).git} )
                 {
                     die unless( $1 || $2 );
 
@@ -114,7 +114,7 @@ sub run {
     _info "Forking...";
     my $data = App::gh->api->fork($user , $repo);
 
-    use Data::Dumper; 
+    use Data::Dumper;
     _debug Dumper( $data );
 
     _info "Repository forked:";

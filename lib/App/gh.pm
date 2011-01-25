@@ -65,7 +65,7 @@ list all repository of c9s:
 
 clone Plack repository from miyagawa:
 
-    $ gh clone miyagawa/Plack   # default: read-only 
+    $ gh clone miyagawa/Plack   # default: read-only
 
 or:
 
@@ -77,11 +77,11 @@ or:
 
 clone from read-only uri:
 
-    $ gh clone miyagawa/Plack --ro 
+    $ gh clone miyagawa/Plack --ro
 
 clone from ssh uri:
 
-    $ gh clone miyagawa/Plack --ssh  
+    $ gh clone miyagawa/Plack --ssh
 
 search repository:
 
@@ -89,7 +89,7 @@ search repository:
 
 to clone all repository of miyagawa:
 
-    $ gh all miyagawa 
+    $ gh all miyagawa
     $ gh all clkao --ro  # read-only
     $ gh all clkao --into path/to/clkao
 
