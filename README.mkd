@@ -9,7 +9,7 @@
 ## COMMANDS
 
 
-### import 
+### import
 
 Import a repository to github:
 
@@ -26,7 +26,7 @@ Show repository info:
 
 commit process:
 
-    % gh commit 
+    % gh commit
     # On branch master
     # Your branch is ahead of 'origin/master' by 3 commits.
     #
@@ -45,7 +45,7 @@ commit process:
 
 get github recent activities.
 
-    $ gh recent 
+    $ gh recent
 
 ### list:
 
@@ -61,7 +61,7 @@ if you want text wrapped:
 
 clone Plack repository from miyagawa:
 
-    $ gh clone miyagawa/Plack   # default: read-only 
+    $ gh clone miyagawa/Plack   # default: read-only
 
 or:
 
@@ -75,11 +75,11 @@ or:
 
 clone from read-only uri:
 
-    $ gh clone miyagawa/Plack --ro 
+    $ gh clone miyagawa/Plack --ro
 
 clone from ssh uri:
 
-    $ gh clone miyagawa/Plack --ssh  
+    $ gh clone miyagawa/Plack --ssh
 
 ### search
 
@@ -91,15 +91,15 @@ search repository:
 
 to clone all repository of miyagawa:
 
-    $ gh all miyagawa 
+    $ gh all miyagawa
 
     $ gh all facebook --into facebook
 
     $ gh all perl6 --into perl6-stuff
 
-    $ gh all perl6 --into perl6-stuff --prompt 
+    $ gh all perl6 --into perl6-stuff --prompt
 
-    $ gh all perl6 --into perl6-stuff --verbose --prompt 
+    $ gh all perl6 --into perl6-stuff --verbose --prompt
 
     $ gh all clkao --ro  # read-only
 
@@ -140,7 +140,7 @@ First , switch path to your repository:
 Show up the network by running pull command with no arguments:
 
     $ gh pull
-    .... 
+    ....
 
 To pull from foo and add remote:
 
@@ -151,7 +151,7 @@ To pull from foo and merge changes:
 
     $ gh pull foo -m
 
-To merge foo/feature1 to local/master 
+To merge foo/feature1 to local/master
 
     $ gh pull foo feature1 -m
 
@@ -193,7 +193,7 @@ To install this module, run the following commands:
 
     $ mkdir ~/.zsh/functions
     $ cp completion/zsh/_gh  ~/.zsh/functions
-    
+
 add ~/.zsh/functions to your fpath
 
     $ vim ~/.zshrc

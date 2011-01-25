@@ -31,7 +31,7 @@ sub parse {
         if( $part =~ /^\[(\w+)\s+["'](\w+)["']\]/g ) {
             my ($o1 , $o2 ) = ($1, $2);
             $config{ $o1 } ||= {};
-            $config{ $o1 }->{ $o2 } 
+            $config{ $o1 }->{ $o2 }
                 = _parse_options( $part );
         }
         elsif( $part =~ /^\[(.*?)\]/g  ) {

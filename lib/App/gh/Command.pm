@@ -32,8 +32,8 @@ sub invoke {
 
 sub parse_remote_param {
     my $uri = shift;
-    if ( $uri =~ m{(?:git|https?)://github.com/(.*?)/(.*?).git} 
-        || $uri =~ m{git\@github.com:(.*?)/(.*?).git} ) 
+    if ( $uri =~ m{(?:git|https?)://github.com/(.*?)/(.*?).git}
+        || $uri =~ m{git\@github.com:(.*?)/(.*?).git} )
     {
         return ( $1 , $2 )
             if( $1 && $2 );
@@ -78,16 +78,16 @@ sub global_help {
 App::gh
 
 
-help                   
+help
     - show help message
 
-list [userid]          
+list [userid]
     - list all repository of an user:
 
 clone [userid] [repo] ([http|ro|ssh])
     - clone repository from an user
 
-search [keyword] 
+search [keyword]
     - search repository:
 
 all [userid]
@@ -98,8 +98,8 @@ fork [userid] [repo]
 
 fork
     - to fork current project:
-        
-network 
+
+network
     -  to show fork network:
 
 pull [userid] ([branch])

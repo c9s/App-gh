@@ -7,7 +7,7 @@ _gh() {
     # Remember the subcommand name
     # XXX:
     local cmd=${words[2]}
-#  
+#
 #      # Set the context for the subcommand.
 #      curcontext="${curcontext%:*:*}:p4-$cmd"
 #      # Narrow the range of words we are looking at to exclude `p4'

@@ -41,6 +41,7 @@ END
 
 1;
 __END__
+
 =head1 NAME
 
 App::gh::Command::Setup - setup command
