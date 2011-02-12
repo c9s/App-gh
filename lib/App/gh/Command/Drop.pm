@@ -25,7 +25,7 @@ sub run {
     $repo =~ s{::}{-}g;
 
     unless( $gh_id && $gh_token ) {
-        die "Github authtoken not found. Can not fork repository.\n";
+        die "Github authtoken not found. Can not delete repository.\n";
     }
 
     die unless $repo;
