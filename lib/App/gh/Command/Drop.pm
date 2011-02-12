@@ -18,6 +18,8 @@ App::gh::Command::Drop - drop a repository.
 
 sub run {
     my ($self,$repo) = @_;
+    return App::gh::Command->invoke('help', 'drop')
+        unless defined $repo;
 
 	my $gh_id = App::gh->config->github_id();
 	my $gh_token = App::gh->config->github_token();
@@ -27,8 +29,6 @@ sub run {
     unless( $gh_id && $gh_token ) {
         die "Github authtoken not found. Can not delete repository.\n";
     }
-
-    die unless $repo;
 
     print "Deleting @{[ $gh_id ]}/@{[ $repo ]}\n";
 
