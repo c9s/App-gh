@@ -21,6 +21,7 @@ sub options { (
         "https" => "https",         # https://github.com/c9s/repo.git
         "git|ro"   => "git",         # git://github.com/c9s/repo.git
         "bare" => "bare",
+        "p|prefix=s" => "prefix",
         "f|force" => "force",
     ) }
 
@@ -29,6 +30,7 @@ sub run {
     my $self = shift;
     my $acc  = shift;
 
+
     $self->{into} ||= $acc;
 
     die 'Need account id.' unless $acc;
@@ -36,7 +38,7 @@ sub run {
     _info "Getting repository list from github: $acc";
 
     my $repolist = App::gh->api->user_repos( $acc );
-    return if @{ $repolist } == 0;
+    return if @$repolist == 0;
 
     if( $self->{into} ) {
         print STDERR "Cloning all repositories into @{[ $self->{into} ]}\n";
@@ -47,6 +49,10 @@ sub run {
     _info "Will clone repositories below:";
     print " " x 8 . join " " , map { $_->{name} } @{ $repolist };
     print "\n";
+
+    _info "With options:";
+    _info " Prefix: " . $self->{prefix} if $self->{prefix};
+    _info " Bare: on" if $self->{bare};
 
     if( $self->{prompt} ) {
         print "Clone them [Y/n] ? ";
@@ -108,7 +114,6 @@ sub run {
             else {
                 my $flags = qq();
                 $flags .= qq{ -q } unless $self->{verbose};
-
                 qx{ git pull $flags --rebase --all };
             }
         }
@@ -126,7 +131,14 @@ sub run {
             $flags .= qq{ -q } unless $self->{verbose};
             $flags .= qq{ --bare } if $self->{bare};
 
-            qx{ git clone $flags $uri };
+            my $reponame =
+                    $self->{prefix} 
+                        ?  $self->{prefix} . "-" . $repo->{name} 
+                        :  $repo->{name}  ;
+
+            my $cmd = qq{ git clone $flags $uri $reponame};
+            print $cmd . "\n" if debug;
+            qx{ $cmd };
 
             if ($self->{bare}) {
                 chdir $local_repo_dir;
