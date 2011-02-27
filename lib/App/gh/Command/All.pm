@@ -137,7 +137,6 @@ sub run {
                         :  $repo->{name}  ;
 
             my $cmd = qq{ git clone $flags $uri $reponame};
-            print $cmd . "\n" if debug;
             qx{ $cmd };
 
             if ($self->{bare}) {
