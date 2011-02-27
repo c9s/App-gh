@@ -200,6 +200,9 @@ Genernal Options:
     --bare
         clone repos as bare repos.
 
+    --prefix {prefix}
+        Add prefix to repository name.
+
     --force, -f
         remove existed repos before cloning repos.
 
