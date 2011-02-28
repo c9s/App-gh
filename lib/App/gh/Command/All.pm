@@ -67,6 +67,14 @@ sub run {
         +{map { $_ => 1 } @$arr};
     };
 
+
+    my $cloned = 0;
+
+    my $print_progress = sub {  
+        return sprintf( "[%d/%d]", ++$cloned , scalar(@$repolist) );
+    };
+
+
     for my $repo ( @{ $repolist } ) {
         my $repo_name = $repo->{name};
         my $local_repo_name = $repo_name;
@@ -91,7 +99,7 @@ sub run {
 
             chdir $local_repo_dir;
             my $guard = guard { chdir ".." };    # switch back
-            print "Updating $local_repo_dir from remotes ...\n";
+            print "Updating $local_repo_dir from remotes ..." . $print_progress->() . "\n";
 
             if( qx{ git config --get core.bare } =~ /\Atrue\n?\Z/ ) {
                 # "Automatic synchronization of 2 git repositories | Pragmatic Source"
@@ -118,7 +126,7 @@ sub run {
             }
         }
         else {
-            print "Cloning " . $repo->{name} . " ...\n";
+            print "Cloning " . $repo->{name} . " ... " . $print_progress->() . "\n";
 
             if ($self->{force}) {
                 rmtree $local_repo_dir or do {
