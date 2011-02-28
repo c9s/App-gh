@@ -1,5 +1,8 @@
 Revision history for App-gh
 
+0.4
+    - Added --prefix option for "all" command.
+
 0.31-TRIAL
     - Testing RTHOMPSON's improvents to gh import
 
@@ -10,11 +13,11 @@ Revision history for App-gh
 0.29
     - update makefile for gh recent.
 
-0.28 
+0.28
 
     - Add setup command.
 
-0.272 
+0.272
 
     - Fix info command.
 
@@ -27,12 +30,12 @@ Revision history for App-gh
     - new Import command for importing repository to github.
 
 0.261
-    
+
     - api class doc update
 
 0.26
 
-    - Added info command. 
+    - Added info command.
     - Refactor api,config stuff.
 
 
@@ -41,41 +44,41 @@ Revision history for App-gh
     Update help messages
 
 0.255
-    
+
     Add Commit command to provide a shipit-like step.
 
-0.254 
-    
+0.254
+
     Add simple bash completion support.
 
 0.253
 
     Add --id option to network
 
-0.252 
+0.252
 
     Remove IO::Pager from dependency.
 
 0.251
-    
+
     Update document.
     Remove Exporter::Lite from dependency
 
-0.25 
+0.25
     Add --branch , --merge option to pull command.
 
     Update documentation.
 
 0.24
-    
+
     Pull command should:
-        add fork remote 
-        fetch fork remote 
+        add fork remote
+        fetch fork remote
         merge it fi --merge option is given.
 
     show networks if arg is not given.
 
-0.236 
+0.236
 
     XML::Feed is optional dependency.
 
@@ -117,6 +120,6 @@ Revision history for App-gh
         * update repository with `git pull --rebase --all`
 
 0.0167  Sat 16 Oct 2010 11:47:28 AM JST
-        * add upload command 
+        * add upload command
         * --cpan option for upload command to use CPAN::Uploader
 

@@ -23,8 +23,7 @@ sub request {
     my $response      =  $ua->post( $url, { login => $github_id, token => $github_token , %args } );
 
     if ( ! $response->is_success ) {
-        warn $response->status_line . ': ' . $response->decoded_content;
-        return;
+        die $response->status_line . ': ' . $response->decoded_content;
     }
 
     my $json = $response->decoded_content;  # or whatever
@@ -113,6 +112,7 @@ sub repo_set_info {
 
 1;
 __END__
+
 =head1 NAME
 
 App::gh::API - Github API class

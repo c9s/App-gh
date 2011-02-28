@@ -1,7 +1,7 @@
 package App::gh;
 use warnings;
 use strict;
-our $VERSION = '0.31-TRIAL';
+our $VERSION = '0.4';
 use App::gh::Config;
 use App::gh::API;
 
