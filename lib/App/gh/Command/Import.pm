@@ -41,7 +41,7 @@ sub run {
             # Don't change visibility of existing repo
             # public => $self->{private} ? 0 : 1 ,
         );
-        my $ret = App::gh->api->repo_set_info( $gh_id, $reponame , %args );
+        my $ret = App::gh->api->repo_set_info( $gh_id, $reponame, %args );
         print "Repository updated: \n";
         App::gh::Utils->print_repo_info( $ret );
     }
@@ -63,7 +63,7 @@ sub run {
                          "git\@github.com:${gh_id}/${reponame}.git");
 
     # Only set up branch remote if it isn't already set up.
-    if ($local_repo->config('branch.master.remote')) {
+    if (! $local_repo->config('branch.master.remote')) {
         print "Setting up remote [$remote] for master branch.\n";
         $local_repo->command('config', 'branch.master.remote', "$remote");
         $local_repo->command('config', 'branch.master.merge', 'refs/heads/master');
@@ -80,7 +80,7 @@ __END__
 
 =head1 NAME
 
-App::gh::Command::Import - create and import a repository.
+App::gh::Command::Import - create and import a repository, or add a remote for an existing one.
 
 =head1 OPTIONS
 
