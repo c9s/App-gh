@@ -1,5 +1,8 @@
 Revision history for App-gh
 
+0.41
+    - Bundle Git.pm package file into App::gh::Git
+
 0.4
     - Added --prefix option for "all" command.
 
