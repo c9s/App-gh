@@ -1,5 +1,9 @@
 Revision history for App-gh
 
+
+0.42
+    - Fix Git.pm test.
+
 0.41
     - Bundle Git.pm package file into App::gh::Git
 
