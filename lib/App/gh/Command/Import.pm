@@ -4,7 +4,7 @@ use strict;
 use base qw(App::gh::Command);
 use File::Basename;
 use Cwd;
-use Git;
+require App::gh::Git;
 use Carp;
 
 sub options {

@@ -4,6 +4,7 @@ use strict;
 our $VERSION = '0.4';
 use App::gh::Config;
 use App::gh::API;
+require App::gh::Git;
 
 sub config {
     return "App::gh::Config";
