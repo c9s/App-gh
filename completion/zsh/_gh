@@ -1,0 +1,28 @@
+#compdef gh
+
+_gh() {
+
+  if (( CURRENT > 2 )); then
+
+    # Remember the subcommand name
+    # XXX:
+    local cmd=${words[2]}
+#
+#      # Set the context for the subcommand.
+#      curcontext="${curcontext%:*:*}:p4-$cmd"
+#      # Narrow the range of words we are looking at to exclude `p4'
+#      (( CURRENT-- ))
+#      shift words
+#      # Run the completion for the subcommand
+#      _perforce_cmd_$cmd
+  else
+    local hline
+    local -a cmdlist
+    gh | while read -A hline; do
+        hline=$( echo $hline | sed -e 's/ - /:/' | sed -e 's/^\s*//' )
+        cmdlist=($cmdlist $hline)
+    done
+    _describe -t gh-commands 'gh command' cmdlist
+  fi
+}
+_gh

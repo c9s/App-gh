@@ -24,8 +24,6 @@ sub run {
         die "Not a repository";
     }
 
-
-
     _info "Running update --prune";
     qx{ git remote update --prune  };
 

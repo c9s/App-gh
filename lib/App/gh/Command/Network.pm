@@ -26,9 +26,23 @@ sub require_local_gitconfig { 1 }
 
 use App::gh;
 
+
+sub get_networks {
+    my $config = App::gh->config->current();
+    my ( $name, $url ) = split( /\s+/, qx( git remote -v | grep origin | grep push ) );
+
+    # git://github.com/miyagawa/Tatsumaki.git
+    if ( $url && ( $url =~ m{git://github.com/(.*?)/(.*?).git}
+            || $url =~ m{git\@github.com:(.*?)/(.*?).git} ) ) {
+
+        my ( $acc, $repo ) = ( $1, $2 );
+        return App::gh->api->repo_network( $acc , $repo );
+    }
+}
+
 sub run {
     my $self = shift;
-    my $networks = App::gh->get_networks;
+    my $networks = $self->get_networks;
     for my $net ( @$networks ) {
         if( $self->{id_only} ) {
             print $net->{owner} . "\n";
@@ -41,7 +55,6 @@ sub run {
             );
         }
     }
-
 }
 
 1;

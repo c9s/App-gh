@@ -2,7 +2,7 @@
 use warnings;
 use strict;
 use lib 'lib';
-use Test::More tests => 9;
+use Test::More tests => 15;
 
 BEGIN {
     use_ok( 'App::gh' ) || print "Bail out!
@@ -21,3 +21,9 @@ use_ok( 'App::gh::Command::All');
 use_ok( 'App::gh::Command::Clone');
 use_ok( 'App::gh::Command::Search');
 use_ok( 'App::gh::Utils');
+use_ok( 'App::gh::Command::Import');
+use_ok( 'App::gh::Command::Drop');
+use_ok( 'App::gh::Command::Pull');
+use_ok( 'App::gh::Command::Push');
+use_ok( 'App::gh::Command::Update');
+use_ok( 'App::gh::Command::Info');

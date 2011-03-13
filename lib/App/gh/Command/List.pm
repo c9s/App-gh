@@ -2,6 +2,7 @@ package App::gh::Command::List;
 use warnings;
 use strict;
 use base qw(App::gh::Command);
+use App::gh;
 
 use App::gh::Utils;
 use LWP::Simple qw(get);
@@ -22,23 +23,22 @@ sub options {
     ( 'n|name' => 'name' )
 }
 
-
 sub run {
     my ( $self, $acc ) = @_;
 
     $acc =~ s{/$}{};
 
-    my $json = get 'http://github.com/api/v2/json/repos/show/' . $acc;
-    my $data = decode_json( $json );
+	# TODO: use api class.
+	my $repolist = App::gh->api->user_repos( $acc );
     my @lines = ();
-    for my $repo ( @{ $data->{repositories} } ) {
+    for my $repo ( @$repolist ) {
         my $repo_name = $repo->{name};
 
         if( $self->{name} ) {
             print $acc . "/" . $repo->{name} , "\n";
         }
         else {
-            push @lines , [  
+            push @lines , [
                 $acc . "/" . $repo->{name} ,
                 ($repo->{description}||"")
             ];

@@ -8,8 +8,7 @@ use constant debug => $ENV{DEBUG};
 
 my $screen_width = 92;
 
-our @EXPORT = qw(_debug _info
-    parse_config parse_options get_github_auth print_list api_request);
+our @EXPORT = qw(_debug _info get_github_auth print_list);
 
 # XXX: move this to logger....... orz
 sub _debug {
@@ -20,47 +19,27 @@ sub _info {
     print STDERR @_,"\n";
 }
 
-
-sub parse_config {
-    my ($file) = @_;
-    open FH , "<" , $file;
-    local $/;
-    my $content = <FH>;
-    close FH;
-    my @parts = split /(?=\[.*?\])/,$content;
-
-
-    my %config;
-
-    for my $part ( @parts ) {
-        if( $part =~ /^\[(\w+)\s+["'](\w+)["']\]/g ) {
-            my ($o1 , $o2 ) = ($1, $2);
-            $config{ $o1 } ||= {};
-            $config{ $o1 }->{ $o2 } 
-                = parse_options( $part );
-        }
-        elsif( $part =~ /^\[(.*?)\]/g  ) {
-            my $key = $1;
-            my $options = parse_options( $part );
-            $config{ $key } = $options;
-        }
-    }
-    return \%config;
+sub prop_line {
+    my ( $label, $value ) = @_;
+    printf "%15s: %s\n", $label, $value;
 }
 
-sub parse_options {
-    my $part = shift;
-    my $options;
-    while(  $part =~ /^\s*(.*?)\s*=\s*(.*?)\s*$/gm ) {
-        my ($name,$value) = ($1,$2);
-        $options->{ $name } = $value;
-    }
-    return $options;
-}
+sub print_repo_info {
+    my ( $class, $ret ) = @_;
+    prop_line "Name" , $ret->{name};
+    prop_line "Description" , $ret->{description};
+    prop_line "Owner" , $ret->{owner};
+    prop_line "URL"   , $ret->{url};
 
-sub get_github_auth {
-    my $config = parse_config $ENV{HOME} . "/.gitconfig";
-    return $config->{github};
+    prop_line "Watchers"   , $ret->{watchers};
+    prop_line "Forks"      , $ret->{forks};
+    prop_line "Open Issues"     , $ret->{open_issues};
+    prop_line "Created at" , $ret->{created_at};
+    prop_line "Pushed at"  , $ret->{pushed_at} || "never";
+
+    print ' ' x 15 . "* Is private\n"    if $ret->{private};
+    print ' ' x 15 . "* Has downloads\n" if $ret->{has_downloads};
+    print ' ' x 15 . "* Has issues\n"    if $ret->{has_issues};
 }
 
 sub print_list {
@@ -68,8 +47,8 @@ sub print_list {
 
     my $column_w = 0;
 
-    map { 
-        $column_w = length($_->[0]) if length($_->[0]) > $column_w ; 
+    map {
+        $column_w = length($_->[0]) if length($_->[0]) > $column_w ;
     } @lines;
 
     for my $arg ( @lines ) {
@@ -116,48 +95,5 @@ sub print_list {
 
     }
 }
-
-require LWP::UserAgent;
-use JSON::XS;
-
-sub api_request {
-    my ($rest) = shift;
-    my $ua = LWP::UserAgent->new;
-    $ua->timeout(10);
-    $ua->env_proxy;
-    my $url = URI->new('http://github.com/api/v2/json/' . $rest);
-
-    my $config = parse_config $ENV{HOME} . '/.gitconfig';
-
-    die 'config error' unless $config;
-    die 'config error' unless $config->{github};
-
-    my $response = $ua->post( $url, { 
-            login => $config->{github}->{user} ,
-            token => $config->{github}->{token} ,
-        } );
-
-    if ( ! $response->is_success) {
-        die $response->status_line . ': ' . $response->decoded_content;
-    }
-    my $json = $response->decoded_content;  # or whatever
-    my $data;
-    eval {
-        $data = decode_json( $json );
-    };
-    if( $@ ) {
-        die "JSON Error:" . $!;
-    }
-
-    if( $data->{error} ) {
-        die $data->{error};
-    }
-
-    unless( $data ) {
-        die "Empty response";
-    }
-    return $data;
-}
-
 
 1;

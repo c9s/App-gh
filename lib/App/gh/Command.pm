@@ -1,8 +1,11 @@
 package App::gh::Command;
 use warnings;
 use strict;
+use App::gh;
+use App::gh::Config;
+use App::gh::API;
 use App::gh::Utils;
-    use base qw(App::CLI App::CLI::Command);
+use base qw(App::CLI App::CLI::Command);
 
 use constant global_options => ( 'help' => 'help' );
 
@@ -29,8 +32,8 @@ sub invoke {
 
 sub parse_remote_param {
     my $uri = shift;
-    if ( $uri =~ m{(?:git|https?)://github.com/(.*?)/(.*?).git} 
-        || $uri =~ m{git\@github.com:(.*?)/(.*?).git} ) 
+    if ( $uri =~ m{(?:git|https?)://github.com/(.*?)/(.*?).git}
+        || $uri =~ m{git\@github.com:(.*?)/(.*?).git} )
     {
         return ( $1 , $2 )
             if( $1 && $2 );
@@ -41,7 +44,7 @@ sub parse_remote_param {
 
 sub get_current_repo {
     my $self = shift;
-    my $config = parse_config( ".git/config" );
+	my $config = App::gh->config->current();
     for my $remote ( values %{ $config->{remote} } ) {
         if( my ($my, $repo) = parse_remote_param( $remote->{url} ) )
         {
@@ -75,16 +78,16 @@ sub global_help {
 App::gh
 
 
-help                   
+help
     - show help message
 
-list [userid]          
+list [userid]
     - list all repository of an user:
 
 clone [userid] [repo] ([http|ro|ssh])
     - clone repository from an user
 
-search [keyword] 
+search [keyword]
     - search repository:
 
 all [userid]
@@ -95,8 +98,8 @@ fork [userid] [repo]
 
 fork
     - to fork current project:
-        
-network 
+
+network
     -  to show fork network:
 
 pull [userid] ([branch])

@@ -18,7 +18,7 @@ App::gh::Command::Search - search repositories
 
 sub run {
     my ($self,$keyword) = @_;
-    my $result = api_request(qq(repos/search/$keyword));
+    my $result = App::gh->api->search($keyword);
     my @ary = ();
     for my $repo ( @{ $result->{repositories} } ) {
         my $name = sprintf "%s/%s", $repo->{username} , $repo->{name};

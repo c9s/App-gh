@@ -8,6 +8,7 @@ license  'perl';
 build_requires 'Test::More';
 
 requires 'File::Temp';
+requires 'File::Basename';
 requires 'App::CLI';
 requires 'File::Path';
 requires 'File::Temp';
@@ -20,7 +21,12 @@ requires 'JSON';
 requires 'JSON::XS';
 requires 'HTML::Strip';
 requires 'Term::ReadLine';
-requires 'IO::Pager';
+requires 'Scope::Guard';
+
+# `gh recent` support
+recommends 'IO::Pager';
+recommends 'XML::Atom';
+recommends 'IO::Socket::SSL';
 
 install_script 'scripts/gh';
 

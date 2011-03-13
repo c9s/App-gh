@@ -27,9 +27,10 @@ sub options { ( 'c|cpan' => 'cpanupload') }
 
 sub run {
     my ( $self, $file, $repo ) = @_;
+	my $gh_id = App::gh->config->github_id;
+	my $gh_token = App::gh->config->github_token;
 
-    my $auth = get_github_auth();
-    unless( $auth ) {
+    unless( $gh_id && $gh_token ) {
         die "Github authtoken not found.\n";
     }
 
@@ -39,11 +40,11 @@ sub run {
     }
 
     my $gh = Net::GitHub::Upload->new(
-        login => $auth->{user},
-        token => $auth->{token},
+        login => $gh_id,
+        token => $gh_token,
     );
 
-    $repo ||= $auth->{user} . '/' . $self->get_current_repo();
+    $repo ||= $gh_id . '/' . $self->get_current_repo();
     print "Uploading $file to Github: $repo\n";
     eval {
         $gh->upload(

@@ -1,30 +1,18 @@
 package App::gh;
 use warnings;
 use strict;
+our $VERSION = '0.41';
+use App::gh::Config;
+use App::gh::API;
+require App::gh::Git;
 
-our $VERSION = '0.256';
-
-
-
-# XXX: move to othere place
-use App::gh::Utils;
-sub get_networks {
-    my $class = shift;
-    my $config = parse_config( ".git/config" );
-
-    my ( $name , $url ) = split( /\s+/ , qx( git remote -v | grep origin | grep push ) );
-
-    # git://github.com/miyagawa/Tatsumaki.git
-    if ( $url && ( $url =~ m{git://github.com/(.*?)/(.*?).git} 
-            || $url =~ m{git\@github.com:(.*?)/(.*?).git} ) ) {
-
-        my ($acc,$repo) = ($1,$2);
-        my $objs = api_request(qq(repos/show/$acc/$repo/network));
-        return $objs->{network};
-    }
+sub config {
+    return "App::gh::Config";
 }
 
-
+sub api {
+    return "App::gh::API";
+}
 
 __END__
 
@@ -78,7 +66,7 @@ list all repository of c9s:
 
 clone Plack repository from miyagawa:
 
-    $ gh clone miyagawa/Plack   # default: read-only 
+    $ gh clone miyagawa/Plack   # default: read-only
 
 or:
 
@@ -90,11 +78,11 @@ or:
 
 clone from read-only uri:
 
-    $ gh clone miyagawa/Plack --ro 
+    $ gh clone miyagawa/Plack --ro
 
 clone from ssh uri:
 
-    $ gh clone miyagawa/Plack --ssh  
+    $ gh clone miyagawa/Plack --ssh
 
 search repository:
 
@@ -102,7 +90,7 @@ search repository:
 
 to clone all repository of miyagawa:
 
-    $ gh all miyagawa 
+    $ gh all miyagawa
     $ gh all clkao --ro  # read-only
     $ gh all clkao --into path/to/clkao
 
@@ -127,7 +115,13 @@ to fork current project:
 
 =head1 AUTHOR
 
-Cornelius, C<< <cornelius.howl at gmail.com> >>
+c9s , C<< <cornelius.howl at gmail.com> >>
+
+=head1 Contributors
+
+tyru
+
+gfx
 
 =head1 BUGS
 

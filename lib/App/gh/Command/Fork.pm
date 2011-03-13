@@ -56,7 +56,7 @@ sub run {
 
     if (@_) {
         $user = shift;
-    
+
        #copied from Github::Fork::Parent
        if ($user && $user=~m#^(?:\Qgit://github.com/\E|git\@github\.com:\E|\Qhttp://github.com/\E)([^/]+)/([^/]+)(?:\.git)?$#) {
             ($user,$repo)=($1,$2);
@@ -69,9 +69,9 @@ sub run {
     }
 
 
-    my $auth = get_github_auth();
-
-    unless( $auth ) {
+	my $gh_id = App::gh->config->github_id;
+	my $gh_token = App::gh->config->github_token;
+    unless( $gh_id && $gh_token ) {
         die "Github authtoken not found. Can not fork repository.\n";
     }
 
@@ -79,12 +79,12 @@ sub run {
     unless ( $repo ) {
         # detect .git directory
         if ( -e ".git/config" ) {
-            my $config = parse_config( ".git/config" );
+            my $config = App::gh->config->current();
             for my $remote ( values %{ $config->{remote} } ) {
                 # git://github.com/miyagawa/Tatsumaki.git
                 # http://github.com/miyagawa/Tatsumaki.git
-                if ( $remote->{url} =~ m{(?:git|https?)://github.com/(.*?)/(.*?).git} 
-                    || $remote->{url} =~ m{git\@github.com:(.*?)/(.*?).git} ) 
+                if ( $remote->{url} =~ m{(?:git|https?)://github.com/(.*?)/(.*?).git}
+                    || $remote->{url} =~ m{git\@github.com:(.*?)/(.*?).git} )
                 {
                     die unless( $1 || $2 );
 
@@ -92,16 +92,16 @@ sub run {
 
                     _info "Found GitHub repository of $user/$repo";
 
-                    my $_remotes = qx(git remote | grep @{[ $auth->{user} ]});
+                    my $_remotes = qx(git remote | grep @{[ $gh_id ]});
                     if( $_remotes ) {
-                        die "Remote @{[ $auth->{user} ]} exists.\n";
+                        die "Remote @{[ $gh_id ]} exists.\n";
                     }
 
-                    my $remote_uri = qq( git\@github.com:@{[ $auth->{user} ]}/$repo.git);
-                    _info "Adding remote '@{[ $auth->{user} ]}' => $remote_uri";
+                    my $remote_uri = qq( git\@github.com:@{[ $gh_id ]}/$repo.git);
+                    _info "Adding remote '@{[ $gh_id ]}' => $remote_uri";
 
                     # url = git@github.com:c9s/App-gh.git
-                    my $cmd = qq( git remote add @{[ $auth->{user} ]} $remote_uri);
+                    my $cmd = qq( git remote add @{[ $gh_id ]} $remote_uri);
                     _debug $cmd;
                     qx($cmd);
 
@@ -112,23 +112,25 @@ sub run {
     }
 
     _info "Forking...";
-    my $data = api_request( sprintf("repos/fork/%s/%s?login=%s&token=%s", $user , $repo , $auth->{user} , $auth->{token} ));
+    my $data = App::gh->api->fork($user , $repo);
 
-    use Data::Dumper; 
+    use Data::Dumper;
     _debug Dumper( $data );
 
     _info "Repository forked:";
 
-    $data = $data->{repository};
-    print "  Name:          " . $data->{name} . "\n";
-    print "  Description:   " . $data->{description} . "\n";
-    print "  Owner:         " . $data->{owner} . "\n";
-    print "  Watchers:      " . $data->{watchers} . "\n";
-    print "  Created at:    " . $data->{created_at} . "\n";
-    print "  Pushed at:     " . $data->{pushed_at} . "\n";
-    print "  Fork:          " . $data->{'fork'} . "\n";
-    print "  URL:           " . $data->{url} . "\n";
-    print "  Homepage:      " . ($data->{homepage}||'') . "\n";
+    App::gh::Utils->print_repo_info($data->{repository});
+
+    # $data = $data->{repository};
+    # print "  Name:          " . $data->{name} . "\n";
+    # print "  Description:   " . $data->{description} . "\n";
+    # print "  Owner:         " . $data->{owner} . "\n";
+    # print "  Watchers:      " . $data->{watchers} . "\n";
+    # print "  Created at:    " . $data->{created_at} . "\n";
+    # print "  Pushed at:     " . $data->{pushed_at} . "\n";
+    # print "  Fork:          " . $data->{'fork'} . "\n";
+    # print "  URL:           " . $data->{url} . "\n";
+    # print "  Homepage:      " . ($data->{homepage}||'') . "\n";
 
 }
 
