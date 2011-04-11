@@ -16,9 +16,9 @@ sub options { (
         "exclude=s@" => "exclude",
         "s|skip-exists" => "skip_exists",
 
-        "ssh" => "protocal_ssh",    # git@github.com:c9s/repo.git
-        "http" => "protocal_http",  # http://github.com/c9s/repo.git
-        "https" => "https",         # https://github.com/c9s/repo.git
+        "ssh" => "protocol_ssh",    # git@github.com:c9s/repo.git
+        "http" => "protocol_http",  # http://github.com/c9s/repo.git
+        "https" => "protocol_https",         # https://github.com/c9s/repo.git
         "git|ro"   => "git",         # git://github.com/c9s/repo.git
         "bare" => "bare",
         "p|prefix=s" => "prefix",

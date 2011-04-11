@@ -57,16 +57,16 @@ sub get_current_repo {
 sub gen_uri {
     my ($self,$acc,$repo) = @_;
 
-    if( $self->{protocal_ssh} ) {
+    if( $self->{protocol_ssh} ) {
         return sprintf( 'git@github.com:%s/%s.git' , $acc, $repo );
     }
-    elsif( $self->{protocal_http} ) {
+    elsif( $self->{protocol_http} ) {
         return sprintf( 'http://github.com/%s/%s.git' , $acc , $repo );
     }
-    elsif( $self->{protocal_https}) {
+    elsif( $self->{protocol_https}) {
         return sprintf( 'https://github.com/%s/%s.git' , $acc , $repo );
     }
-    elsif( $self->{protocal_git} ) {
+    elsif( $self->{protocol_git} ) {
         return sprintf( 'git://github.com/%s/%s.git', $acc, $repo );
     }
     return sprintf( 'git://github.com/%s/%s.git', $acc, $repo );
