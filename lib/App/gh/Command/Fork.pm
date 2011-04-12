@@ -97,7 +97,12 @@ sub run {
                         die "Remote @{[ $gh_id ]} exists.\n";
                     }
 
-                    my $remote_uri = qq( git\@github.com:@{[ $gh_id ]}/$repo.git);
+                    my $remote_uri;
+                    if ( $self->{protocol_https} ) {
+                        $remote_uri = qq( https://@{[ $gh_id ]}\@github.com/@{[ $gh_id ]}/$repo.git);
+                    } else {
+                        $remote_uri = qq( git\@github.com:@{[ $gh_id ]}/$repo.git);
+                    };
                     _info "Adding remote '@{[ $gh_id ]}' => $remote_uri";
 
                     # url = git@github.com:c9s/App-gh.git
