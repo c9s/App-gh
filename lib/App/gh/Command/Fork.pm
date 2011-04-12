@@ -83,8 +83,8 @@ sub run {
             for my $remote ( values %{ $config->{remote} } ) {
                 # git://github.com/miyagawa/Tatsumaki.git
                 # http://github.com/miyagawa/Tatsumaki.git
-                if ( $remote->{url} =~ m{(?:git|https?)://github.com/(.*?)/(.*?).git}
-                    || $remote->{url} =~ m{git\@github.com:(.*?)/(.*?).git} )
+                if ( $remote->{url} =~ m{(?:git|https?)://github.com/(.*?)/(.*?)\.git}
+                    || $remote->{url} =~ m{git\@github.com:(.*?)/(.*?)\.git} )
                 {
                     die unless( $1 || $2 );
 
