@@ -1,5 +1,33 @@
 Revision history for App-gh
 
+0.43
+    - Thanks to @garu++, patches:
+
+       From @garu:
+       > This patch does 3 things:
+       > * Improves documentation on how to let "gh" see your authentication data;
+
+       > * Fixes an "uninitialized" warning in App::gh::Utils::print_list(),
+       > while also showing a (nicer, I think) "[no description available]"
+       > message instead, quite similar to what github does on the web;
+
+       > * Patches App::gh::API::request() to allow users without
+       > authentication information in their .gitconfig to use "gh". This was
+       > probably working before, but I think github updated the API and, if
+       > you try to fetch data by posting the request with empty login/token
+       > values, github returns 401 Forbidden instead of assuming anonymous.
+       > With this patch, "gh" works for most commands even when the user
+       > doesn't have a .gitconfig file.
+
+       > I hope this helps!
+
+       > (That said, I think you should really consider Net::GitHub for proper
+       > Github API handling. For instance, the documents in develop.github.com
+       > are pretty strict regarding what should be a GET request and what
+       > should be POST, while the simplistic approach in App::gh uses POST for
+       > everything. If github decides to enforce that API, App::gh will break.
+       > Also, some (most?) of the functionality in the TODO file is already
+       > implemented there, e.g. the issues tracker)
 
 0.42
     - Fix Git.pm test.

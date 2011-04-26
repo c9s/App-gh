@@ -1,7 +1,7 @@
 package App::gh;
 use warnings;
 use strict;
-our $VERSION = '0.42';
+our $VERSION = '0.43';
 use App::gh::Config;
 use App::gh::API;
 require App::gh::Git;
