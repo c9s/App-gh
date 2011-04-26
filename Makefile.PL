@@ -13,6 +13,7 @@ requires 'App::CLI';
 requires 'File::Path';
 requires 'File::Temp';
 requires 'File::Spec';
+requires 'File::HomeDir';
 requires 'LWP::Simple';
 requires 'URI';
 requires 'Text::Wrap';
