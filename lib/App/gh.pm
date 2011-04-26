@@ -58,6 +58,17 @@ to pull changes from one fork.
 This will pull changes from gugod/[branch].  specify --merge to merge these
 changes. --branch if you want the forked branch to be checked out.
 
+=head2 Operations Requiring Authentication
+
+Some Github operations (like forking) require that your user is authenticated. To do that, simply add the following fields to your .gitconfig file (located in your home directory):
+
+  [github]
+      user=myuser
+      token=XXX
+
+You can find your token by logging into Github, then going to C<"Account Settings"> on the top right corner, then C<"Account Admin">. Make sure to update this information if you ever change your password.
+
+
 =head1 SYNOPSIS
 
 list all repository of c9s:
