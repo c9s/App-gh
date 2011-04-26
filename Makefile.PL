@@ -13,6 +13,7 @@ requires 'App::CLI';
 requires 'File::Path';
 requires 'File::Temp';
 requires 'File::Spec';
+requires 'File::HomeDir';
 requires 'LWP::Simple';
 requires 'URI';
 requires 'Text::Wrap';
@@ -34,6 +35,7 @@ install_script 'scripts/gh';
 author_tests('xt');
 
 repository 'http://github.com/c9s/App-gh';
+bugtracker 'http://github.com/c9s/App-gh/issues';
 
 auto_install;
 
