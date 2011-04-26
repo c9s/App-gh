@@ -1,7 +1,7 @@
 package App::gh::Config;
 use warnings;
 use strict;
-use File::Path;
+use File::HomeDir ();
 use File::Spec;
 
 sub _parse_options {
@@ -70,7 +70,7 @@ sub github_id {
 
 sub global {
     my $class = shift;
-    my $path = File::Spec->join($ENV{HOME} , ".gitconfig"); # TODO: support windows
+    my $path = File::Spec->join(File::HomeDir->my_home, '.gitconfig');
     return unless -e $path;
     return $class->parse( $path );
 }
