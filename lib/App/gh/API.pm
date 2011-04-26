@@ -20,7 +20,11 @@ sub request {
     my $github_id     =  App::gh->config->github_id();
     my $github_token  =  App::gh->config->github_token();
 
-    my $response      =  $ua->post( $url, { login => $github_id, token => $github_token , %args } );
+    # passing empty login/token triggers 401 unauthorized
+    if ($github_id and $github_token) {
+        @args{'login', 'token'} = ($github_id, $github_token);
+    }
+    my $response = $ua->post($url, %args);
 
     if ( ! $response->is_success ) {
         die $response->status_line . ': ' . $response->decoded_content;
