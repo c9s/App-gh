@@ -23,7 +23,6 @@ requires 'JSON::XS';
 requires 'HTML::Strip';
 requires 'Term::ReadLine';
 requires 'Scope::Guard';
-requires 'Error::Simple';
 requires 'Error';
 
 # `gh recent` support
