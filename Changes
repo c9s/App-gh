@@ -1,5 +1,8 @@
 Revision history for App-gh
 
+0.44
+    - Remove Error::Simple from Makefile.PL, Add Error.pm instead.
+
 0.43
     - Thanks to @garu++, patches:
 
