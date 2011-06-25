@@ -3,7 +3,7 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 use App::gh::Utils;
-
+use App::gh;
 
 =head1 NAME
 
@@ -14,7 +14,7 @@ App::gh::Command::Push - push changes to writable github remotes
 sub run {
     my $self = shift;
 
-    die unless( -e ".git/HEAD" );
+    die "Not in git repository\n" unless( -e ".git/HEAD" );
 
     open FH , "<" , ".git/HEAD";
     my $ref = <FH>;

@@ -3,8 +3,6 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 use App::gh::Utils;
-use LWP::Simple qw(get);
-use JSON;
 
 
 =head1 NAME
@@ -58,7 +56,7 @@ sub run {
         $user = shift;
 
        #copied from Github::Fork::Parent
-       if ($user && $user=~m#^(?:\Qgit://github.com/\E|git\@github\.com:\E|\Qhttp://github.com/\E)([^/]+)/([^/]+)(?:\.git)?$#) {
+       if ($user && $user=~m{^(?:\Qgit://github.com/\E|git\@github\.com:\E|\Qhttp://github.com/\E)([^/]+)/([^/]+)(?:\.git)?$}) {
             ($user,$repo)=($1,$2);
         } elsif( $user && $user =~ /\// ) {
             ($user,$repo) = split /\//,$user;

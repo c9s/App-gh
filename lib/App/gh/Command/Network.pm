@@ -2,8 +2,7 @@ package App::gh::Command::Network;
 use warnings;
 use strict;
 use base qw(App::gh::Command);
-use LWP::Simple;
-use JSON;
+use App::gh;
 use App::gh::Utils;
 
 =head1 NAME
@@ -24,7 +23,6 @@ sub options { (
 
 sub require_local_gitconfig { 1 }
 
-use App::gh;
 
 
 sub get_networks {

@@ -5,8 +5,6 @@ use strict;
 use base qw(App::gh::Command);
 use File::Path qw(mkpath rmtree);
 use App::gh::Utils;
-use LWP::Simple qw(get);
-use JSON;
 use Scope::Guard qw(guard);
 
 sub options { (
@@ -70,7 +68,7 @@ sub run {
 
     my $cloned = 0;
 
-    my $print_progress = sub {  
+    my $print_progress = sub {
         return sprintf( "[%d/%d]", ++$cloned , scalar(@$repolist) );
     };
 
@@ -139,8 +137,8 @@ sub run {
             $flags .= qq{ -q } unless $self->{verbose};
 
             my $reponame =
-                    $self->{prefix} 
-                        ?  $self->{prefix} . "-" . $repo->{name} 
+                    $self->{prefix}
+                        ?  $self->{prefix} . "-" . $repo->{name}
                         :  $repo->{name}  ;
 
             my $cmd = qq{ git clone $flags $uri $reponame};
@@ -154,10 +152,6 @@ sub run {
             }
         }
     }
-
-
-
-
 }
 
 

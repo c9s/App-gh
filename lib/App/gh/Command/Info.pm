@@ -3,10 +3,8 @@ use utf8;
 use warnings;
 use strict;
 use base qw(App::gh::Command);
-use File::Path qw(mkpath);
+use App::gh;
 use App::gh::Utils;
-use LWP::Simple qw(get);
-use JSON;
 
 sub parse_uri {
     my ($uri) = @_;

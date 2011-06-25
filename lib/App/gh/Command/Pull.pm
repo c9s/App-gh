@@ -2,9 +2,8 @@ package App::gh::Command::Pull;
 use warnings;
 use strict;
 use base qw(App::gh::Command);
+use App::gh;
 use App::gh::Utils;
-use LWP::Simple qw(get);
-use JSON;
 
 =head1 NAME
 
