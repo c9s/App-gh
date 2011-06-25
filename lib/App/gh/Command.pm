@@ -74,8 +74,7 @@ sub gen_uri {
 
 sub is_mine {
     my($self, $acc, $repo) = @_;
-    my $config  = App::gh->config;
-    my $gh_user = $config->current->{github}{user} || $config->global->{github}{user};
+    my $gh_user = App::gh->config->github_id;
     return defined($gh_user) && $gh_user eq $acc;
 }
 

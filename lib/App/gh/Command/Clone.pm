@@ -50,14 +50,14 @@ sub run {
     }
 
     unless( $user && $repo ) {
-        die "Usage [user] [repo]";
+        die "Usage: gh clone [user] [repo]\n";
     }
 
     my $uri = $self->gen_uri( $user, $repo );
     my $flags = q{};
     $flags .= qq{ --bare } if $self->{bare};
 
-    print $uri . "\n";
+    print 'cloning ', $uri,  "...\n";
     system( qq{git clone $flags $uri} );
 
     if( $self->{with_fork} ) {
