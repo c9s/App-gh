@@ -1,5 +1,9 @@
 Revision history for App-gh
 
+0.44
+    - Automatically adding --ssh option for owner's repos (gfx)
+    - Clean up dependencies; JSON is no longer required (gfx)
+
 0.43
     - Thanks to @garu++, patches:
 
