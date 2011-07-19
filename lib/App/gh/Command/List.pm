@@ -23,6 +23,7 @@ sub options {
 sub run {
     my ( $self, $acc ) = @_;
 
+    $acc ||= App::gh->config->github_id;
     $acc =~ s{/$}{};
 
 	# TODO: use api class.
