@@ -30,7 +30,7 @@ sub options { (
     "ssh" => "protocol_ssh",    # git@github.com:c9s/repo.git
     "http" => "protocol_http",  # http://github.com/c9s/repo.git
     "https" => "protocol_https",         # https://github.com/c9s/repo.git
-    "git|ro"   => "git",        # git://github.com/c9s/repo.git
+    "git|ro"   => "protocol_git",        # git://github.com/c9s/repo.git
     "k|forks|fork"  => 'with_fork',
     "bare" => "bare",
 ) }
