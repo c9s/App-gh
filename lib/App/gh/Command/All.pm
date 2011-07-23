@@ -20,6 +20,7 @@ sub options { (
         "https" => "protocol_https",         # https://github.com/c9s/repo.git
         "git|ro"   => "protocol_git",         # git://github.com/c9s/repo.git
         "bare" => "bare",
+        "mirror" => "mirror",
         "p|prefix=s" => "prefix",
         "f|force" => "force",
     ) }
@@ -45,6 +46,8 @@ sub run {
         chdir  $self->{into};
     }
 
+    $self->{bare} = 1 if $self->{mirror};
+
     _info "Will clone repositories below:";
     print " " x 8 . join " " , map { $_->{name} } @{ $repolist };
     print "\n";
@@ -52,6 +55,7 @@ sub run {
     _info "With options:";
     _info " Prefix: " . $self->{prefix} if $self->{prefix};
     _info " Bare: on" if $self->{bare};
+    _info " Mirror: on" if $self->{mirror};
 
     if( $self->{prompt} ) {
         print "Clone them [Y/n] ? ";
@@ -111,7 +115,7 @@ sub run {
 
             if( qx{ git config --get core.bare } =~ /\Atrue\n?\Z/ ) {
                 # Here I assume remote.<remote>.mirror is automatically set.
-                # bacause --bare do the set-up.
+                # bacause --bare and --mirror do the set-up.
                 qx{ git fetch --all };
             }
             else {
@@ -125,8 +129,8 @@ sub run {
             print "Cloning " . $repo->{name} . " ... " . $print_progress->() . "\n";
 
             my $flags = qq();
-            $flags .= qq{ -q }       unless $self->{verbose};
-            $flags .= qq{ --mirror } if     $self->{bare};
+            $flags .= qq{ -q }     unless $self->{verbose};
+            $flags .= qq{ --bare } if     $self->{bare};
 
             my $reponame =
                     $self->{prefix}
@@ -136,14 +140,15 @@ sub run {
             my $cmd = qq{ git clone $flags $uri $reponame};
             qx{ $cmd };
 
-            # TODO: Support old git (which does not support `git clone --mirror`)
-            # if ($self->{bare}) {
-            #     my $cwd = Cwd::getcwd();
-            #     chdir $local_repo_dir;
-            #     my $guard = guard { chdir $cwd };    # switch back
-            #     qx{ git remote rm origin };
-            #     qx{ git remote add --mirror origin $uri };
-            # }
+            # Support old git (which does not support `git clone --mirror`)
+            if ($self->{mirror}) {
+                my $cwd = Cwd::getcwd();
+                chdir $local_repo_dir;
+                my $guard = guard { chdir $cwd };    # switch back
+                qx{ git config remote.origin.fetch '+refs/*:refs/*' };
+                qx{ git config remote.origin.url $uri };
+                qx{ git config remote.origin.mirror true };
+            }
         }
     }
 }
@@ -192,8 +197,15 @@ Genernal Options:
     --verbose
         verbose output.
 
-    --bare, --mirror
+    --bare
         clone repos as bare repos.
+        this option adds postfix ".git" to directory.
+        e.g.: "{dirname}.git"
+
+    --mirror
+        clone repos as mirror repos.
+        this option adds postfix ".git" to directory.
+        e.g.: "{dirname}.git"
 
     --prefix {prefix}
         Add prefix to repository name.
