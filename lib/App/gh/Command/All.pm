@@ -6,6 +6,7 @@ use base qw(App::gh::Command);
 use File::Path qw(mkpath rmtree);
 use App::gh::Utils;
 use Scope::Guard qw(guard);
+use Cwd ();
 
 sub options { (
         "verbose" => "verbose",
@@ -95,8 +96,9 @@ sub run {
         if( -e $local_repo_dir && !$self->{force} ) {
             print("Found $local_repo_dir, skipped.\n"),next if $self->{skip_exists};
 
+            my $cwd = Cwd::getcwd();
             chdir $local_repo_dir;
-            my $guard = guard { chdir ".." };    # switch back
+            my $guard = guard { chdir $cwd };    # switch back
             print "Updating $local_repo_dir from remotes ..." . $print_progress->() . "\n";
 
             if( qx{ git config --get core.bare } =~ /\Atrue\n?\Z/ ) {
@@ -146,8 +148,9 @@ sub run {
             qx{ $cmd };
 
             if ($self->{bare}) {
+                my $cwd = Cwd::getcwd();
                 chdir $local_repo_dir;
-                my $guard = guard { chdir ".." };    # switch back
+                my $guard = guard { chdir $cwd };    # switch back
                 qx{ git remote add gh-bare $uri };
                 qx{ git config branch.master.remote gh-bare };    # initial branch must be master.
             }
