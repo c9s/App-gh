@@ -93,8 +93,15 @@ sub run {
 
 
         my $local_repo_dir = $self->{bare} ? "$local_repo_name.git" : $local_repo_name;
-        if( -e $local_repo_dir && !$self->{force} ) {
+        if( -e $local_repo_dir ) {
             print("Found $local_repo_dir, skipped.\n"),next if $self->{skip_exists};
+
+            if( $self->{force} ) {
+                rmtree $local_repo_dir or do {
+                    print STDERR "could not remove '$local_repo_dir', skipped.\n";
+                    next;
+                };
+            }
 
             my $cwd = Cwd::getcwd();
             chdir $local_repo_dir;
@@ -127,13 +134,6 @@ sub run {
         }
         else {
             print "Cloning " . $repo->{name} . " ... " . $print_progress->() . "\n";
-
-            if ($self->{force}) {
-                rmtree $local_repo_dir or do {
-                    print STDERR "could not remove '$local_repo_dir', skipped.\n";
-                    next;
-                };
-            }
 
             my $flags = qq();
             $flags .= qq{ -q }     unless $self->{verbose};
