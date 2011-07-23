@@ -94,6 +94,7 @@ sub run {
 
         my $local_repo_dir = $self->{bare} ? "$local_repo_name.git" : $local_repo_name;
         if( -e $local_repo_dir ) {
+            # Found local repository. Update it.
             print("Found $local_repo_dir, skipped.\n"),next if $self->{skip_exists};
 
             if( $self->{force} ) {
@@ -109,22 +110,9 @@ sub run {
             print "Updating $local_repo_dir from remotes ..." . $print_progress->() . "\n";
 
             if( qx{ git config --get core.bare } =~ /\Atrue\n?\Z/ ) {
-                # "Automatic synchronization of 2 git repositories | Pragmatic Source"
-                # http://www.pragmatic-source.com/en/opensource/tips/automatic-synchronization-2-git-repositories
-
-                my ($branch) = map { s/\A\* (.+)/$1/; $_ } grep /\A\*/, split /\n/, qx{ git branch };
-                my $remote = qx{ git config --get branch.$branch.remote };
-                chomp $remote;
-                if ($remote =~ /\A\s*\Z/) {
-                    print STDERR "branch.$branch.remote is not set, skipped.\n";
-                    next;
-                }
-                unless (grep /^$remote/, split /\n/, qx{ git remote }) {
-                    print "$local_repo_dir: Need remote '$remote' for updating '$local_repo_dir', skipped.\n";
-                    next;
-                }
-                qx{ git fetch $remote };
-                qx{ git reset --soft refs/remotes/$remote/$branch };
+                # Here I assume remote.<remote>.mirror is automatically set.
+                # bacause --bare do the set-up.
+                qx{ git fetch --all };
             }
             else {
                 my $flags = qq();
@@ -133,11 +121,12 @@ sub run {
             }
         }
         else {
+            # No repository was cloned yet. Clone it.
             print "Cloning " . $repo->{name} . " ... " . $print_progress->() . "\n";
 
             my $flags = qq();
-            $flags .= qq{ -q }     unless $self->{verbose};
-            $flags .= qq{ --bare } if     $self->{bare};
+            $flags .= qq{ -q }       unless $self->{verbose};
+            $flags .= qq{ --mirror } if     $self->{bare};
 
             my $reponame =
                     $self->{prefix}
@@ -147,13 +136,14 @@ sub run {
             my $cmd = qq{ git clone $flags $uri $reponame};
             qx{ $cmd };
 
-            if ($self->{bare}) {
-                my $cwd = Cwd::getcwd();
-                chdir $local_repo_dir;
-                my $guard = guard { chdir $cwd };    # switch back
-                qx{ git remote add gh-bare $uri };
-                qx{ git config branch.master.remote gh-bare };    # initial branch must be master.
-            }
+            # TODO: Support old git (which does not support `git clone --mirror`)
+            # if ($self->{bare}) {
+            #     my $cwd = Cwd::getcwd();
+            #     chdir $local_repo_dir;
+            #     my $guard = guard { chdir $cwd };    # switch back
+            #     qx{ git remote rm origin };
+            #     qx{ git remote add --mirror origin $uri };
+            # }
         }
     }
 }
@@ -202,7 +192,7 @@ Genernal Options:
     --verbose
         verbose output.
 
-    --bare
+    --bare, --mirror
         clone repos as bare repos.
 
     --prefix {prefix}
