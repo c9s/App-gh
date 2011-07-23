@@ -80,8 +80,6 @@ sub run {
 
     for my $repo ( @{ $repolist } ) {
         my $repo_name = $repo->{name};
-        my $local_repo_name = $repo_name;
-        $local_repo_name =~ s/\.git$//;
 
         if( $self->{prompt} ) {
             print "Clone $repo_name [Y/n] ? ";
@@ -90,13 +88,16 @@ sub run {
             $ans ||= 'Y';
             next if( $ans =~ /n/ );
         }
-        next if exists $exclude->{$local_repo_name};
+        next if exists $exclude->{$repo_name};
 
         my $uri = $self->gen_uri( $acc, $repo_name );
         print $uri . "\n" if $self->{verbose};
 
 
-        my $local_repo_dir = $self->{bare} ? "$local_repo_name.git" : $local_repo_name;
+        my $local_repo_dir = $repo_name;
+        $local_repo_dir = "$local_repo_dir.git" if $self->{bare};
+        $local_repo_dir = $self->{prefix} . "-" . $local_repo_dir if $self->{prefix};
+
         if( -e $local_repo_dir ) {
             # Found local repository. Update it.
             print("Found $local_repo_dir, skipped.\n"),next if $self->{skip_exists};
@@ -132,12 +133,7 @@ sub run {
             $flags .= qq{ -q }     unless $self->{verbose};
             $flags .= qq{ --bare } if     $self->{bare};
 
-            my $reponame =
-                    $self->{prefix}
-                        ?  $self->{prefix} . "-" . $repo->{name}
-                        :  $repo->{name}  ;
-
-            my $cmd = qq{ git clone $flags $uri $reponame};
+            my $cmd = qq{ git clone $flags $uri $local_repo_dir};
             qx{ $cmd };
 
             # Support old git (which does not support `git clone --mirror`)
