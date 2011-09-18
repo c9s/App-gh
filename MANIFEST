@@ -37,7 +37,6 @@ lib/App/gh/Command/Setup.pm
 lib/App/gh/Command/Update.pm
 lib/App/gh/Command/Upload.pm
 lib/App/gh/Config.pm
-lib/App/gh/Logger.pm
 lib/App/gh/Utils.pm
 Makefile.PL
 MANIFEST

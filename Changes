@@ -1,5 +1,8 @@
 Revision history for App-gh
 
+0.46
+    - Update fix & refactoring from @tyru++.
+
 0.45
     - gh list command default to current github user id.
 
