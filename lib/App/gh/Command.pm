@@ -57,7 +57,10 @@ sub get_current_repo {
 sub gen_uri {
     my ($self,$acc,$repo) = @_;
 
-    if( $self->{protocol_ssh} ) {
+    if( $self->{protocol_git} ) {
+        return sprintf( 'git://github.com/%s/%s.git', $acc, $repo );
+    }
+    elsif( $self->{protocol_ssh} || $self->is_mine($acc, $repo) ) {
         return sprintf( 'git@github.com:%s/%s.git' , $acc, $repo );
     }
     elsif( $self->{protocol_http} ) {
@@ -66,10 +69,13 @@ sub gen_uri {
     elsif( $self->{protocol_https}) {
         return sprintf( 'https://github.com/%s/%s.git' , $acc , $repo );
     }
-    elsif( $self->{protocol_git} ) {
-        return sprintf( 'git://github.com/%s/%s.git', $acc, $repo );
-    }
     return sprintf( 'git://github.com/%s/%s.git', $acc, $repo );
+}
+
+sub is_mine {
+    my($self, $acc, $repo) = @_;
+    my $gh_user = App::gh->config->github_id;
+    return defined($gh_user) && $gh_user eq $acc;
 }
 
 sub global_help {

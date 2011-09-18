@@ -5,9 +5,8 @@ use strict;
 use base qw(App::gh::Command);
 use File::Path qw(mkpath rmtree);
 use App::gh::Utils;
-use LWP::Simple qw(get);
-use JSON;
 use Scope::Guard qw(guard);
+use Cwd ();
 
 sub options { (
         "verbose" => "verbose",
@@ -19,8 +18,9 @@ sub options { (
         "ssh" => "protocol_ssh",    # git@github.com:c9s/repo.git
         "http" => "protocol_http",  # http://github.com/c9s/repo.git
         "https" => "protocol_https",         # https://github.com/c9s/repo.git
-        "git|ro"   => "git",         # git://github.com/c9s/repo.git
+        "git|ro"   => "protocol_git",         # git://github.com/c9s/repo.git
         "bare" => "bare",
+        "mirror" => "mirror",
         "p|prefix=s" => "prefix",
         "f|force" => "force",
     ) }
@@ -46,6 +46,8 @@ sub run {
         chdir  $self->{into};
     }
 
+    $self->{bare} = 1 if $self->{mirror};
+
     _info "Will clone repositories below:";
     print " " x 8 . join " " , map { $_->{name} } @{ $repolist };
     print "\n";
@@ -53,6 +55,7 @@ sub run {
     _info "With options:";
     _info " Prefix: " . $self->{prefix} if $self->{prefix};
     _info " Bare: on" if $self->{bare};
+    _info " Mirror: on" if $self->{mirror};
 
     if( $self->{prompt} ) {
         print "Clone them [Y/n] ? ";
@@ -70,15 +73,13 @@ sub run {
 
     my $cloned = 0;
 
-    my $print_progress = sub {  
+    my $print_progress = sub {
         return sprintf( "[%d/%d]", ++$cloned , scalar(@$repolist) );
     };
 
 
     for my $repo ( @{ $repolist } ) {
         my $repo_name = $repo->{name};
-        my $local_repo_name = $repo_name;
-        $local_repo_name =~ s/\.git$//;
 
         if( $self->{prompt} ) {
             print "Clone $repo_name [Y/n] ? ";
@@ -87,37 +88,36 @@ sub run {
             $ans ||= 'Y';
             next if( $ans =~ /n/ );
         }
-        next if exists $exclude->{$local_repo_name};
+        next if exists $exclude->{$repo_name};
 
         my $uri = $self->gen_uri( $acc, $repo_name );
         print $uri . "\n" if $self->{verbose};
 
 
-        my $local_repo_dir = $self->{bare} ? "$local_repo_name.git" : $local_repo_name;
-        if( -e $local_repo_dir && !$self->{force} ) {
+        my $local_repo_dir = $repo_name;
+        $local_repo_dir = "$local_repo_dir.git" if $self->{bare};
+        $local_repo_dir = $self->{prefix} . "-" . $local_repo_dir if $self->{prefix};
+
+        if( -e $local_repo_dir ) {
+            # Found local repository. Update it.
             print("Found $local_repo_dir, skipped.\n"),next if $self->{skip_exists};
 
+            if( $self->{force} ) {
+                rmtree $local_repo_dir or do {
+                    print STDERR "could not remove '$local_repo_dir', skipped.\n";
+                    next;
+                };
+            }
+
+            my $cwd = Cwd::getcwd();
             chdir $local_repo_dir;
-            my $guard = guard { chdir ".." };    # switch back
+            my $guard = guard { chdir $cwd };    # switch back
             print "Updating $local_repo_dir from remotes ..." . $print_progress->() . "\n";
 
             if( qx{ git config --get core.bare } =~ /\Atrue\n?\Z/ ) {
-                # "Automatic synchronization of 2 git repositories | Pragmatic Source"
-                # http://www.pragmatic-source.com/en/opensource/tips/automatic-synchronization-2-git-repositories
-
-                my ($branch) = map { s/\A\* (.+)/$1/; $_ } grep /\A\*/, split /\n/, qx{ git branch };
-                my $remote = qx{ git config --get branch.$branch.remote };
-                chomp $remote;
-                if ($remote =~ /\A\s*\Z/) {
-                    print STDERR "branch.$branch.remote is not set, skipped.\n";
-                    next;
-                }
-                unless (grep /^$remote/, split /\n/, qx{ git remote }) {
-                    print "$local_repo_dir: Need remote '$remote' for updating '$local_repo_dir', skipped.\n";
-                    next;
-                }
-                qx{ git fetch $remote };
-                qx{ git reset --soft refs/remotes/$remote/$branch };
+                # Here I assume remote.<remote>.mirror is automatically set.
+                # bacause --bare and --mirror do the set-up.
+                qx{ git fetch --all };
             }
             else {
                 my $flags = qq();
@@ -126,38 +126,27 @@ sub run {
             }
         }
         else {
+            # No repository was cloned yet. Clone it.
             print "Cloning " . $repo->{name} . " ... " . $print_progress->() . "\n";
 
-            if ($self->{force}) {
-                rmtree $local_repo_dir or do {
-                    print STDERR "could not remove '$local_repo_dir', skipped.\n";
-                    next;
-                };
-            }
-
             my $flags = qq();
-            $flags .= qq{ -q } unless $self->{verbose};
+            $flags .= qq{ -q }     unless $self->{verbose};
+            $flags .= qq{ --bare } if     $self->{bare};
 
-            my $reponame =
-                    $self->{prefix} 
-                        ?  $self->{prefix} . "-" . $repo->{name} 
-                        :  $repo->{name}  ;
-
-            my $cmd = qq{ git clone $flags $uri $reponame};
+            my $cmd = qq{ git clone $flags $uri $local_repo_dir};
             qx{ $cmd };
 
-            if ($self->{bare}) {
+            # Support old git (which does not support `git clone --mirror`)
+            if ($self->{mirror}) {
+                my $cwd = Cwd::getcwd();
                 chdir $local_repo_dir;
-                my $guard = guard { chdir ".." };    # switch back
-                qx{ git remote add gh-bare $uri };
-                qx{ git config branch.master.remote gh-bare };    # initial branch must be master.
+                my $guard = guard { chdir $cwd };    # switch back
+                qx{ git config remote.origin.fetch '+refs/*:refs/*' };
+                qx{ git config remote.origin.url $uri };
+                qx{ git config remote.origin.mirror true };
             }
         }
     }
-
-
-
-
 }
 
 
@@ -206,6 +195,13 @@ Genernal Options:
 
     --bare
         clone repos as bare repos.
+        this option adds postfix ".git" to directory.
+        e.g.: "{dirname}.git"
+
+    --mirror
+        clone repos as mirror repos.
+        this option adds postfix ".git" to directory.
+        e.g.: "{dirname}.git"
 
     --prefix {prefix}
         Add prefix to repository name.

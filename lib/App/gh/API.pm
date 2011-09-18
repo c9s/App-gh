@@ -2,6 +2,7 @@ package App::gh::API;
 use warnings;
 use strict;
 use LWP::UserAgent;
+use URI;
 use JSON::XS;
 use App::gh::Utils;
 
@@ -36,7 +37,7 @@ sub request {
         $data = decode_json( $json );
     };
 
-    die "JSON Error:" . $!  if $@ ;
+    die "JSON Error:" . $@  if $@ ;
     die $data->{error} if $data->{error};
     die "Empty response" unless( $data );
     return $data;

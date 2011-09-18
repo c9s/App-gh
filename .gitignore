@@ -3,6 +3,7 @@ Makefile
 Makefile.old
 MANIFEST.bak
 META.yml
+MYMETA.yml
 Build
 Build.bat
 _build*

@@ -3,9 +3,9 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 use App::gh::Utils;
-use JSON;
 use URI;
 use Text::Wrap;
+use HTML::Strip;
 
 =head1 NAME
 
@@ -41,7 +41,6 @@ sub run {
         my $html = $entry->content->body;
         $html =~ s{<a href="(.*?)".*?>(.*?)</a>}{$2 : $1 }g;
 
-        use HTML::Strip;
         my $h = HTML::Strip->new(  emit_spaces => 1 );
         my $text = $h->parse( $html );
         $h->eof;

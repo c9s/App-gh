@@ -2,6 +2,7 @@ package App::gh::Command::Update;
 use warnings;
 use strict;
 use base qw(App::gh::Command);
+use App::gh;
 use App::gh::Utils;
 
 # XXX: improve me

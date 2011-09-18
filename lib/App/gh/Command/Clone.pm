@@ -3,8 +3,6 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 use App::gh::Utils;
-use LWP::Simple qw(get);
-use JSON;
 use App::gh;
 
 =head1 NAME
@@ -32,7 +30,7 @@ sub options { (
     "ssh" => "protocol_ssh",    # git@github.com:c9s/repo.git
     "http" => "protocol_http",  # http://github.com/c9s/repo.git
     "https" => "protocol_https",         # https://github.com/c9s/repo.git
-    "git|ro"   => "git",        # git://github.com/c9s/repo.git
+    "git|ro"   => "protocol_git",        # git://github.com/c9s/repo.git
     "k|forks|fork"  => 'with_fork',
     "bare" => "bare",
 ) }
@@ -52,14 +50,14 @@ sub run {
     }
 
     unless( $user && $repo ) {
-        die "Usage [user] [repo]";
+        die "Usage: gh clone [user] [repo]\n";
     }
 
     my $uri = $self->gen_uri( $user, $repo );
     my $flags = q{};
     $flags .= qq{ --bare } if $self->{bare};
 
-    print $uri . "\n";
+    print 'cloning ', $uri,  "...\n";
     system( qq{git clone $flags $uri} );
 
     if( $self->{with_fork} ) {

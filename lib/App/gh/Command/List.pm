@@ -3,10 +3,7 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 use App::gh;
-
 use App::gh::Utils;
-use LWP::Simple qw(get);
-use JSON;
 
 
 =head1 NAME
@@ -26,6 +23,7 @@ sub options {
 sub run {
     my ( $self, $acc ) = @_;
 
+    $acc ||= App::gh->config->github_id;
     $acc =~ s{/$}{};
 
 	# TODO: use api class.

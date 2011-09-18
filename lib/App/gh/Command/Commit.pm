@@ -2,13 +2,10 @@ package App::gh::Command::Commit;
 use warnings;
 use strict;
 use utf8;
-use warnings;
-use strict;
+
 use base qw(App::gh::Command);
 use File::Path qw(mkpath);
 use App::gh::Utils;
-use LWP::Simple qw(get);
-use JSON;
 use File::Temp;
 use Term::ReadLine;
 
