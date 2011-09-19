@@ -78,7 +78,7 @@ sub run {
         print "Available forks:\n";
 
         # XXX: refactor this ... XD
-        my $objs = App::gh->api->request(qq(repos/show/$userid/$repo/network));
+        my $objs = App::gh->api->request(GET => qq(repos/show/$userid/$repo/network));
         my $networks = $objs->{network};
         for my $net ( @$networks ) {
             print sprintf( "% 20s - watchers(%d) forks(%d)\n"

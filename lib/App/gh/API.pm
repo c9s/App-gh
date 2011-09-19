@@ -15,17 +15,29 @@ sub new_ua {
 }
 
 sub request {
-    my ( $class, $query , %args ) = @_;
+    my ( $class, $verb, $query , %args ) = @_;
     my $ua = $class->new_ua;
     my $url = URI->new('http://github.com/api/v2/json/' . $query );
     my $github_id     =  App::gh->config->github_id();
     my $github_token  =  App::gh->config->github_token();
 
+    # normalize $verb to lowercase (for dispatch to $ua later)
+    $verb = "\L$verb\E";
+
     # passing empty login/token triggers 401 unauthorized
     if ($github_id and $github_token) {
-        @args{'login', 'token'} = ($github_id, $github_token);
+        if ($verb eq 'post') {
+            my %content = %args;
+            @content{'login', 'token'} = ($github_id, $github_token);
+            %args = ();
+            $args{'Content-Type'} = 'form-data';
+            $args{'Content'} = \%content;
+        }
+        else {
+            @args{'login', 'token'} = ($github_id, $github_token);
+        }
     }
-    my $response = $ua->post($url, %args);
+    my $response = $ua->$verb($url, %args);
 
     if ( ! $response->is_success ) {
         die $response->status_line . ': ' . $response->decoded_content;
@@ -45,7 +57,7 @@ sub request {
 
 sub search {
     my ( $class, $query, %args ) = @_;
-    return $class->request( qq{repos/search/$query}, %args );
+    return $class->request(GET => qq{repos/search/$query}, %args);
 }
 
 sub fork {
@@ -55,31 +67,31 @@ sub fork {
     unless( $gh_id && $gh_token ) {
         die "Github authtoken not found. Can not fork repository.\n";
     }
-    return $class->request( sprintf("repos/fork/%s/%s?login=%s&token=%s", $user , $repo , $gh_id , $gh_token ));
+    return $class->request(POST => sprintf("repos/fork/%s/%s?login=%s&token=%s", $user , $repo , $gh_id , $gh_token ));
 }
 
 sub repo_network {
     my ( $class, $user, $repo ) = @_;
-    my $ret = $class->request(qq(repos/show/$user/$repo/network));
+    my $ret = $class->request(GET => qq(repos/show/$user/$repo/network));
     return $ret->{network};
 }
 
 sub repo_info {
     my ( $class, $user, $repo ) = @_;
-    my $ret = $class->request(qq{repos/show/$user/$repo});
+    my $ret = $class->request(GET => qq{repos/show/$user/$repo});
     return $ret->{repository} if $ret;
 }
 
 sub repo_create {
     my ($class,%args) = @_;
-    my $ret = $class->request( qq{repos/create} , %args );
+    my $ret = $class->request(POST => qq{repos/create} , %args);
     return $ret->{repository} if $ret;
 }
 
 sub user_info {
     my ($class,$user,$page) = @_;
     $page ||= 1;
-    my $ret =  $class->request( qq{repos/show/$user?page=$page} );
+    my $ret =  $class->request(GET => qq{repos/show/$user?page=$page});
     return $ret if $ret;
 }
 
@@ -99,7 +111,7 @@ sub user_repos {
 sub repo_set_public {
     my ( $class, $user, $repo, $public ) = @_;
     my $visibility = $public ? "public" : "private";
-    my $ret = $class->request( qq{repos/set/$visibility/$user/$repo} );
+    my $ret = $class->request(POST => qq{repos/set/$visibility/$user/$repo});
     return $ret;
 }
 
@@ -111,7 +123,7 @@ sub repo_set_info {
     }
     # Keys must be in the form 'values[key]'
     %args = map { ("values[$_]" => $args{$_}) } (keys %args);
-    my $ret = $class->request( qq{repos/show/$user/$repo} , %args );
+    my $ret = $class->request(POST => qq{repos/show/$user/$repo} , %args);
     return $ret->{repository};
 }
 
