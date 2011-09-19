@@ -31,11 +31,10 @@ sub run {
     print "Deleting @{[ $gh_id ]}/@{[ $repo ]}\n";
 
     # repos/delete/:user/:repo
-    my $uri = sprintf( qq{repos/delete/%s/%s?login=%s&token=%s}, $gh_id , $repo, $gh_id , $gh_token );
-    my $ret = App::gh->api->request($uri);
+    my $uri = sprintf( qq{repos/delete/%s/%s}, $gh_id , $repo );
+    my $ret = App::gh->api->request(POST => $uri);
     my $delete_token = $ret->{delete_token};
-    $uri .= '&delete_token=' . $delete_token;
-    $ret = App::gh->api->request($uri);
+    $ret = App::gh->api->request(POST => $uri, delete_token => $delete_token);
     print $ret->{status} , "\n";
     return;
 }
