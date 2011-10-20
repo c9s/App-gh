@@ -111,6 +111,15 @@ network
 pull [userid] ([branch])
     - pull from other's fork:
 
+pullreq list
+    - show list of pull requests:
+
+pullreq show
+    - show the pull requests:
+
+pullreq send ([branch])
+    - send pull requests of current branch to branch:
+
 END
 }
 

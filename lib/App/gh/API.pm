@@ -127,6 +127,41 @@ sub repo_set_info {
     return $ret->{repository};
 }
 
+sub pullreq_send {
+    my ( $class, $user, $repo, $local_branch, $remote_branch, $title, $body) = @_;
+	my $gh_id = App::gh->config->github_id;
+	my $gh_token = App::gh->config->github_token;
+    unless( $gh_id && $gh_token ) {
+        die "Github authtoken not found. Can not send pull request.\n";
+    }
+    return $class->request(POST => sprintf("pulls/%s/%s?login=%s&token=%s", $user, $repo, $gh_id, $gh_token),
+        'pull[base]'  => $remote_branch,
+        'pull[head]'  => "$gh_id:$local_branch",
+		'pull[title]' => $title,
+		'pull[body]'  => $body,
+    );
+}
+
+sub pullreq_list {
+    my ( $class, $user, $repo) = @_;
+	my $gh_id = App::gh->config->github_id;
+	my $gh_token = App::gh->config->github_token;
+    unless( $gh_id && $gh_token ) {
+        die "Github authtoken not found. Can not get pull requests.\n";
+    }
+    return $class->request(GET => sprintf("pulls/%s/%s?login=%s&token=%s", $user, $repo, $gh_id, $gh_token));
+}
+
+sub pullreq_get {
+    my ( $class, $user, $repo, $number) = @_;
+	my $gh_id = App::gh->config->github_id;
+	my $gh_token = App::gh->config->github_token;
+    unless( $gh_id && $gh_token ) {
+        die "Github authtoken not found. Can not get pull request.\n";
+    }
+    return $class->request(GET => sprintf("pulls/%s/%s/%s?login=%s&token=%s", $user, $repo, scalar $number, $gh_id, $gh_token));
+}
+
 1;
 __END__
 
