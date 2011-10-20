@@ -136,7 +136,7 @@ sub pullreq_send {
     }
     return $class->request(POST => sprintf("pulls/%s/%s?login=%s&token=%s", $user, $repo, $gh_id, $gh_token),
         'pull[base]'  => $remote_branch,
-        'pull[head]'  => $local_branch,
+        'pull[head]'  => "$gh_id:$local_branch",
 		'pull[title]' => $title,
 		'pull[body]'  => $body,
     );
