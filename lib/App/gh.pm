@@ -115,20 +115,42 @@ to fork current project:
     $ cd miyagawa/Tatsumaki
     $ gh fork
 
+to show pull requests of the project:
+
+    $ cd tokuhirom/Amon
+    $ gh pullreq list
+
+and show the pull request
+
+    $ cd gfx/p5-Text-Xslate
+    $ gh pullreq show 3
+
+if you want to send pull request about current branch:
+
+    $ cd yappo/p5-AnySan
+    $ git checkout -b experimental
+    $ vi lib/AnySan.pm
+    $ git commit -m "bug fix about ..."
+    $ gh pullreq send
+
 =head1 ALIASES
 
     a  => all
-    u  => update
+    up => update
     pu => pull
-    f  => fork
-    n  => network
-    s  => search
+    pr => pullreq
+    fo => fork
+    ne => network
+    se => search
+    ci => commit
 
 =head1 AUTHOR
 
 c9s , C<< <cornelius.howl at gmail.com> >>
 
 =head1 Contributors
+
+mattn
 
 tyru
 
