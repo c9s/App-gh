@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use lib 'lib';
 use LWP::Simple;
-use JSON;
+use JSON::XS;
 use utf8;
 use warnings;
 use constant debug => $ENV{DEBUG};
