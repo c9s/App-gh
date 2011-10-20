@@ -166,14 +166,36 @@ Run (pull/push) repository changes from/to remotes, and `git remote update --pru
 
     $ gh update
 
+### pullreq
+
+To show pull requests of the project:
+
+    $ cd tokuhirom/Amon
+    $ gh pullreq list
+
+And show the pull request
+
+    $ cd gfx/p5-Text-Xslate
+    $ gh pullreq show 3
+
+If you want to send pull request about current branch:
+
+    $ cd yappo/p5-AnySan
+    $ git checkout -b experimental
+    $ vi lib/AnySan.pm
+    $ git commit -m "bug fix about ..."
+    $ gh pullreq send
+
 ## COMMAND ALIAS
 
     "a"  => "all"
-    "u"  => "update"
+    "up" => "update"
     "pu" => "pull"
-    "f"  => "fork"
-    "n"  => "network"
-    "s"  => "search"
+    "pr" => "pullreq"
+    "fo" => "fork"
+    "ne" => "network"
+    "se" => "search"
+    "ci" => "commit"
 
 ## INSTALLATION
 
