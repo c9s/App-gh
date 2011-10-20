@@ -62,8 +62,8 @@ sub search {
 
 sub fork {
     my ( $class, $user, $repo) = @_;
-	my $gh_id = App::gh->config->github_id;
-	my $gh_token = App::gh->config->github_token;
+    my $gh_id = App::gh->config->github_id;
+    my $gh_token = App::gh->config->github_token;
     unless( $gh_id && $gh_token ) {
         die "Github authtoken not found. Can not fork repository.\n";
     }
@@ -129,23 +129,23 @@ sub repo_set_info {
 
 sub pullreq_send {
     my ( $class, $user, $repo, $local_branch, $remote_branch, $title, $body) = @_;
-	my $gh_id = App::gh->config->github_id;
-	my $gh_token = App::gh->config->github_token;
+    my $gh_id = App::gh->config->github_id;
+    my $gh_token = App::gh->config->github_token;
     unless( $gh_id && $gh_token ) {
         die "Github authtoken not found. Can not send pull request.\n";
     }
     return $class->request(POST => sprintf("pulls/%s/%s?login=%s&token=%s", $user, $repo, $gh_id, $gh_token),
         'pull[base]'  => $remote_branch,
         'pull[head]'  => "$gh_id:$local_branch",
-		'pull[title]' => $title,
-		'pull[body]'  => $body,
+        'pull[title]' => $title,
+        'pull[body]'  => $body,
     );
 }
 
 sub pullreq_list {
     my ( $class, $user, $repo) = @_;
-	my $gh_id = App::gh->config->github_id;
-	my $gh_token = App::gh->config->github_token;
+    my $gh_id = App::gh->config->github_id;
+    my $gh_token = App::gh->config->github_token;
     unless( $gh_id && $gh_token ) {
         die "Github authtoken not found. Can not get pull requests.\n";
     }
@@ -154,12 +154,68 @@ sub pullreq_list {
 
 sub pullreq_get {
     my ( $class, $user, $repo, $number) = @_;
-	my $gh_id = App::gh->config->github_id;
-	my $gh_token = App::gh->config->github_token;
+    my $gh_id = App::gh->config->github_id;
+    my $gh_token = App::gh->config->github_token;
     unless( $gh_id && $gh_token ) {
         die "Github authtoken not found. Can not get pull request.\n";
     }
     return $class->request(GET => sprintf("pulls/%s/%s/%s?login=%s&token=%s", $user, $repo, scalar $number, $gh_id, $gh_token));
+}
+
+sub issue_edit {
+    my ( $class, $user, $repo, $number, $title, $body) = @_;
+    my $gh_id = App::gh->config->github_id;
+    my $gh_token = App::gh->config->github_token;
+    unless( $gh_id && $gh_token ) {
+        die "Github authtoken not found. Can not edit issue.\n";
+    }
+    if ($number) {
+        return $class->request(POST => sprintf("issues/edit/%s/%s/%s?login=%s&token=%s", $user, $repo, $gh_id, $gh_token, $number), "$title\n$body");
+    } else {
+        return $class->request(POST => sprintf("issues/open/%s/%s?login=%s&token=%s", $user, $repo, $gh_id, $gh_token), "$title\n$body");
+    }
+}
+
+sub issue_list {
+    my ( $class, $user, $repo) = @_;
+    my $gh_id = App::gh->config->github_id;
+    my $gh_token = App::gh->config->github_token;
+    unless( $gh_id && $gh_token ) {
+        die "Github authtoken not found. Can not get issues.\n";
+    }
+    return $class->request(GET => sprintf("issues/list/%s/%s/open?login=%s&token=%s", $user, $repo, $gh_id, $gh_token));
+}
+
+sub issue_get {
+    my ( $class, $user, $repo, $number) = @_;
+    my $gh_id = App::gh->config->github_id;
+    my $gh_token = App::gh->config->github_token;
+    unless( $gh_id && $gh_token ) {
+        die "Github authtoken not found. Can not get issues.\n";
+    }
+    return $class->request(GET => sprintf("issues/show/%s/%s/%s?login=%s&token=%s", $user, $repo, scalar $number, $gh_id, $gh_token));
+}
+
+sub issue_get_comments {
+    my ( $class, $user, $repo, $number) = @_;
+    my $gh_id = App::gh->config->github_id;
+    my $gh_token = App::gh->config->github_token;
+    unless( $gh_id && $gh_token ) {
+        die "Github authtoken not found. Can not get issue comments.\n";
+    }
+    return $class->request(GET => sprintf("issues/comments/%s/%s/%s?login=%s&token=%s", $user, $repo, scalar $number, $gh_id, $gh_token));
+}
+
+sub issue_comment {
+    my ( $class, $user, $repo, $number, $body) = @_;
+    my $gh_id = App::gh->config->github_id;
+    my $gh_token = App::gh->config->github_token;
+    unless( $gh_id && $gh_token ) {
+        die "Github authtoken not found. Can not comment to issue.\n";
+    }
+    return $class->request(POST => sprintf("issues/comment/%s/%s/%s?login=%s&token=%s", $user, $repo, $number, $gh_id, $gh_token),
+        comment => $body,
+    );
 }
 
 1;
