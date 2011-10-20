@@ -36,6 +36,10 @@ lib/App/gh/Command/Search.pm
 lib/App/gh/Command/Setup.pm
 lib/App/gh/Command/Update.pm
 lib/App/gh/Command/Upload.pm
+lib/App/gh/Command/Pullreq.pm
+lib/App/gh/Command/Pullreq/List.pm
+lib/App/gh/Command/Pullreq/Send.pm
+lib/App/gh/Command/Pullreq/Show.pm
 lib/App/gh/Config.pm
 lib/App/gh/Utils.pm
 Makefile.PL

@@ -1,5 +1,8 @@
 Revision history for App-gh
 
+0.48
+    - Merge pull request from @mattn++, added pull request commands.
+
 0.47
     - Merge pull request #22 from zakame/master. API request fixes, @zakame++.
 
