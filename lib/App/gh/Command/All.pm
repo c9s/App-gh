@@ -187,10 +187,13 @@ command again:
 Genernal Options:
 
     --prompt
-        prompt when cloning every repo.
+        prompt for each cloning repo.
 
     --into {path}
         clone repos into a {path}.
+
+    --skip-forks
+        skip repos which has a parent repo (fork from others)
 
     --skip-exists, -s
         skip existed repos.
