@@ -40,23 +40,30 @@ sub request {
     }
     my $response = $ua->$verb($url, %args);
 
-    if ( ! $response->is_success ) {
-        die $response->status_line . ': ' . $response->decoded_content;
-    }
-
-    my $json = $response->decoded_content;  # or whatever
-    my $data;
 
     try {
-        $data = decode_json( $json );
-        die 'Error: Can not decode json. => ' . $json unless $data;
+        my $data;
+        my $content = $response->decoded_content;
+
+        if ( ! $response->is_success ) {
+            # if the error message looks like JSON,
+            # then should provide a readable format.
+            if ( $content =~ m/{"error"/ ) {
+                my $r = decode_json( $content );
+                die $r->{error};
+            }
+
+            die $response->status_line . ': ' . $content;
+        }
+
+        $data = decode_json( $content );
+        die 'Error: Can not decode json. => ' . $content unless $data;
         die $data->{error} if $data->{error};
+        return $data;
     }
     catch {
         die $_;
-    }
-
-    return $data;
+    };
 }
 
 sub search {
