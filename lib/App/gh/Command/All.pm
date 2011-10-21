@@ -92,7 +92,17 @@ sub run {
 
         next if exists $exclude->{$repo_name};
 
+        if( $self->{skip_exists} ) {
+            # Found local repository. Update it.
+            if(-e $local_repo_dir) {
+                _info "Found $local_repo_dir, skipped.";
+                next;
+            }
+        }
+
         if( $self->{skip_forks} ) {
+            # NOTICE: This might exceed the API rate, careful.
+            # Please put this to the end of condition.
             my $info = App::gh->api->repo_info( $acc , $repo_name );
             if($info->{parent}) {
                 _info "Skipping repository with parent: $repo_name";
@@ -100,13 +110,7 @@ sub run {
             }
         }
 
-        if($self->{skip_exists}) {
-            # Found local repository. Update it.
-            if(-e $local_repo_dir) {
-                _info "Found $local_repo_dir, skipped.";
-                next;
-            }
-        }
+        # =================
         # End of conditions for skipping clone
 
 
