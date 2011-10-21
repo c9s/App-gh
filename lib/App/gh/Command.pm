@@ -54,6 +54,14 @@ sub get_current_repo {
     }
 }
 
+sub get_clone_protocol {
+    my $self = shift;
+    return 'git' if $self->{protocol_git} ;
+    return 'ssh' if $self->{protocol_ssh} ;
+    return 'http' if $self->{protocol_http};
+    return 'https' if $self->{protocol_https};
+    return;
+}
 
 sub gen_uri {
     my ($self,$acc,$repo) = @_;

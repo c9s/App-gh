@@ -19,6 +19,7 @@ sub options { (
         "http" => "protocol_http",  # http://github.com/c9s/repo.git
         "https" => "protocol_https",         # https://github.com/c9s/repo.git
         "git|ro"   => "protocol_git",         # git://github.com/c9s/repo.git
+
         "bare" => "bare",
         "mirror" => "mirror",
         "p|prefix=s" => "prefix",
@@ -97,6 +98,8 @@ sub run {
         my $local_repo_dir = $repo_name;
         $local_repo_dir = "$local_repo_dir.git" if $self->{bare};
         $local_repo_dir = $self->{prefix} . "-" . $local_repo_dir if $self->{prefix};
+
+
 
         if( -e $local_repo_dir ) {
             # Found local repository. Update it.
