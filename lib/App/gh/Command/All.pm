@@ -10,8 +10,8 @@ use Cwd ();
 
 sub options { (
         "verbose" => "verbose",
-        "prompt" => "prompt",
-        "into=s" => "into",
+        "prompt"  => "prompt",
+        "into=s"  => "into",
         "exclude=s@" => "exclude",
         "s|skip-exists" => "skip_exists",
 
@@ -62,19 +62,10 @@ sub run {
     _info " Bare: on" if $self->{bare};
     _info " Mirror: on" if $self->{mirror};
 
-    if( $self->{prompt} ) {
-        print "Clone them [Y/n] ? ";
-        my $ans = <STDIN>;
-        chomp( $ans );
-        $ans ||= 'Y';
-        return if( $ans =~ /n/ );
-    }
-
     my $exclude = do {
         my $arr = ref $self->{exclude} eq 'ARRAY' ? $self->{exclude} : [];
         +{map { $_ => 1 } @$arr};
     };
-
 
     my $cloned = 0;
 
