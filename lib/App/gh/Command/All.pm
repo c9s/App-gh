@@ -43,7 +43,6 @@ sub run {
     my $repolist = App::gh->api->user_repos( $acc );
     return if @$repolist == 0;
 
-
     if( $self->{into} ) {
         print STDERR "Cloning all repositories into @{[ $self->{into} ]}\n";
         mkpath [ $self->{into} ];
@@ -74,16 +73,15 @@ sub run {
     };
 
     for my $repo ( @{ $repolist } ) {
-        my $repo_name = $repo->{name};
+        my $repo_name      = $repo->{name};
+        my $uri            = $self->gen_uri( $acc, $repo_name );
+        my $local_repo_dir = $repo_name;
+        $local_repo_dir    = "$local_repo_dir.git" if $self->{bare};
+        $local_repo_dir    = $self->{prefix} . "-" . $local_repo_dir if $self->{prefix};
 
-        if( $self->{skip_forks} ) {
-            my $info = App::gh->api->repo_info( $acc , $repo_name );
-            if($info->{parent}) {
-                _info "Skip $repo_name";
-                next;
-            }
-        }
+        print $uri . "\n" if $self->{verbose};
 
+        # ===> Conditions for skipping repos, to prevent api rate exceeded
         if( $self->{prompt} ) {
             print "Clone $repo_name [Y/n] ? ";
             my $ans = <STDIN>;
@@ -91,21 +89,28 @@ sub run {
             $ans ||= 'Y';
             next if( $ans =~ /n/ );
         }
+
         next if exists $exclude->{$repo_name};
 
-        my $uri = $self->gen_uri( $acc, $repo_name );
-        print $uri . "\n" if $self->{verbose};
+        if( $self->{skip_forks} ) {
+            my $info = App::gh->api->repo_info( $acc , $repo_name );
+            if($info->{parent}) {
+                _info "Skipping repository with parent: $repo_name";
+                next;
+            }
+        }
 
-
-        my $local_repo_dir = $repo_name;
-        $local_repo_dir = "$local_repo_dir.git" if $self->{bare};
-        $local_repo_dir = $self->{prefix} . "-" . $local_repo_dir if $self->{prefix};
-
+        if($self->{skip_exists}) {
+            # Found local repository. Update it.
+            if(-e $local_repo_dir) {
+                _info "Found $local_repo_dir, skipped.";
+                next;
+            }
+        }
+        # End of conditions for skipping clone
 
 
         if( -e $local_repo_dir ) {
-            # Found local repository. Update it.
-            print("Found $local_repo_dir, skipped.\n"),next if $self->{skip_exists};
 
             if( $self->{force} ) {
                 rmtree $local_repo_dir or do {
