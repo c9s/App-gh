@@ -171,6 +171,7 @@ sub run {
             }
         }
     }
+    print "Done\n";
 }
 
 
