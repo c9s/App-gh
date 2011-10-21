@@ -5,6 +5,7 @@ use LWP::UserAgent;
 use URI;
 use JSON::XS;
 use App::gh::Utils;
+use Try::Tiny;
 
 sub new_ua {
     my $class = shift;
@@ -45,13 +46,16 @@ sub request {
 
     my $json = $response->decoded_content;  # or whatever
     my $data;
-    eval {
-        $data = decode_json( $json );
-    };
 
-    die "JSON Error:" . $@  if $@ ;
-    die $data->{error} if $data->{error};
-    die "Empty response" unless( $data );
+    try {
+        $data = decode_json( $json );
+        die 'Error: Can not decode json. => ' . $json unless $data;
+        die $data->{error} if $data->{error};
+    }
+    catch {
+        die $_;
+    }
+
     return $data;
 }
 

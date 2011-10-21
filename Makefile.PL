@@ -21,6 +21,7 @@ requires 'HTML::Strip';
 requires 'Term::ReadLine';
 requires 'Scope::Guard';
 requires 'Error';
+requires 'Try::Tiny';
 
 # `gh recent` support
 recommends 'IO::Pager';
