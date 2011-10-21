@@ -20,6 +20,8 @@ sub options { (
         "https" => "protocol_https",         # https://github.com/c9s/repo.git
         "git|ro"   => "protocol_git",         # git://github.com/c9s/repo.git
 
+        "skip-forks" => "skip_forks",  # skip repositories fork from others.
+
         "bare" => "bare",
         "mirror" => "mirror",
         "p|prefix=s" => "prefix",
@@ -41,6 +43,7 @@ sub run {
     my $repolist = App::gh->api->user_repos( $acc );
     return if @$repolist == 0;
 
+
     if( $self->{into} ) {
         print STDERR "Cloning all repositories into @{[ $self->{into} ]}\n";
         mkpath [ $self->{into} ];
@@ -48,6 +51,7 @@ sub run {
     }
 
     $self->{bare} = 1 if $self->{mirror};
+
 
     _info "Will clone repositories below:";
     print " " x 8 . join " " , map { $_->{name} } @{ $repolist };
@@ -78,9 +82,16 @@ sub run {
         return sprintf( "[%d/%d]", ++$cloned , scalar(@$repolist) );
     };
 
-
     for my $repo ( @{ $repolist } ) {
         my $repo_name = $repo->{name};
+
+        if( $self->{skip_forks} ) {
+            my $info = App::gh->api->repo_info( $acc , $repo_name );
+            if($info->{parent}) {
+                _info "Skip $repo_name";
+                next;
+            }
+        }
 
         if( $self->{prompt} ) {
             print "Clone $repo_name [Y/n] ? ";
