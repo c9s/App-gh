@@ -33,6 +33,8 @@ sub run {
     my $self = shift;
     my $acc  = shift;
 
+    # turn off buffering
+    $|++; 
 
     $self->{into} ||= $acc;
 
