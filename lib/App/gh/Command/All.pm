@@ -138,6 +138,14 @@ sub run {
             else {
                 my $flags = qq();
                 $flags .= qq{ -q } unless $self->{verbose};
+
+                # prune deleted remote branches
+                qx{ git remote update --prune };
+
+                # fetch all remotes
+                qx{ git fetch --all };
+
+                # update current working repo
                 qx{ git pull $flags --rebase --all };
             }
         }
