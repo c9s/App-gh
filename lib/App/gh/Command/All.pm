@@ -137,7 +137,7 @@ sub run {
         }
         else {
             # No repository was cloned yet. Clone it.
-            print "Cloning " . $repo->{name} . " ... " . $print_progress->() . "\n";
+            _info "Cloning " . $repo->{name} . " ... " . $print_progress->();
 
             my $flags = qq();
             $flags .= qq{ -q }     unless $self->{verbose};
