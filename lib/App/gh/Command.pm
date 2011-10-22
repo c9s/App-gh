@@ -11,13 +11,14 @@ use constant global_options => ( 'help' => 'help' );
 
 sub alias { (
         "a"  => "all",
-        "up" => "update",
-        "pu" => "pull",
-        "pr" => "pullreq",
-        "fo" => "fork",
-        "ne" => "network",
-        "se" => "search",
         "ci" => "commit",
+        "fo" => "fork",
+        "is" => "issue",
+        "ne" => "network",
+        "pr" => "pullreq",
+        "pu" => "pull",
+        "se" => "search",
+        "up" => "update",
         ) }
 
 sub invoke {

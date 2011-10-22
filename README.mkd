@@ -186,16 +186,42 @@ If you want to send pull request about current branch:
     $ git commit -m "bug fix about ..."
     $ gh pullreq send
 
+### issue
+
+To show issues of the project:
+
+    $ cd mattn/p5-Growl-Any
+    $ gh issue list
+
+And show the issue
+
+    $ cd mattn/p5-Growl-GNTP
+    $ gh issue show 3
+
+If you want to create issue:
+
+    $ cd mattn/p5-Growl-GNTP
+    $ gh issue edit
+
+Or edit issue
+
+    $ gh issue edit 3
+
+And comment to the issue
+
+    $ gh issue comment 3
+
 ## COMMAND ALIAS
 
     "a"  => "all"
-    "up" => "update"
-    "pu" => "pull"
-    "pr" => "pullreq"
-    "fo" => "fork"
-    "ne" => "network"
-    "se" => "search"
     "ci" => "commit"
+    "fo" => "fork"
+    "is" => "issue"
+    "ne" => "network"
+    "pr" => "pullreq"
+    "pu" => "pull"
+    "se" => "search"
+    "up" => "update"
 
 ## INSTALLATION
 
