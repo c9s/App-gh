@@ -1,5 +1,8 @@
 Revision history for App-gh
 
+0.51
+    - Fix double list query.
+
 0.50
     - Improve API error message printint
     - Refactor command "all" conditions
