@@ -9,16 +9,16 @@ use Scope::Guard qw(guard);
 use Cwd ();
 
 sub options { (
-        "verbose" => "verbose",
-        "prompt"  => "prompt",
-        "into=s"  => "into",
-        "exclude=s@" => "exclude",
+        "verbose"       => "verbose",
+        "prompt"        => "prompt",
+        "into=s"        => "into",
+        "exclude=s@"    => "exclude",
         "s|skip-exists" => "skip_exists",
 
-        "ssh" => "protocol_ssh",    # git@github.com:c9s/repo.git
-        "http" => "protocol_http",  # http://github.com/c9s/repo.git
-        "https" => "protocol_https",         # https://github.com/c9s/repo.git
-        "git|ro"   => "protocol_git",         # git://github.com/c9s/repo.git
+        "ssh"    => "protocol_ssh",    # git@github.com:c9s/repo.git
+        "http"   => "protocol_http",  # http://github.com/c9s/repo.git
+        "https"  => "protocol_https",         # https://github.com/c9s/repo.git
+        "git|ro" => "protocol_git",         # git://github.com/c9s/repo.git
 
         "skip-forks" => "skip_forks",  # skip repositories fork from others.
 
