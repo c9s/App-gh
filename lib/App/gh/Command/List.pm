@@ -17,7 +17,7 @@ App::gh::Command::List - list repository from one.
 =cut
 
 sub options {
-    ( 'n|name' => 'name' )
+    ( 'n|name' => 'name_only' )
 }
 
 sub run {
@@ -32,7 +32,8 @@ sub run {
     for my $repo ( @$repolist ) {
         my $repo_name = $repo->{name};
 
-        if( $self->{name} ) {
+        # name-only
+        if( $self->{name_only} ) {
             print $acc . "/" . $repo->{name} , "\n";
         }
         else {
@@ -41,7 +42,6 @@ sub run {
                 ($repo->{description}||"")
             ];
         }
-
     }
     print_list @lines if @lines;
 }

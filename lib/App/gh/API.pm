@@ -110,7 +110,7 @@ sub user_info {
 sub user_repos {
     my ($class,$user) = @_;
     my @repos;
-    my $page;
+    my $page = 1;
     while (1) {
         my $ret = $class->user_info( $user, $page++ );
         last unless @{$ret->{repositories}};
