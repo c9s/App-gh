@@ -133,16 +133,40 @@ if you want to send pull request about current branch:
     $ git commit -m "bug fix about ..."
     $ gh pullreq send
 
+to show issues of the project:
+
+    $ cd mattn/p5-Growl-Any
+    $ gh issue list
+
+and show the issue
+
+    $ cd mattn/p5-Growl-GNTP
+    $ gh issue show 3
+
+if you want to create issue:
+
+    $ cd mattn/p5-Growl-GNTP
+    $ gh issue edit
+
+or edit issue
+
+    $ gh issue edit 3
+
+and comment to the issue
+
+    $ gh issue comment 3
+
 =head1 ALIASES
 
     a  => all
-    up => update
-    pu => pull
-    pr => pullreq
-    fo => fork
-    ne => network
-    se => search
     ci => commit
+    fo => fork
+    is => issue
+    ne => network
+    pr => pullreq
+    pu => pull
+    se => search
+    up => update
 
 =head1 AUTHOR
 
