@@ -1,22 +1,12 @@
 
+* Remove Git.pm from dependency. use Git::Repository instead.
+
 
 * `key`  - list keys
 * `key remove`
 * `key add`
 * `vis public`
 * `vis private`
-
-
-* Issues
-
-    gh is  (alias)
-    gh issue --list
-    gh issue [id]
-    gh issue open [id]
-    gh issue close [id]
-    gh issue comment [id]
-
-    # any better ideas ?
 
 * Collaborators
 
