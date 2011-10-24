@@ -1,5 +1,13 @@
 Revision history for App-gh
 
+0.50
+    - Improve API error message printint
+    - Refactor command "all" conditions
+    - Preventing API rate exceed
+    - Add --skip-forks option
+    - Issue command from @mattn.
+    - Documentation update.
+
 0.49
     - Update pods for pull request command. @mattn++
 
