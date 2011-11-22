@@ -1,5 +1,8 @@
 Revision history for App-gh
 
+0.531
+    - Improvement for help messages.
+
 0.53
     - Improvement for issue printing layout.
     - Improvement for pull request show command printing.
