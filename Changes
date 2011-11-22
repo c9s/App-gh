@@ -1,5 +1,8 @@
 Revision history for App-gh
 
+0.521
+    - Fix error printing
+
 0.52
     - Improve pullrequest list layout, better printing.
 

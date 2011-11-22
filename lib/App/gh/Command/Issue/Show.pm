@@ -5,6 +5,7 @@ use base qw(App::gh::Command);
 use App::gh::Utils;
 use File::stat;
 use File::Temp;
+use Text::Wrap;
 require App::gh::Git;
 
 
@@ -58,8 +59,8 @@ sub run {
 
     my $data = App::gh->api->issue_get($user, $repo, $number);
     my $issue = $data->{issue};
-    printf "title: %s\n", $issue->{title};
-    printf "author: %s\n", $issue->{user};
+    printf "Title: %s\n", $issue->{title};
+    printf "Author: %s\n", $issue->{user};
     printf "\n%s\n\n", $issue->{body};
 
     $data = App::gh->api->issue_get_comments($user, $repo, $number);
@@ -68,6 +69,5 @@ sub run {
         printf "%s:\n%s\n", $d->{user}, $d->{body};
     }
 }
-
 
 1;
