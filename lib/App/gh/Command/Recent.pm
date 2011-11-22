@@ -38,7 +38,12 @@ sub run {
     $Text::Wrap::columns = 90;
 
     for my $entry ( $feed->entries ) {
+        my $link = $entry->link->href;
+        my $author = $entry->author->name;
+        my $email = $entry->author->email;
+
         my $html = $entry->content->body;
+
         $html =~ s{<a href="(.*?)".*?>(.*?)</a>}{$2 : $1 }g;
 
         my $h = HTML::Strip->new(  emit_spaces => 1 );
@@ -50,12 +55,16 @@ sub run {
 
         my $title = $entry->title;
         if( $self->{color} ) {
-            print "\e[1;32m" , $title , "\e[0m\n";
+            print "\e[1;32m* " , $title , "\e[0m\n";
         }
         else {
-            print $title , "\n";
+            print "* " . $title . "\n";
         }
-        print wrap( "  ", "  ", $text ) , "\n\n";
+
+        print "  Link: $link\n";
+        print "  Author: $author\n";
+        $text =~ s{^\s*}{};
+        print wrap( "    ", "    ", $text ) , "\n\n";
     }
 
 }

@@ -6,6 +6,7 @@ use App::gh::Utils;
 use File::stat;
 use File::Temp;
 use Text::Wrap;
+use IO::Pager;
 require App::gh::Git;
 
 
@@ -57,13 +58,15 @@ sub run {
     unless (@{$data->{pulls}}) {
         _info "No pull request found.";
     } else {
+        local  $STDOUT = new IO::Pager       *STDOUT;
         for my $pull (@{$data->{pulls}}) {
             printf "* Issue %d: %s - %s (%s)\n", $pull->{number} , 
                 $pull->{title},
                 $pull->{user}->{name}, 
                 $pull->{user}->{login};
             printf "  Diff: %s\n", $pull->{diff_url};
-            print  "  Body: " . wrap( "", "\t", $pull->{body} );
+            print "\n";
+            print  "  " . wrap( "", "\t", $pull->{body} );
             print "\n";
         }
     }
