@@ -11,9 +11,22 @@ use constant subcommands => qw(List Show Send);
 
 App::gh::Command::Pullreq - pull request. (show/list/send)
 
-=head1 DESCRIPTION
+=head1 USAGE
 
-balh
+Send a pull request
+
+before that, make sure you've set EDITOR environment variable.
+
+    $ gh pullreq send
+
+List pull requests
+
+    $ gh pullreq list
+    ...
+
+Show pull requests issue {N}:
+
+    $ gh pullreq show {N}
 
 =cut
 
