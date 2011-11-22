@@ -5,6 +5,7 @@ use base qw(App::gh::Command);
 use App::gh::Utils;
 use File::stat;
 use File::Temp;
+use Text::Wrap;
 require App::gh::Git;
 
 
@@ -20,7 +21,13 @@ App::gh::Command::PullReq::Show - show the pull request.
 
     $ gh pullreq show [number]
 
+        --diff     also print diff
+
 =cut
+
+sub options {
+    "diff"       => "with_diff",
+}
 
 sub parse_uri {
     my ($uri) = @_;
@@ -58,31 +65,51 @@ sub run {
 
     my $data = App::gh->api->pullreq_get($user, $repo, $number);
     my $pull = $data->{pull};
-    printf "title: %s\n", $pull->{title};
-    printf "author: %s\n", $pull->{user}->{name};
-    printf "request: %s => %s\n", $pull->{base}->{label}, $pull->{head}->{label};
-    printf "\n%s\n\n", $pull->{body};
-    for my $d (@{$pull->{discussion}}) {
-        print "-" x 78 . "\n";
+    printf "Title:    [%s] %s\n", ucfirst($pull->{state}) , $pull->{title};
+    printf "Date:     %s\n", $pull->{created_at};
+    printf "Author:   %s (%s)\n", $pull->{user}->{name}, $pull->{user}->{login};
+    printf "Request:  %s => %s\n", $pull->{base}->{label}, $pull->{head}->{label};
+
+    print  wrap "\t","\t",$pull->{body};
+    print  "\n\n";
+
+    my @discussions = @{ $pull->{discussion} };
+    my @commits     = grep { $_->{type} eq 'Commit' } @discussions;
+
+    print scalar(@commits) , " Commits:\n\n";
+    for my $c ( @commits ) {
+        printf "* Commit: %s\n",$c->{tree};
+        printf "  Author: %s (%s) <%s>\n", $c->{author}->{name} , $c->{author}->{login} , $c->{author}->{email};
+        printf "  Date:   %s\n" , $c->{committed_date};
+        printf "\n%s\n\n",wrap "\t","\t", $c->{message};
+    }
+
+    for my $d ( @discussions ) {
         if ($d->{type} eq 'IssueComment') {
             printf "%s:\n%s\n", $d->{user}->{name}, $d->{body};
-        }
-        if ($d->{type} eq 'Commit') {
-            printf "%s:\n%s\n", $d->{author}->{name}, $d->{message};
         }
         if ($d->{type} eq 'PullRequestReviewComment') {
             printf "%s:\n%s\n", $d->{author}->{name}, $d->{body};
         }
     }
-    print "-" x 78 . "\n";
-    my $ua = LWP::UserAgent->new;
-    $ua->timeout(10);
-    $ua->env_proxy;
-    my $res = $ua->get($pull->{patch_url});
-    if ($res->is_success) {
-        print $res->decoded_content;
-    } else {
-        warn $res->message;
+
+
+    # XXX: need to patch App::CLI for subcommand help message
+    # eg,
+    #
+    #    gh help pullreq show  # this doesn't work
+    #
+    if( 1 || $self->{with_diff} ) {
+        print "=" x 78 . "\n";
+        my $ua = LWP::UserAgent->new;
+        $ua->timeout(10);
+        $ua->env_proxy;
+        my $res = $ua->get($pull->{patch_url});
+        if ($res->is_success) {
+            print $res->decoded_content;
+        } else {
+            warn $res->message;
+        }
     }
 }
 

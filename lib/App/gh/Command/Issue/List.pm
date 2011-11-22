@@ -3,6 +3,7 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 use App::gh::Utils;
+use Text::Wrap;
 use File::stat;
 use File::Temp;
 require App::gh::Git;
@@ -59,7 +60,17 @@ sub run {
         _info "No issues found.";
     } else {
         for my $issue (@{$data->{issues}}) {
-            printf "%04d:%s: %s\n", $issue->{number}, $issue->{user}, $issue->{title};
+            printf "* Issue %-4d [%s] %s - %s\n" , 
+                    $issue->{number}, 
+                    ucfirst($issue->{state}),
+                    $issue->{title}, 
+                    $issue->{user};
+            printf "  Date       %s\n", $issue->{created_at};
+            printf "  Url        %s\n", $issue->{html_url};
+            # use Data::Dumper; warn Dumper( $issue->{body} );
+            printf "\n%s",wrap " " x 6," " x 6,$issue->{body};
+            printf "\n\n";
+            # printf "%04d:%s: %s\n", $issue->{number}, $issue->{user}, $issue->{title};
         }
     }
 }
