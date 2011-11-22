@@ -161,7 +161,7 @@ To merge changes from foo/master and create a tracked branch:
     $ gh pull foo -m -b
 
 
-### pullreq
+### Pull Requests: pullreq
 
 To show pull requests of the project:
 
