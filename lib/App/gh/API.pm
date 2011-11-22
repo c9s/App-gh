@@ -306,6 +306,3 @@ The returned structure:
 http://developer.github.com/v3/pulls/
 
 =cut
-
-
-=cut
