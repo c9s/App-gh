@@ -50,9 +50,8 @@ sub request {
             # then should provide a readable format.
             if ( $content =~ m/{"error"/ ) {
                 my $r = decode_json( $content );
-                die join "\n",@$r->{error};
+                die join "\n", @{ $r->{error} };
             }
-
             die $response->status_line . ': ' . $content;
         }
 
