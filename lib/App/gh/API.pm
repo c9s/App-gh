@@ -1,6 +1,7 @@
 package App::gh::API;
 use warnings;
 use strict;
+use Carp ();
 use LWP::UserAgent;
 use URI;
 use JSON::XS;
@@ -74,6 +75,7 @@ sub search {
 
 sub fork {
     my ( $class, $user, $repo) = @_;
+    Carp::croak("Missing mandatory parameter: user") unless defined $user;
     my $gh_id = App::gh->config->github_id;
     my $gh_token = App::gh->config->github_token;
     unless( $gh_id && $gh_token ) {
