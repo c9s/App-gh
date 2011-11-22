@@ -21,7 +21,13 @@ App::gh::Command::PullReq::Show - show the pull request.
 
     $ gh pullreq show [number]
 
+        --diff     also print diff
+
 =cut
+
+sub options {
+    "diff"       => "with_diff",
+}
 
 sub parse_uri {
     my ($uri) = @_;
@@ -72,10 +78,10 @@ sub run {
 
     print scalar(@commits) , " Commits:\n\n";
     for my $c ( @commits ) {
-        printf "    Commit: %s\n",$c->{tree};
-        printf "    Author: %s (%s) <%s>\n", $c->{author}->{name} , $c->{author}->{login} , $c->{author}->{email};
-        printf "    Date:   %s\n" , $c->{committed_date};
-        printf "\n%s\n\n",wrap "\t\t","\t\t", $c->{message};
+        printf "* Commit: %s\n",$c->{tree};
+        printf "  Author: %s (%s) <%s>\n", $c->{author}->{name} , $c->{author}->{login} , $c->{author}->{email};
+        printf "  Date:   %s\n" , $c->{committed_date};
+        printf "\n%s\n\n",wrap "\t","\t", $c->{message};
     }
 
     for my $d ( @discussions ) {
@@ -86,15 +92,24 @@ sub run {
             printf "%s:\n%s\n", $d->{author}->{name}, $d->{body};
         }
     }
-    print "=" x 78 . "\n";
-    my $ua = LWP::UserAgent->new;
-    $ua->timeout(10);
-    $ua->env_proxy;
-    my $res = $ua->get($pull->{patch_url});
-    if ($res->is_success) {
-        print $res->decoded_content;
-    } else {
-        warn $res->message;
+
+
+    # XXX: need to patch App::CLI for subcommand help message
+    # eg,
+    #
+    #    gh help pullreq show  # this doesn't work
+    #
+    if( 1 || $self->{with_diff} ) {
+        print "=" x 78 . "\n";
+        my $ua = LWP::UserAgent->new;
+        $ua->timeout(10);
+        $ua->env_proxy;
+        my $res = $ua->get($pull->{patch_url});
+        if ($res->is_success) {
+            print $res->decoded_content;
+        } else {
+            warn $res->message;
+        }
     }
 }
 
