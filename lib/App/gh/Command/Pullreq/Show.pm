@@ -5,6 +5,7 @@ use base qw(App::gh::Command);
 use App::gh::Utils;
 use File::stat;
 use File::Temp;
+use Text::Wrap;
 require App::gh::Git;
 
 
@@ -58,9 +59,9 @@ sub run {
 
     my $data = App::gh->api->pullreq_get($user, $repo, $number);
     my $pull = $data->{pull};
-    printf "title: %s\n", $pull->{title};
-    printf "author: %s\n", $pull->{user}->{name};
-    printf "request: %s => %s\n", $pull->{base}->{label}, $pull->{head}->{label};
+    printf "Title:    %s\n", $pull->{title};
+    printf "Author:   %s (%s)\n", $pull->{user}->{name}, $pull->{user}->{login};
+    printf "Request:  %s => %s\n", $pull->{base}->{label}, $pull->{head}->{label};
     printf "\n%s\n\n", $pull->{body};
     for my $d (@{$pull->{discussion}}) {
         print "-" x 78 . "\n";
