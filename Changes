@@ -1,5 +1,8 @@
 Revision history for App-gh
 
+0.52
+    - Improve pullrequest list layout, better printing.
+
 0.51
     - Fix double list query.
 

@@ -60,7 +60,10 @@ sub run {
         _info "No pull request found.";
     } else {
         for my $pull (@{$data->{pulls}}) {
-            printf "* Issue %d: %s - %s\n", $pull->{number} , $pull->{user}->{name} , $pull->{title};
+            printf "* Issue %d: %s - %s (%s)\n", $pull->{number} , 
+                $pull->{title},
+                $pull->{user}->{name}, 
+                $pull->{user}->{login};
             printf "  Diff: %s\n", $pull->{diff_url};
             print  "  Body: " . wrap( "", "\t", $pull->{body} );
             print "\n";
