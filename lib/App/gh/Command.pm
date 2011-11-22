@@ -130,6 +130,18 @@ pullreq show
 pullreq send ([branch])
     - send pull requests of current branch to branch:
 
+issue list
+    - show list of issues.
+
+issue show
+    - show the issue.
+
+issue edit ([issueid])
+    - to edit the issue.
+
+issue comment [issueid]
+    - to comment the issue.
+
 END
 }
 
