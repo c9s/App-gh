@@ -1,7 +1,6 @@
 package App::gh::Command::Pullreq::Send;
-use warnings;
-use strict;
 use base qw(App::gh::Command);
+use v5.10;
 use App::gh::Utils;
 use File::stat;
 use File::Temp;
@@ -15,8 +14,6 @@ App::gh::Command::PullReq::Send - pull request of current branch.
 =head1 DESCRIPTION
 
 =head1 USAGE
-
-=pod
 
     $ gh pullreq send ([branch])
 
@@ -43,7 +40,21 @@ sub get_remote {
 sub run {
     my $self = shift;
 
-    die "\$EDITOR is not set." unless $ENV{EDITOR};
+    unless ( $ENV{EDITOR} ) {
+        say "\$EDITOR is not set. please set the EDITOR environment variable for editing.";
+        say "\nUnix-like system users: \n";
+        say "\tNano text editor, a simple text editor";
+        say "\t\t export EDITOR=nano";
+        say "\tVIM users please run:";
+        say "\t\t export EDITOR=vim";
+        say "\tEmacs users please run:";
+        say "\t\t export EDITOR=emacs";
+
+        say "\nWindows users please run:\n";
+        say "\t\t set EDITOR=notepad.txt";
+        say "";
+        die;
+    }
 
     my $remote_branch = shift||'master';
     my $remote = $self->get_remote();
@@ -87,7 +98,7 @@ sub run {
     _info "Sending pull request for $branch...";
     my $data = App::gh->api->pullreq_send($user, $repo, $branch, $remote_branch, $title, $body);
 
-    _info "sent: " . $data->{pull}->{html_url};
+    _info "Sent: " . $data->{pull}->{html_url};
 }
 
 

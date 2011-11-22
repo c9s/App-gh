@@ -17,8 +17,6 @@ App::gh::Command::PullReq::List - show list of pull requests.
 
 =head1 USAGE
 
-=pod
-
     $ gh pullreq list
 
 =cut
