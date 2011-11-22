@@ -59,23 +59,34 @@ sub run {
 
     my $data = App::gh->api->pullreq_get($user, $repo, $number);
     my $pull = $data->{pull};
-    printf "Title:    %s\n", $pull->{title};
+    printf "Title:    [%s] %s\n", ucfirst($pull->{state}) , $pull->{title};
+    printf "Date:     %s\n", $pull->{created_at};
     printf "Author:   %s (%s)\n", $pull->{user}->{name}, $pull->{user}->{login};
     printf "Request:  %s => %s\n", $pull->{base}->{label}, $pull->{head}->{label};
-    printf "\n%s\n\n", $pull->{body};
-    for my $d (@{$pull->{discussion}}) {
-        print "-" x 78 . "\n";
+
+    print  wrap "\t","\t",$pull->{body};
+    print  "\n\n";
+
+    my @discussions = @{ $pull->{discussion} };
+    my @commits     = grep { $_->{type} eq 'Commit' } @discussions;
+
+    print scalar(@commits) , " Commits:\n\n";
+    for my $c ( @commits ) {
+        printf "    Commit: %s\n",$c->{tree};
+        printf "    Author: %s (%s) <%s>\n", $c->{author}->{name} , $c->{author}->{login} , $c->{author}->{email};
+        printf "    Date:   %s\n" , $c->{committed_date};
+        printf "\n%s\n\n",wrap "\t\t","\t\t", $c->{message};
+    }
+
+    for my $d ( @discussions ) {
         if ($d->{type} eq 'IssueComment') {
             printf "%s:\n%s\n", $d->{user}->{name}, $d->{body};
-        }
-        if ($d->{type} eq 'Commit') {
-            printf "%s:\n%s\n", $d->{author}->{name}, $d->{message};
         }
         if ($d->{type} eq 'PullRequestReviewComment') {
             printf "%s:\n%s\n", $d->{author}->{name}, $d->{body};
         }
     }
-    print "-" x 78 . "\n";
+    print "=" x 78 . "\n";
     my $ua = LWP::UserAgent->new;
     $ua->timeout(10);
     $ua->env_proxy;
