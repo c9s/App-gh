@@ -1,11 +1,15 @@
 Revision history for App-gh
 
+0.54
+    - Add IO::Pager for Pull request command (list and show)
+    - Improvements for recent command printing.
+
 0.531
-    - Improvement for help messages.
+    - Improvements for help messages.
 
 0.53
-    - Improvement for issue printing layout.
-    - Improvement for pull request show command printing.
+    - Improvements for issue printing layout.
+    - Improvements for pull request show command printing.
 
 0.521
     - Fix error printing
