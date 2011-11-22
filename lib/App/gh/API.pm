@@ -301,4 +301,10 @@ These are the same args as repo_create, except for name.
 
 Set a repo to be public or private.
 
+=head2 pullreq_list
+
+The returned structure:
+
+http://developer.github.com/v3/pulls/
+
 =cut

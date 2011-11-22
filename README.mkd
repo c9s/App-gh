@@ -160,11 +160,6 @@ To merge changes from foo/master and create a tracked branch:
     $ gh pull foo --merge --branch
     $ gh pull foo -m -b
 
-### update
-
-Run (pull/push) repository changes from/to remotes, and `git remote update --prune`
-
-    $ gh update
 
 ### pullreq
 
@@ -172,6 +167,14 @@ To show pull requests of the project:
 
     $ cd tokuhirom/Amon
     $ gh pullreq list
+
+    * Issue 1: Test - Cornelius (c9s)
+      Diff: https://github.com/c9s/App-gh/pull/29.diff
+      Body: Test
+    * Issue 2: Test - Cornelius (c9s)
+      Diff: https://github.com/c9s/App-gh/pull/29.diff
+      Body: Test
+      ...
 
 And show the pull request
 
@@ -185,6 +188,12 @@ If you want to send pull request about current branch:
     $ vi lib/AnySan.pm
     $ git commit -m "bug fix about ..."
     $ gh pullreq send
+
+### update
+
+Run (pull/push) repository changes from/to remotes, and `git remote update --prune`
+
+    $ gh update
 
 ### issue
 

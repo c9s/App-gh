@@ -5,6 +5,7 @@ use base qw(App::gh::Command);
 use App::gh::Utils;
 use File::stat;
 use File::Temp;
+use Text::Wrap;
 require App::gh::Git;
 
 
@@ -54,15 +55,20 @@ sub run {
         die "Github authtoken not found. Can not get pull requests.\n";
     }
 
-    my $data = App::gh->api->pullreq_list($user, $repo);
+    my $data = App::gh->api->pullreq_list( $user, $repo );
     unless (@{$data->{pulls}}) {
         _info "No pull request found.";
     } else {
         for my $pull (@{$data->{pulls}}) {
-            printf "%04d:%s: %s\n", $pull->{number}, $pull->{user}->{name}, $pull->{title};
+            printf "* Issue %d: %s - %s (%s)\n", $pull->{number} , 
+                $pull->{title},
+                $pull->{user}->{name}, 
+                $pull->{user}->{login};
+            printf "  Diff: %s\n", $pull->{diff_url};
+            print  "  Body: " . wrap( "", "\t", $pull->{body} );
+            print "\n";
         }
     }
 }
-
 
 1;
