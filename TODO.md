@@ -1,6 +1,8 @@
 
 * Remove Git.pm from dependency. use Git::Repository instead.
 
+* GitHub Pages support
+    http://pages.github.com/
 
 * `key`  - list keys
 * `key remove`
