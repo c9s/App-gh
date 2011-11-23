@@ -1,6 +1,6 @@
 Revision history for App-gh
 
-0.54
+0.54, 0.541
     - Add IO::Pager for Pull request command (list and show)
     - Improvements for recent command printing.
 
