@@ -7,6 +7,7 @@ license  'perl';
 
 build_requires 'Test::More';
 
+requires 'Term::ANSIColor';
 requires 'File::Temp';
 requires 'File::Basename';
 requires 'App::CLI';
