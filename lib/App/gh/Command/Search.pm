@@ -26,13 +26,9 @@ sub run {
     my ($self,$keyword) = @_;
 
     local $|;
-
     say "Fetching list...";
 
     my $result = App::gh->api->search($keyword);
-
-    # use Data::Dumper; warn Dumper( $result );
-
     if( $self->{long} ) {
         for my $entry ( @{ $result->{repositories} } ) {
             print color 'white bold';
@@ -42,7 +38,6 @@ sub run {
             say "    Url:      " .  $entry->{url} if $entry->{url};
             say "    Homepage: " .  $entry->{homepage} if $entry->{homepage};
             say "\n" . wrap( '    ', '    ', $entry->{description} ) . "\n";
-
         }
     } else {
         my @ary = ();
