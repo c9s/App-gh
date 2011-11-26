@@ -58,4 +58,4 @@ t/manifest.t
 t/pod.t
 t/01-git.t
 xt/01-git.t
-TODO.mkd
+TODO.md
