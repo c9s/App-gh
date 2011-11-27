@@ -28,6 +28,13 @@ Show pull requests issue {N}:
 
     $ gh pullreq show {N}
 
+
+More about pullreq send command:
+
+    $ gh pullreq send
+
+    $ gh pullreq send master c9s/App-gh
+
 =cut
 
 sub run {

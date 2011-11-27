@@ -15,7 +15,28 @@ App::gh::Command::PullReq::Send - pull request of current branch.
 
 =head1 USAGE
 
-    $ gh pullreq send ([branch])
+    $ gh pullreq send ([base branch]) ([owner]/[repo])
+
+Example:
+
+    $ gh pullreq send
+
+    $ gh pullreq send master c9s/App-gh
+
+=head1 API
+
+API Spec is from L<http://develop.github.com/p/pulls.html>
+
+    pull[base] - A String of the branch or commit SHA that you want your
+        changes to be pulled to.
+
+    pull[head] - A String of the branch or commit SHA of your changes.
+        Typically this will be a branch. If the branch is in a fork of the original
+        repository, specify the username first: "my-user:some-branch".
+
+    pull[title] - The String title of the Pull Request (and the related Issue).
+
+    pull[body] - The String body of the Pull Request.
 
 =cut
 
@@ -56,7 +77,7 @@ sub run {
         die;
     }
 
-    my $remote_branch = shift ||'master' ;
+    my $remote_branch = shift ||'master';
     my $remote = $self->get_remote();
 
     die "Remote not found\n." unless $remote;
