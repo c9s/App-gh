@@ -24,9 +24,10 @@ sub run {
     eval { require XML::Atom::Feed; };
     die 'Please install XML::Atom::Feed to enable this command.' if $@;
 
+    local $STDOUT;
     eval { require IO::Pager; };
     unless( $@ ) {
-        local $STDOUT = new IO::Pager       *STDOUT;
+        $STDOUT = new IO::Pager       *STDOUT;
     }
 
     my $user  = App::gh->config->github_id();

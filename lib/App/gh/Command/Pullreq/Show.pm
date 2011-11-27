@@ -52,11 +52,6 @@ sub run {
     return App::gh::Command->invoke('help', 'pullreq', 'show')
         unless defined $number;
 
-    eval {
-        require IO::Pager;
-    };
-    die 'Please install IO::Pager to enable this command' if $@;
-
     my $remote = $self->get_remote();
 
     die "Remote not found\n." unless $remote;
@@ -69,8 +64,9 @@ sub run {
     }
 
     eval { require IO::Pager; };
+    local $STDOUT;
     unless ( $@ ) {
-        local $STDOUT = new IO::Pager *STDOUT;
+        $STDOUT = IO::Pager->new( *STDOUT );
     } else {
         warn 'Please install IO::Pager to enable pager support.';
     }
