@@ -17,6 +17,10 @@ App::gh::Command::PullReq::Send - pull request of current branch.
 
     $ gh pullreq send ([base branch]) ([owner]/[repo])
 
+Base branch: the branch you fork from.
+
+Owner/Repo:  the repository you fork from.
+
 Example:
 
     $ gh pullreq send
