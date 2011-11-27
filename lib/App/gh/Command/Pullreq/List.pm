@@ -42,8 +42,6 @@ sub get_remote {
 
 sub run {
     my $self = shift;
-
-
     my $remote = $self->get_remote();
 
     die "Remote not found\n." unless $remote;
