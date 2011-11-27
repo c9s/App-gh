@@ -78,16 +78,25 @@ sub run {
     }
 
     my $remote_branch = shift ||'master';
-    my $remote = $self->get_remote();
+    my $base          = shift;
+    my ($user,$repo,$uri_type);
+    if( $base ) {
+        ($user,$repo) = split m{[/:]},$base;
 
-    die "Remote not found\n." unless $remote;
-    my ( $user, $repo, $uri_type ) = parse_uri( $remote->{url} );
+    } else {
+        my $remote = $self->get_remote();
+        die "Remote not found\n." unless $remote;
+        ($user, $repo, $uri_type ) = parse_uri( $remote->{url} );
+    }
+
+
 
     my $gh_id = App::gh->config->github_id;
     my $gh_token = App::gh->config->github_token;
     unless( $gh_id && $gh_token ) {
         die "Github authtoken not found. Can not send pull request.\n";
     }
+
 
     my $local_repo = Git->repository();
     open my $fh, '<', $local_repo->wc_path()."/.git/HEAD";
@@ -97,13 +106,22 @@ sub run {
 
     my ($branch) = ( $ref =~ m{ref:\s\S+?/\S+?/(\S+)} );
 
-    my $f = File::Temp->new(SUFFIX => ".mkd");
+    my $f = File::Temp->new(SUFFIX => ".md");
     my $t = stat($f->filename)->mtime;
+
+    open $fh , ">" , $f->filename;
+    print $fh "Title\n";
+    print $fh "Body (markdown format)\n";
+    close $fh;
+
+    # launch editor
     system $ENV{EDITOR}, $f->filename;
+
     if ($t == stat($f->filename)->mtime) {
         _info "No changes. Pull request was not sent.";
         return;
     }
+
     open $fh, '<', $f->filename;
     my $content = do { local $/; <$fh> };
     close $fh;
@@ -117,6 +135,7 @@ sub run {
     }
 
     _info "Sending pull request for $branch...";
+    # XXX: make arguments into hash format
     my $data = App::gh->api->pullreq_send($user, $repo, $branch, $remote_branch, $title, $body);
 
     _info "Sent: " . $data->{pull}->{html_url};
