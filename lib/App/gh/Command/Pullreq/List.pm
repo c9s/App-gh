@@ -42,10 +42,6 @@ sub get_remote {
 sub run {
     my $self = shift;
 
-    eval {
-        require IO::Pager;
-    };
-    die 'Please install IO::Pager to enable this command' if $@;
 
     my $remote = $self->get_remote();
 
@@ -58,11 +54,15 @@ sub run {
         die "Github authtoken not found. Can not get pull requests.\n";
     }
 
+
     my $data = App::gh->api->pullreq_list( $user, $repo );
     unless (@{$data->{pulls}}) {
         _info "No pull request found.";
     } else {
-        local  $STDOUT = new IO::Pager       *STDOUT;
+        eval { require IO::Pager; };
+        unless ($@) {
+            local $STDOUT = new IO::Pager *STDOUT;
+        }
         for my $pull (@{$data->{pulls}}) {
             printf "* Issue %d: %s - %s (%s)\n", $pull->{number} , 
                 $pull->{title},
