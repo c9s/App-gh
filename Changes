@@ -1,5 +1,8 @@
 Revision history for App-gh
 
+0.553
+    - Improve pullreq send command. Add base argument.
+
 0.552
     - let IO::Pager be in requires.
 
