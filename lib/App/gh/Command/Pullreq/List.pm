@@ -6,6 +6,7 @@ use App::gh::Utils;
 use File::stat;
 use File::Temp;
 use Text::Wrap;
+use IO::Pager;
 require App::gh::Git;
 
 
@@ -59,10 +60,7 @@ sub run {
     unless (@{$data->{pulls}}) {
         _info "No pull request found.";
     } else {
-        eval { require IO::Pager; };
-        unless ($@) {
-            local $STDOUT = new IO::Pager *STDOUT;
-        }
+        local $STDOUT = new IO::Pager *STDOUT;
         for my $pull (@{$data->{pulls}}) {
             printf "* Issue %d: %s - %s (%s)\n", $pull->{number} , 
                 $pull->{title},

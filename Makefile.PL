@@ -23,9 +23,9 @@ requires 'Term::ReadLine';
 requires 'Scope::Guard';
 requires 'Error';
 requires 'Try::Tiny';
+requires 'IO::Pager';
 
 # `gh recent` support
-recommends 'IO::Pager';
 recommends 'XML::Atom';
 recommends 'IO::Socket::SSL';
 
