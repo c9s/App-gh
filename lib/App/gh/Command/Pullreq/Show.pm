@@ -6,7 +6,6 @@ use App::gh::Utils;
 use File::stat;
 use File::Temp;
 use Text::Wrap;
-use IO::Pager;
 require App::gh::Git;
 
 
@@ -52,6 +51,11 @@ sub run {
     my ($self, $number) = @_;
     return App::gh::Command->invoke('help', 'pullreq', 'show')
         unless defined $number;
+
+    eval {
+        require IO::Pager;
+    };
+    die 'Please install IO::Pager to enable this command' if $@;
 
     my $remote = $self->get_remote();
 
