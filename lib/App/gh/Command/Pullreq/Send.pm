@@ -101,5 +101,4 @@ sub run {
     _info "Sent: " . $data->{pull}->{html_url};
 }
 
-
 1;
