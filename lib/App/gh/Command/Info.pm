@@ -31,7 +31,6 @@ sub run {
     die "Remote not found\n." unless $remote;
     my ( $user, $repo, $uri_type ) = parse_uri( $remote->{url} );
     my $ret = App::gh->api->repo_info( $user, $repo );
-    use Data::Dumper; warn Dumper( $ret );
     App::gh::Utils->print_repo_info( $ret );
 }
 

@@ -56,7 +56,7 @@ sub run {
         die;
     }
 
-    my $remote_branch = shift||'master';
+    my $remote_branch = shift ||'master' ;
     my $remote = $self->get_remote();
 
     die "Remote not found\n." unless $remote;
