@@ -1,7 +1,7 @@
 Revision history for App-gh
 
-0.551
-    - let IO::Pager be optional.
+0.552
+    - let IO::Pager be in requires.
 
 0.55
     - Add -l option to search.
