@@ -64,7 +64,13 @@ sub run {
         die "Github authtoken not found. Can not get pull request.\n";
     }
 
-    local  $STDOUT = new IO::Pager *STDOUT;
+    eval { require IO::Pager; };
+    unless ( $@ ) {
+        local $STDOUT = new IO::Pager *STDOUT;
+    } else {
+        warn 'Please install IO::Pager to enable pager support.';
+    }
+
 
     my $data = App::gh->api->pullreq_get($user, $repo, $number);
     my $pull = $data->{pull};
