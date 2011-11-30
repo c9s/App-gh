@@ -34,6 +34,18 @@ sub run {
     print "Please add your index.html page and commit the file.\n";
     print "Then push gh-pages branch to github remote.\n";
     print "\t\$ git push origin gh-pages\n";
+
+
+
+
+
+    # http://c9s.github.com/App-gh/
+    my $url = sprintf 'http://%s.github.com/%s';
+
+    print "Preview URL: \n";
+
+
+
 }
 
 

@@ -15,6 +15,9 @@ sub _parse_options {
 }
 
 
+
+
+# XXX: use Config::Tiny to parse ini format config.
 sub parse {
     my ( $class, $file ) = @_;
 
