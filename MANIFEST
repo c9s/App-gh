@@ -60,3 +60,4 @@ t/pod.t
 t/01-git.t
 xt/01-git.t
 TODO.md
+scripts/transfer_git_pm
