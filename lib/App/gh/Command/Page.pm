@@ -25,6 +25,14 @@ command flow:
 
 =cut
 
+sub get_remote {
+    my $self = shift;
+    my $config = App::gh->config->current();
+    my %remotes = %{ $config->{remote} };
+    # try to get origin remote
+    return $remotes{origin} || (values( %remotes ))[0];
+}
+
 sub run {
     my $self = shift;
     my $repo = App::gh->git;
