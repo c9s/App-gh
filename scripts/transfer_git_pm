@@ -1,0 +1,46 @@
+#!/usr/bin/env perl
+use v5.12;
+use Test::More;
+use Cwd;
+$|++;
+my $gitfile = shift;
+die unless $gitfile;
+
+say "reading Git.pm from $gitfile";
+
+my @lines = ();
+open my $fh , "<" , $gitfile;
+while( my $line = <$fh> ) {
+    chomp( $line );
+    $line =~ s/(?<!::)(Git::[\w:]+|Git(?>[^_]))/App::gh::$1/g;
+    push @lines, $line;
+}
+close $fh;
+
+say "writing Git.pm...";
+open $fh , ">" , 'Git.pm';
+print $fh join "\n",@lines;
+close $fh;
+
+say "syntax checking...";
+system( 'perl -c Git.pm' );
+
+say 'Testing App::gh::Git from Git.pm...';
+eval {
+    use lib '.';
+    require_ok 'Git.pm';
+};
+die $! if $@;
+
+my $version = App::gh::Git::command_oneline('version');
+ok( $version , 'git version' );
+
+my $repo = App::gh::Git->repository( Directory => getcwd() );
+ok( $repo , 'repo' );
+
+my @revs = $repo->command('rev-list', '--all');
+ok( @revs , 'revisions' );
+
+say "Writing back to lib/App/gh/Git.pm";
+rename 'Git.pm', 'lib/App/gh/Git.pm';
+done_testing;
