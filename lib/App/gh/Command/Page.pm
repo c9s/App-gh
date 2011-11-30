@@ -58,7 +58,6 @@ sub run {
     print "\t\$ git push origin gh-pages\n";
     print "\n";
 
-
     my $remote = $self->get_remote;
     die "Remote not found\n." unless $remote;
     my ($user,$repo,$uri_type) = parse_uri( $remote->{url} );
