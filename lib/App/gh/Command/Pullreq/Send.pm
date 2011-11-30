@@ -102,7 +102,7 @@ sub run {
     }
 
 
-    my $local_repo = Git->repository();
+    my $local_repo = App::gh->git;
     open my $fh, '<', $local_repo->wc_path()."/.git/HEAD";
     my $ref = <$fh>;
     close $fh;

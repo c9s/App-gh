@@ -16,7 +16,7 @@ sub api {
 }
 
 sub git {
-    return App::gh::Git->repository( Directory => getcwd() );
+    return App::gh::Git->repository;
 }
 
 __END__

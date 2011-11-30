@@ -17,7 +17,7 @@ sub options {
 
 sub run {
     my ($self) = @_;
-    my $local_repo = Git->repository();
+    my $local_repo = App::gh->git;
     my $remote = $self->{remote} || 'origin';
     my $config = App::gh->config->current();
     my $basename = basename( $local_repo->wc_path() );
