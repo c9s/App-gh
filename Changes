@@ -1,19 +1,16 @@
 Revision history for App-gh
 
+0.56
+    - Add page command to create gh-pages branch.
+
 0.553
     - Improve pullreq send command. Add base argument.
 
 0.552
     - let IO::Pager be in requires.
-
-0.55
     - Add -l option to search.
-
-0.54, 0.541
     - Add IO::Pager for Pull request command (list and show)
     - Improvements for recent command printing.
-
-0.531
     - Improvements for help messages.
 
 0.53

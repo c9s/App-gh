@@ -4,6 +4,7 @@ use strict;
 our $VERSION = '0.553';
 use App::gh::Config;
 use App::gh::API;
+use Cwd;
 require App::gh::Git;
 
 sub config {
@@ -12,6 +13,10 @@ sub config {
 
 sub api {
     return "App::gh::API";
+}
+
+sub git {
+    return App::gh::Git->repository;
 }
 
 __END__

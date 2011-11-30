@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
-use Test::More tests => 1;
+use Test::More;
 use lib 'lib';
+use_ok("App::gh");
 use_ok("App::gh::Git");
-# my $version = Git::command_oneline('version');
-# ok( $version , $version );
+use_ok("App::gh::Command");
+done_testing;

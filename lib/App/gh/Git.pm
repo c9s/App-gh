@@ -1,11 +1,11 @@
 =head1 NAME
 
-Git - Perl interface to the Git version control system
+App::gh::Git - Perl interface to the App::gh::Git version control system
 
 =cut
 
 
-package Git;
+package App::gh::Git;
 
 use 5.008;
 use strict;
@@ -21,14 +21,14 @@ $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-  use Git;
+  use App::gh::Git;
 
-  my $version = Git::command_oneline('version');
+  my $version = App::gh::Git::command_oneline('version');
 
-  git_cmd_try { Git::command_noisy('update-server-info') }
+  git_cmd_try { App::gh::Git::command_noisy('update-server-info') }
               '%s failed w/ code %d';
 
-  my $repo = Git->repository (Directory => '/srv/git/cogito.git');
+  my $repo = App::gh::Git->repository (Directory => '/srv/git/cogito.git');
 
 
   my @revs = $repo->command('rev-list', '--since=last monday', '--all');
@@ -64,7 +64,7 @@ require Exporter;
 
 =head1 DESCRIPTION
 
-This module provides Perl scripts easy way to interface the Git version control
+This module provides Perl scripts easy way to interface the App::gh::Git version control
 system. The modules have an easy and well-tested way to call arbitrary Git
 commands; in the future, the interface will also provide specialized methods
 for doing easily operations which are not totally trivial to do over
@@ -72,7 +72,7 @@ the generic command interface.
 
 While some commands can be executed outside of any context (e.g. 'version'
 or 'init'), most operations require a repository context, which in practice
-means getting an instance of the Git object using the repository() constructor.
+means getting an instance of the App::gh::Git object using the repository() constructor.
 (In the future, we will also get a new_repository() constructor.) All commands
 called as methods of the object are then executed in the context of the
 repository.
@@ -86,11 +86,11 @@ of your process.)
 TODO: In the future, we might also do
 
 	my $remoterepo = $repo->remote_repository (Name => 'cogito', Branch => 'master');
-	$remoterepo ||= Git->remote_repository ('http://git.or.cz/cogito.git/');
+	$remoterepo ||= App::gh::Git->remote_repository ('http://git.or.cz/cogito.git/');
 	my @refs = $remoterepo->refs();
 
-Currently, the module merely wraps calls to external Git tools. In the future,
-it will provide a much faster way to interact with Git by linking directly
+Currently, the module merely wraps calls to external App::gh::Git tools. In the future,
+it will provide a much faster way to interact with App::gh::Git by linking directly
 to libgit. This should be completely opaque to the user, though (performance
 increase notwithstanding).
 
@@ -99,7 +99,7 @@ increase notwithstanding).
 
 use Carp qw(carp croak); # but croak is bad - throw instead
 use Error qw(:try);
-use Cwd qw(abs_path);
+use Cwd qw(abs_path cwd);
 use IPC::Open2 qw(open2);
 use Fcntl qw(SEEK_SET SEEK_CUR);
 }
@@ -119,7 +119,7 @@ Construct a new repository object.
 C<OPTIONS> are passed in a hash like fashion, using key and value pairs.
 Possible options are:
 
-B<Repository> - Path to the Git repository.
+B<Repository> - Path to the App::gh::Git repository.
 
 B<WorkingCopy> - Path to the associated working copy; not strictly required
 as many commands will happily crunch on a bare repository.
@@ -127,7 +127,7 @@ as many commands will happily crunch on a bare repository.
 B<WorkingSubdir> - Subdirectory in the working copy to work inside.
 Just left undefined if you do not want to limit the scope of operations.
 
-B<Directory> - Path to the Git working directory in its usual setup.
+B<Directory> - Path to the App::gh::Git working directory in its usual setup.
 The C<.git> directory is searched in the directory and all the parent
 directories; if found, C<WorkingCopy> is set to the directory containing
 it and C<Repository> to the C<.git> directory itself. If no C<.git>
@@ -145,7 +145,7 @@ field.
 
 Calling the constructor with no options whatsoever is equivalent to
 calling it with C<< Directory => '.' >>. In general, if you are building
-a standard porcelain command, simply doing C<< Git->repository() >> should
+a standard porcelain command, simply doing C<< App::gh::Git->repository() >> should
 do the right thing and setup the object to reflect exactly where the user
 is right now.
 
@@ -175,12 +175,12 @@ sub repository {
 	if (defined $opts{Directory}) {
 		-d $opts{Directory} or throw Error::Simple("Directory not found: $opts{Directory} $!");
 
-		my $search = Git->repository(WorkingCopy => $opts{Directory});
+		my $search = App::gh::Git->repository(WorkingCopy => $opts{Directory});
 		my $dir;
 		try {
 			$dir = $search->command_oneline(['rev-parse', '--git-dir'],
 			                                STDERR => 0);
-		} catch Git::Error::Command with {
+		} catch App::gh::Git::Error::Command with {
 			$dir = undef;
 		};
 
@@ -208,10 +208,10 @@ sub repository {
 				# Mimic git-rev-parse --git-dir error message:
 				throw Error::Simple("fatal: Not a git repository: $dir");
 			}
-			my $search = Git->repository(Repository => $dir);
+			my $search = App::gh::Git->repository(Repository => $dir);
 			try {
 				$search->command('symbolic-ref', 'HEAD');
-			} catch Git::Error::Command with {
+			} catch App::gh::Git::Error::Command with {
 				# Mimic git-rev-parse --git-dir error message:
 				throw Error::Simple("fatal: Not a git repository: $dir");
 			}
@@ -236,7 +236,7 @@ sub repository {
 
 =item command ( [ COMMAND, ARGUMENTS... ], { Opt => Val ... } )
 
-Execute the given Git C<COMMAND> (specify it without the 'git-'
+Execute the given App::gh::Git C<COMMAND> (specify it without the 'git-'
 prefix), optionally with the specified extra C<ARGUMENTS>.
 
 The second more elaborate form can be used if you want to further adjust
@@ -249,7 +249,7 @@ you specify, but you must be extremely careful; if the error output is not
 very short and you want to read it in the same process as where you called
 C<command()>, you are set up for a nice deadlock!
 
-The method can be called without any instance or on a specified Git repository
+The method can be called without any instance or on a specified App::gh::Git repository
 (in that case the command will be run in the repository context).
 
 In scalar context, it returns all the command output in a single string
@@ -274,7 +274,7 @@ sub command {
 		my $text = <$fh>;
 		try {
 			_cmd_close($fh, $ctx);
-		} catch Git::Error::Command with {
+		} catch App::gh::Git::Error::Command with {
 			# Pepper with the output:
 			my $E = shift;
 			$E->{'-outputref'} = \$text;
@@ -287,7 +287,7 @@ sub command {
 		defined and chomp for @lines;
 		try {
 			_cmd_close($fh, $ctx);
-		} catch Git::Error::Command with {
+		} catch App::gh::Git::Error::Command with {
 			my $E = shift;
 			$E->{'-outputref'} = \@lines;
 			throw $E;
@@ -314,7 +314,7 @@ sub command_oneline {
 	defined $line and chomp $line;
 	try {
 		_cmd_close($fh, $ctx);
-	} catch Git::Error::Command with {
+	} catch App::gh::Git::Error::Command with {
 		# Pepper with the output:
 		my $E = shift;
 		$E->{'-outputref'} = \$line;
@@ -396,7 +396,16 @@ See C<command_close_bidi_pipe()> for details.
 
 sub command_bidi_pipe {
 	my ($pid, $in, $out);
+	my ($self) = _maybe_self(@_);
+	local %ENV = %ENV;
+	my $cwd_save = undef;
+	if ($self) {
+		shift;
+		$cwd_save = cwd();
+		_setup_git_cmd_env($self);
+	}
 	$pid = open2($in, $out, 'git', @_);
+	chdir($cwd_save) if $cwd_save;
 	return ($pid, $in, $out, join(' ', @_));
 }
 
@@ -427,7 +436,7 @@ sub command_close_bidi_pipe {
 			if ($!) {
 				carp "error closing pipe: $!";
 			} elsif ($? >> 8) {
-				throw Git::Error::Command($ctx, $? >>8);
+				throw App::gh::Git::Error::Command($ctx, $? >>8);
 			}
 		}
 	}
@@ -435,7 +444,7 @@ sub command_close_bidi_pipe {
 	waitpid $pid, 0;
 
 	if ($? >> 8) {
-		throw Git::Error::Command($ctx, $? >>8);
+		throw App::gh::Git::Error::Command($ctx, $? >>8);
 	}
 }
 
@@ -447,7 +456,7 @@ capture the command output - the standard output is not redirected and goes
 to the standard output of the caller application.
 
 While the method is called command_noisy(), you might want to as well use
-it for the most silent Git commands which you know will never pollute your
+it for the most silent App::gh::Git commands which you know will never pollute your
 stdout but you want to avoid the overhead of the pipe setup when calling them.
 
 The function returns only after the command has finished running.
@@ -465,14 +474,14 @@ sub command_noisy {
 		_cmd_exec($self, $cmd, @args);
 	}
 	if (waitpid($pid, 0) > 0 and $?>>8 != 0) {
-		throw Git::Error::Command(join(' ', $cmd, @args), $? >> 8);
+		throw App::gh::Git::Error::Command(join(' ', $cmd, @args), $? >> 8);
 	}
 }
 
 
 =item version ()
 
-Return the Git version in use.
+Return the App::gh::Git version in use.
 
 =cut
 
@@ -485,7 +494,7 @@ sub version {
 
 =item exec_path ()
 
-Return path to the Git sub-command executables (the same as
+Return path to the App::gh::Git sub-command executables (the same as
 C<git --exec-path>). Useful mostly only internally.
 
 =cut
@@ -495,7 +504,7 @@ sub exec_path { command_oneline('--exec-path') }
 
 =item html_path ()
 
-Return path to the Git html documentation (the same as
+Return path to the App::gh::Git html documentation (the same as
 C<git --html-path>). Useful mostly only internally.
 
 =cut
@@ -576,7 +585,7 @@ sub config {
 		} else {
 			return command_oneline(@cmd, '--get', $var);
 		}
-	} catch Git::Error::Command with {
+	} catch App::gh::Git::Error::Command with {
 		my $E = shift;
 		if ($E->value() == 1) {
 			# Key not found.
@@ -607,7 +616,39 @@ sub config_bool {
 		my $val = command_oneline(@cmd);
 		return undef unless defined $val;
 		return $val eq 'true';
-	} catch Git::Error::Command with {
+	} catch App::gh::Git::Error::Command with {
+		my $E = shift;
+		if ($E->value() == 1) {
+			# Key not found.
+			return undef;
+		} else {
+			throw $E;
+		}
+	};
+}
+
+
+=item config_path ( VARIABLE )
+
+Retrieve the path configuration C<VARIABLE>. The return value
+is an expanded path or C<undef> if it's not defined.
+
+This currently wraps command('config') so it is not so fast.
+
+=cut
+
+sub config_path {
+	my ($self, $var) = _maybe_self(@_);
+
+	try {
+		my @cmd = ('config', '--path');
+		unshift @cmd, $self if $self;
+		if (wantarray) {
+			return command(@cmd, '--get-all', $var);
+		} else {
+			return command_oneline(@cmd, '--get', $var);
+		}
+	} catch App::gh::Git::Error::Command with {
 		my $E = shift;
 		if ($E->value() == 1) {
 			# Key not found.
@@ -637,7 +678,7 @@ sub config_int {
 		my @cmd = ('config', '--int', '--get', $var);
 		unshift @cmd, $self if $self;
 		return command_oneline(@cmd);
-	} catch Git::Error::Command with {
+	} catch App::gh::Git::Error::Command with {
 		my $E = shift;
 		if ($E->value() == 1) {
 			# Key not found.
@@ -724,14 +765,14 @@ sub remote_refs {
 	}
 
 	my @self = $self ? ($self) : (); # Ultra trickery
-	my ($fh, $ctx) = Git::command_output_pipe(@self, 'ls-remote', @args);
+	my ($fh, $ctx) = App::gh::Git::command_output_pipe(@self, 'ls-remote', @args);
 	my %refs;
 	while (<$fh>) {
 		chomp;
 		my ($hash, $ref) = split(/\t/, $_, 2);
 		$refs{$ref} = $hash;
 	}
-	Git::command_close_pipe(@self, $fh, $ctx);
+	App::gh::Git::command_close_pipe(@self, $fh, $ctx);
 	return \%refs;
 }
 
@@ -790,7 +831,7 @@ sub ident_person {
 Compute the SHA1 object id of the given C<FILENAME> considering it is
 of the C<TYPE> object type (C<blob>, C<commit>, C<tree>).
 
-The method can be called without any instance or on a specified Git repository,
+The method can be called without any instance or on a specified App::gh::Git repository,
 it makes zero difference.
 
 The function returns the SHA1 hash.
@@ -843,7 +884,7 @@ sub _open_hash_and_insert_object_if_needed {
 
 	($self->{hash_object_pid}, $self->{hash_object_in},
 	 $self->{hash_object_out}, $self->{hash_object_ctx}) =
-		command_bidi_pipe(qw(hash-object -w --stdin-paths --no-filters));
+		$self->command_bidi_pipe(qw(hash-object -w --stdin-paths --no-filters));
 }
 
 sub _close_hash_and_insert_object {
@@ -932,7 +973,7 @@ sub _open_cat_blob_if_needed {
 
 	($self->{cat_blob_pid}, $self->{cat_blob_in},
 	 $self->{cat_blob_out}, $self->{cat_blob_ctx}) =
-		command_bidi_pipe(qw(cat-file --batch));
+		$self->command_bidi_pipe(qw(cat-file --batch));
 }
 
 sub _close_cat_blob {
@@ -1103,7 +1144,7 @@ See the L<Error> module on how to catch those. Most exceptions are mere
 L<Error::Simple> instances.
 
 However, the C<command()>, C<command_oneline()> and C<command_noisy()>
-functions suite can throw C<Git::Error::Command> exceptions as well: those are
+functions suite can throw C<App::gh::Git::Error::Command> exceptions as well: those are
 thrown when the external command returns an error code and contain the error
 code as well as access to the captured command's output. The exception class
 provides the usual C<stringify> and C<value> (command's exit code) methods and
@@ -1120,9 +1161,9 @@ use C<command_close_pipe()>, which can throw the exception.
 =cut
 
 {
-	package Git::Error::Command;
+	package App::gh::Git::Error::Command;
 
-	@Git::Error::Command::ISA = qw(Error);
+	@App::gh::Git::Error::Command::ISA = qw(Error);
 
 	sub new {
 		my $self = shift;
@@ -1167,7 +1208,7 @@ use C<command_close_pipe()>, which can throw the exception.
 
 =item git_cmd_try { CODE } ERRMSG
 
-This magical statement will automatically catch any C<Git::Error::Command>
+This magical statement will automatically catch any C<App::gh::Git::Error::Command>
 exceptions thrown by C<CODE> and make your program die with C<ERRMSG>
 on its lips; the message will have %s substituted for the command line
 and %d for the exit status. This statement is useful mostly for producing
@@ -1190,7 +1231,7 @@ sub git_cmd_try(&$) {
 		} else {
 			$result[0] = &$code;
 		}
-	} catch Git::Error::Command with {
+	} catch App::gh::Git::Error::Command with {
 		my $E = shift;
 		$err = $errmsg;
 		$err =~ s/\%s/$E->cmdline()/ge;
@@ -1220,7 +1261,7 @@ either version 2, or (at your option) any later version.
 # the method was called upon an instance and (undef, @args) if
 # it was called directly.
 sub _maybe_self {
-	UNIVERSAL::isa($_[0], 'Git') ? @_ : (undef, @_);
+	UNIVERSAL::isa($_[0], 'App::gh::Git') ? @_ : (undef, @_);
 }
 
 # Check if the command id is something reasonable.
@@ -1254,7 +1295,7 @@ sub _command_common_pipe {
 		# a handle class, not scalar. It is not known if
 		# it is something specific to ActiveState Perl or
 		# just a Perl quirk.
-		tie (*ACPIPE, 'Git::activestate_pipe', $cmd, @args);
+		tie (*ACPIPE, 'App::gh::Git::activestate_pipe', $cmd, @args);
 		$fh = *ACPIPE;
 
 	} else {
@@ -1279,6 +1320,14 @@ sub _command_common_pipe {
 # for the given repository and execute the git command.
 sub _cmd_exec {
 	my ($self, @args) = @_;
+	_setup_git_cmd_env($self);
+	_execv_git_cmd(@args);
+	die qq[exec "@args" failed: $!];
+}
+
+# set up the appropriate state for git command
+sub _setup_git_cmd_env {
+	my $self = shift;
 	if ($self) {
 		$self->repo_path() and $ENV{'GIT_DIR'} = $self->repo_path();
 		$self->repo_path() and $self->wc_path()
@@ -1286,11 +1335,9 @@ sub _cmd_exec {
 		$self->wc_path() and chdir($self->wc_path());
 		$self->wc_subdir() and chdir($self->wc_subdir());
 	}
-	_execv_git_cmd(@args);
-	die qq[exec "@args" failed: $!];
 }
 
-# Execute the given Git command ($_[0]) with arguments ($_[1..])
+# Execute the given App::gh::Git command ($_[0]) with arguments ($_[1..])
 # by searching for it at proper places.
 sub _execv_git_cmd { exec('git', @_); }
 
@@ -1303,7 +1350,7 @@ sub _cmd_close {
 			carp "error closing pipe: $!";
 		} elsif ($? >> 8) {
 			# The caller should pepper this.
-			throw Git::Error::Command($ctx, $? >> 8);
+			throw App::gh::Git::Error::Command($ctx, $? >> 8);
 		}
 		# else we might e.g. closed a live stream; the command
 		# dying of SIGPIPE would drive us here.
@@ -1320,7 +1367,7 @@ sub DESTROY {
 
 # Pipe implementation for ActiveState Perl.
 
-package Git::activestate_pipe;
+package App::gh::Git::activestate_pipe;
 use strict;
 
 sub TIEHANDLE {

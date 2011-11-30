@@ -24,6 +24,7 @@ lib/App/gh/Command/Clone.pm
 lib/App/gh/Command/Commit.pm
 lib/App/gh/Command/Drop.pm
 lib/App/gh/Command/Fork.pm
+lib/App/gh/Command/Page.pm
 lib/App/gh/Command/Help.pm
 lib/App/gh/Command/Import.pm
 lib/App/gh/Command/Info.pm
