@@ -30,7 +30,10 @@ sub run {
     my $repo = App::gh->git;
     $repo->command('symbolic-ref','HEAD','refs/heads/gh-pages');
     $repo->command('clean','-fdx');
-    print "gh-pages created, please push gh-pages branch to github remote.\n";
+    print "Branch gh-pages created\n";
+    print "Please add your index.html page and commit the file.\n";
+    print "Then push gh-pages branch to github remote.\n";
+    print "\t\$ git push origin gh-pages\n";
 }
 
 
