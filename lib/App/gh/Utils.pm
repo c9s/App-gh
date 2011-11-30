@@ -8,15 +8,7 @@ use constant debug => $ENV{DEBUG};
 
 my $screen_width = 92;
 
-our @EXPORT = qw(_debug _info get_github_auth print_list get_git);
-
-sub get_git {
-
-
-
-
-
-}
+our @EXPORT = qw(_debug _info get_github_auth print_list);
 
 # XXX: move this to logger....... orz
 sub _debug {
