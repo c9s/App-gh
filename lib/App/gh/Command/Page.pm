@@ -66,6 +66,8 @@ sub run {
     my $id = App::gh->config->github_id;
     my $url = sprintf 'http://%s.github.com/%s', $id, $repo;
     print "Your preview URL: $url\n";
+
+    print "Reference: http://pages.github.com/\n";
 }
 
 
