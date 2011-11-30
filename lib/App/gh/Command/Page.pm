@@ -37,15 +37,14 @@ sub run {
 
 
 
-
+    my $remote = $self->get_remote;
+    die "Remote not found\n." unless $remote;
+    my ($user,$repo,$uri_type) = parse_uri( $remote->{url} );
 
     # http://c9s.github.com/App-gh/
-    my $url = sprintf 'http://%s.github.com/%s';
-
-    print "Preview URL: \n";
-
-
-
+    my $id = App::gh->config->github_id;
+    my $url = sprintf 'http://%s.github.com/%s', $id, $repo;
+    print "Preview URL: $url\n";
 }
 
 

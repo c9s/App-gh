@@ -56,6 +56,9 @@ sub current {
     return $class->parse( $path );
 }
 
+
+# when command trying to read config, we should let it die, and provide another
+# method to check github id and token.
 sub github_token {
     my $class = shift;
     my $config;
@@ -69,7 +72,6 @@ sub github_id {
     $config = $class->global();
     return $config->{github}->{user};
 }
-
 
 sub global {
     my $class = shift;
