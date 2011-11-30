@@ -4,6 +4,7 @@ use strict;
 use base qw(App::gh::Command);
 use App::gh;
 use App::gh::Utils;
+use File::Spec;
 
 =head1 NAME
 
@@ -47,7 +48,9 @@ sub run {
     my $self = shift;
     my $git = App::gh->git;
     $git->command('symbolic-ref','HEAD','refs/heads/gh-pages');
+    unlink File::Spec->join( $git->wc_path , '.git' , 'index' );
     $git->command('clean','-fdx');
+
     print "Branch gh-pages created\n";
     print "Please add your index.html page and commit the file.\n";
     print "Then push gh-pages branch to github remote.\n";
