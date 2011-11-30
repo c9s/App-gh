@@ -45,14 +45,15 @@ sub parse_uri {
 
 sub run {
     my $self = shift;
-    my $repo = App::gh->git;
-    $repo->command('symbolic-ref','HEAD','refs/heads/gh-pages');
-    $repo->command('clean','-fdx');
+    my $git = App::gh->git;
+    $git->command('symbolic-ref','HEAD','refs/heads/gh-pages');
+    $git->command('clean','-fdx');
     print "Branch gh-pages created\n";
     print "Please add your index.html page and commit the file.\n";
     print "Then push gh-pages branch to github remote.\n";
+    print "\n";
     print "\t\$ git push origin gh-pages\n";
-
+    print "\n";
 
 
     my $remote = $self->get_remote;
@@ -62,7 +63,7 @@ sub run {
     # http://c9s.github.com/App-gh/
     my $id = App::gh->config->github_id;
     my $url = sprintf 'http://%s.github.com/%s', $id, $repo;
-    print "Preview URL: $url\n";
+    print "Your preview URL: $url\n";
 }
 
 
