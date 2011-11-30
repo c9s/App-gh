@@ -33,6 +33,16 @@ sub get_remote {
     return $remotes{origin} || (values( %remotes ))[0];
 }
 
+sub parse_uri {
+    my ($uri) = @_;
+    if ( $uri =~ m{(git|https?)://github.com/(.*?)/(.*?).git} ) {
+        return ($2,$3,$1);
+    } elsif ( $uri =~ m{git\@github.com:(.*?)/(.*?).git} ) {
+        return ($1,$2,'git');
+    }
+    return undef;
+}
+
 sub run {
     my $self = shift;
     my $repo = App::gh->git;
