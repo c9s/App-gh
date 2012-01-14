@@ -32,8 +32,8 @@ sub get_networks {
     # git://github.com/miyagawa/Tatsumaki.git
     #   -or-
     # https://github.com/miyagawa/Tatsumaki.git
-    if ( $url && ( $url =~ m{git://github.com/(.*?)/(.*?).git}
-            || $url =~ m{git\@github.com:(.*?)/(.*?).git}
+    if ( $url && ( $url =~ m{git://github.com/(.*?)/(.*?)\.git}
+            || $url =~ m{git\@github.com:(.*?)/(.*?)\.git}
             || $url =~ m{https://github.com/(.*?)/(.*?)\.git} ) ) {
 
         my ( $acc, $repo ) = ( $1, $2 );
