@@ -19,6 +19,8 @@ sub alias { (
         "pu" => "pull",
         "se" => "search",
         "up" => "update",
+
+        "fetch" => "pull",
         ) }
 
 sub invoke {
