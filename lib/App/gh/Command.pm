@@ -19,6 +19,8 @@ sub alias { (
         "pu" => "pull",
         "se" => "search",
         "up" => "update",
+
+        "fetch" => "pull",
         ) }
 
 sub invoke {
@@ -34,8 +36,8 @@ sub invoke {
 
 sub parse_remote_param {
     my $uri = shift;
-    if ( $uri =~ m{(?:git|https?)://github.com/(.*?)/(.*?).git}
-        || $uri =~ m{git\@github.com:(.*?)/(.*?).git} )
+    if ( $uri =~ m{(?:git|https?)://github.com/(.*?)/(.*?)\.git$}
+        || $uri =~ m{git\@github.com:(.*?)/(.*?)\.git$} )
     {
         return ( $1 , $2 )
             if( $1 && $2 );
