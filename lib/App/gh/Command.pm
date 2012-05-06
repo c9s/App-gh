@@ -20,8 +20,14 @@ sub alias { (
         "se" => "search",
         "up" => "update",
 
+        # TODO: 
+        #   fetch should only do git fetch 
+        #   pull should only do git pull
+        #   should wrap these commands with github features
+        #   
+        #   https://github.com/c9s/App-gh/pull/39
         "fetch" => "pull",
-        ) }
+    )
 
 sub invoke {
     my ($pkg, $cmd, @args) = @_;
