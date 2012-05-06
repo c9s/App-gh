@@ -19,7 +19,15 @@ sub alias { (
         "pu" => "pull",
         "se" => "search",
         "up" => "update",
-        ) }
+
+        # TODO: 
+        #   fetch should only do git fetch 
+        #   pull should only do git pull
+        #   should wrap these commands with github features
+        #   
+        #   https://github.com/c9s/App-gh/pull/39
+        "fetch" => "pull",
+    )
 
 sub invoke {
     my ($pkg, $cmd, @args) = @_;
@@ -34,8 +42,8 @@ sub invoke {
 
 sub parse_remote_param {
     my $uri = shift;
-    if ( $uri =~ m{(?:git|https?)://github.com/(.*?)/(.*?).git}
-        || $uri =~ m{git\@github.com:(.*?)/(.*?).git} )
+    if ( $uri =~ m{(?:git|https?)://github.com/(.*?)/(.*?)\.git$}
+        || $uri =~ m{git\@github.com:(.*?)/(.*?)\.git$} )
     {
         return ( $1 , $2 )
             if( $1 && $2 );

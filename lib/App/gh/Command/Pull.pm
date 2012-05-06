@@ -73,7 +73,7 @@ sub run {
 
 
         my $origin_url = qx( git remote -v | grep origin | grep fetch );
-        my ($userid,$repo) = ($origin_url =~ m{:(\w+)/(.*?)\.git});
+        my ($userid,$repo) = ($origin_url =~ m{:(\w+)/(.*?)\.git$});
 
         print "Available forks:\n";
 
@@ -95,7 +95,7 @@ sub run {
     $to_branch   ||= 'master';
 
     if( qx(git diff) ) {
-        die "Your repository is diryt\n";
+        die "Your repository is dirty!\n";
     }
 
     die "git config not found." if  ! -e ".git/config" ;
