@@ -4,8 +4,11 @@ use strict;
 our $VERSION = '0.552';
 use App::gh::Config;
 use App::gh::API;
+use Net::GitHub;
 use Cwd;
 require App::gh::Git;
+
+my $GITHUB;
 
 sub config {
     return "App::gh::Config";
@@ -19,6 +22,15 @@ sub git {
     return App::gh::Git->repository;
 }
 
+sub github { 
+    my $class = shift;
+    return $GITHUB ||= Net::GitHub->new(  # Net::GitHub::V3
+        login => $class->config->github_id,
+        token => $class->config->github_token,
+    );
+}
+
+1;
 __END__
 
 =head1 NAME
