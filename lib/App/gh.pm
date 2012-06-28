@@ -24,11 +24,17 @@ sub git {
 
 sub github { 
     my $class = shift;
-    my $access_token = $class->config->access_token;
+    my $access_token = $class->config->github_access_token;
     return $GITHUB ||= Net::GitHub->new( access_token => $access_token ) if $access_token;
+
+    my $github_id = $class->config->github_id;
+    my $github_password = $class->config->github_password;
+
+    die('Please configure your github.password') unless $github_password;
+
     return $GITHUB ||= Net::GitHub->new(  # Net::GitHub::V3
-        login => $class->config->github_id,
-        token => $class->config->github_pass || $class->config->github_token,
+        login => $github_id
+        token => $github_password || $class->config->github_token,
     );
 }
 

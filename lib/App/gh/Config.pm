@@ -61,7 +61,7 @@ sub current {
 # XXX: abandoned, since we are using Net::GitHub V3
 sub github_token { return $_[0]->global()->{github}->{token}; }
 
-sub github_pass { return $_[0]->global()->{github}->{pass}; }
+sub github_password { return $_[0]->global()->{github}->{password}; }
 
 # Auth with OAuth
 sub github_access_token { return $_[0]->global()->{github}->{access_token}; }
