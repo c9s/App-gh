@@ -36,17 +36,17 @@ sub run {
     # Check if repo already exists
     my $existing_gh_repo = eval { App::gh->github->repos->get( $gh_id, $reponame ) };
     if ($existing_gh_repo) {
-        # Update existing repo
-        my %args = (
-            description => ($self->{description}
-                                || $existing_gh_repo->{description} || ""),
-            homepage => ($self->{homepage}
-                             || $existing_gh_repo->{homepage} || "" ),
-            # Don't change visibility of existing repo
-            # public => $self->{private} ? 0 : 1 ,
-        );
-        my $ret = App::gh->api->repo_set_info( $gh_id, $reponame, %args );
-        print "Repository updated: \n";
+        # FIXME: Update existing repo
+        # my %args = (
+        #     description => ($self->{description}
+        #                         || $existing_gh_repo->{description} || ""),
+        #     homepage => ($self->{homepage}
+        #                      || $existing_gh_repo->{homepage} || "" ),
+        #     # Don't change visibility of existing repo
+        #     # public => $self->{private} ? 0 : 1 ,
+        # );
+        # my $ret = App::gh->api->repo_set_info( $gh_id, $reponame, %args );
+        # print "Repository updated: \n";
     }
     else {
         # Create new repo
