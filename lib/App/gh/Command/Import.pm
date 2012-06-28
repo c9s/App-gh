@@ -19,13 +19,10 @@ sub run {
     my ($self) = @_;
     my $local_repo = App::gh->git;
     my $remote = $self->{remote} || 'origin';
-    my $config = App::gh->config->current();
+    my $config = App::gh->config->current;
     my $basename = basename( $local_repo->wc_path() );
     my $reponame = $self->{name} || $basename;
     my $gh_id = App::gh->config->github_id();
-
-
-
 
     # Check if remote already exists
     if ($local_repo->config("remote.$remote.fetch")) {
