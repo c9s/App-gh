@@ -56,7 +56,8 @@ README.mkd
 scripts/gh
 t/00-load.t
 t/manifest.t
-t/pod.t
 t/01-git.t
 xt/01-git.t
 TODO.md
+scripts/transfer_git_pm
+xt/01-github.t
