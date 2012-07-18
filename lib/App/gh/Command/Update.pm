@@ -25,23 +25,23 @@ sub run {
         die "Not a repository";
     }
 
-    _info "Running update --prune";
+    info "Running update --prune";
     qx{ git remote update --prune  };
 
     my @lines = split /\n/,qx{ git remote -v | grep '(fetch)'};
     for my $line ( @lines ) {
         my ( $remote , $uri , $type ) = ($line =~ m{^(\w+)\s+(\S+)\s+\((\w+)\)} );
         # use Data::Dumper; warn Dumper( $remote , $uri , $type );
-        _info "Updating from $remote ...";
+        info "Updating from $remote ...";
         qx{ git pull --rebase $remote };
 
         if( $uri =~ /^git\@github\.com/ ) {
-            _info "Pushing changes to $remote : $uri";
+            info "Pushing changes to $remote : $uri";
             qx{ git push  $remote };
         }
     }
 
-    _info "Done";
+    info "Done";
 }
 
 1;

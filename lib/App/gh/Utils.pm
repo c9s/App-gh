@@ -9,7 +9,7 @@ use constant debug => $ENV{DEBUG};
 
 my $screen_width = 92;
 
-our @EXPORT = qw(_debug _info 
+our @EXPORT = qw(_debug
     info 
     error
     notice
@@ -28,10 +28,6 @@ sub build_git_fetch_command;
 # XXX: move this to logger....... orz
 sub _debug {
     print STDERR @_,"\n" if debug;
-}
-
-sub _info {
-    print STDERR @_,"\n";
 }
 
 sub prop_line {

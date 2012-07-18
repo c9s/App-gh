@@ -122,7 +122,7 @@ sub run {
     system $ENV{EDITOR}, $f->filename;
 
     if ($t == stat($f->filename)->mtime) {
-        _info "No changes. Pull request was not sent.";
+        info "No changes. Pull request was not sent.";
         return;
     }
 
@@ -134,15 +134,15 @@ sub run {
     chomp( $body );
 
     if (length($title) == 0 || length($body) == 0) {
-        _info "Message should two lines at least.";
+        info "Message should two lines at least.";
         return;
     }
 
-    _info "Sending pull request for $branch...";
+    info "Sending pull request for $branch...";
     # XXX: make arguments into hash format
     my $data = App::gh->api->pullreq_send($user, $repo, $branch, $remote_branch, $title, $body);
 
-    _info "Sent: " . $data->{pull}->{html_url};
+    info "Sent: " . $data->{pull}->{html_url};
 }
 
 1;

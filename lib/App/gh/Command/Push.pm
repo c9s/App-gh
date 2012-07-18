@@ -26,11 +26,11 @@ sub run {
     my @lines = split /\n/,qx{ git remote -v | grep '(fetch)'};
     for my $line ( @lines ) {
         my ( $remote , $uri , $type ) = ($line =~ m{^(\w+)\s+(\S+)\s+\((\w+)\)} );
-        _info "Updating from $remote ...";
+        info "Updating from $remote ...";
         qx{ git pull --rebase $remote $branch};
 
         if( $uri =~ /^git\@github\.com/ ) {
-            _info "Pushing changes to $remote : $uri";
+            info "Pushing changes to $remote : $uri";
             qx{ git push $remote $branch};
         }
     }

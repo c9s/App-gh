@@ -56,7 +56,7 @@ sub run {
 
     my $data = App::gh->api->pullreq_list( $user, $repo );
     unless (@{$data->{pulls}}) {
-        _info "No pull request found.";
+        info "No pull request found.";
     } else {
         local $STDOUT = new IO::Pager *STDOUT;
         for my $pull (@{$data->{pulls}}) {
