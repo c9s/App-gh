@@ -9,6 +9,7 @@ use constant debug => $ENV{DEBUG};
 my $screen_width = 92;
 
 our @EXPORT = qw(_debug _info get_github_auth print_list);
+our @EXPORT_OK = qw(generate_repo_uri);
 
 # XXX: move this to logger....... orz
 sub _debug {
@@ -98,5 +99,31 @@ sub print_list {
 
     }
 }
+
+
+
+sub generate_repo_uri { 
+    my ($user,$repo,$options) = @_;
+
+    $options->{protocol_ssh} = 1 
+        if App::gh->config->github_id eq $user;
+
+    if( $options->{protocol_git} ) {
+        return sprintf( 'git://github.com/%s/%s.git', $user, $repo );
+    }
+    elsif( $options->{protocol_ssh} ||
+        $options->is_mine($user, $repo) ) {
+        return sprintf( 'git@github.com:%s/%s.git', $user, $repo );
+    }
+    elsif( $options->{protocol_http} ) {
+        return sprintf( 'http://github.com/%s/%s.git', $user , $repo );
+    }
+    elsif( $options->{protocol_https}) {
+        return sprintf( 'https://github.com/%s/%s.git', $user , $repo );
+    }
+    return sprintf( 'git://github.com/%s/%s.git', $user, $repo );
+}
+
+
 
 1;
