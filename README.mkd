@@ -1,61 +1,6 @@
 # App::gh
 
-## SYNOPSIS
-
-    show help message;
-
-        $ gh help
-
 ## COMMANDS
-
-
-### import
-
-Import a repository to github:
-
-    $ gh import
-
-### info
-
-Show repository info:
-
-    $ cd App
-    $ gh info
-
-### commit
-
-commit process:
-
-    % gh commit
-    # On branch master
-    # Your branch is ahead of 'origin/master' by 3 commits.
-    #
-    # Changed but not updated:
-    #   (use "git add <file>..." to update what will be committed)
-    #   (use "git checkout -- <file>..." to discard changes in working directory)
-    #
-    #	modified:   Changes
-    #	modified:   Makefile.PL
-    #	modified:   README.mkd
-    #
-    no changes added to commit (use "git add" and/or "git commit -a")
-    Show Diff(d), Status(s), Commit(c), Quit(q) :___
-
-### recent
-
-get github recent activities.
-
-    $ gh recent
-
-### list:
-
-list all repository of c9s:
-
-    $ gh list c9s
-
-if you want text wrapped:
-
-    $ WRAP=1 gh list c9s
 
 ### clone
 
@@ -81,12 +26,6 @@ clone from ssh uri:
 
     $ gh clone miyagawa/Plack --ssh
 
-### search
-
-search repository:
-
-    $ gh search Plack
-
 ### all
 
 to clone all repository of miyagawa:
@@ -102,7 +41,6 @@ to clone all repository of miyagawa:
     $ gh all perl6 --into perl6-stuff --verbose --prompt
 
     $ gh all clkao --ro  # read-only
-
 
 ### fork
 
