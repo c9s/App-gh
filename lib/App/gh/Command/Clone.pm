@@ -3,7 +3,11 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 use File::Basename;
-use App::gh::Utils qw(generate_repo_uri build_git_clone_command);
+use App::gh::Utils qw(
+generate_repo_uri 
+build_git_clone_command
+run_git_fetch
+);
 use App::gh;
 
 =head1 NAME
@@ -91,6 +95,7 @@ sub run {
                 print "===> Adding remote $login => $clone_url\n";
                 qx(git remote add $login $clone_url);
                 print "===> Fetching fork $full_name...\n";
+                run_git_fetch $login;
                 qx(git fetch $login);
             }
         }

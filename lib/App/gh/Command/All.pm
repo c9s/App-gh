@@ -4,8 +4,12 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 use File::Path qw(mkpath rmtree);
-use App::gh::Utils qw(info 
+use App::gh::Utils qw(
+    info 
+    error
+    notice
     generate_repo_uri 
+    run_git_fetch
     build_git_clone_command
     dialog_yes_default
 );
@@ -26,6 +30,8 @@ sub options { (
 
         "skip-forks" => "skip_forks",  # skip repositories fork from others.
 
+
+        "tags"    => "tags",
         "q|quiet" => "quiet",
         "bare" => "bare",
         "mirror" => "mirror",
@@ -46,6 +52,7 @@ sub run {
     # turn off buffering
     $|++; 
 
+    my $cwd = Cwd::getcwd();
     $self->{into} ||= $user;
 
     die 'Need account id.' unless $user;
@@ -64,6 +71,7 @@ sub run {
         return;
     }
 
+    my $into = Cwd::getcwd();
     my $cloned = 0;
     my $total = scalar(@repos);
 
@@ -73,39 +81,79 @@ sub run {
 
     return unless dialog_yes_default "Are you sure to continue ?";
 
-    for my $repo ( @repos ) {
-        my $uri = generate_repo_uri($user,$repo->{name},$self);
-        my @command = build_git_clone_command($uri,$self);
-        my $local_repo = $repo->{name};
-        $local_repo = $self->{prefix} . $local_repo if $self->{prefix};
-        push @command , $local_repo;
-
-        if( $self->{prompt} ) {
-            next unless dialog_yes_default "Clong " . $repo->{name} . ' ?';
-        }
-
-        info sprintf "[%d/%d] Cloning %s (%d/%d) ...", 
+    my $progress = sub {
+        return sprintf "[%d/%d]",
             ++$cloned,
-            $total,
-            $repo->{full_name},
-            $repo->{watchers},
-            $repo->{forks};
-        my $cmd = join " ",@command;
-        qx($cmd);
-    }
-
-=pod
+            $total;
+    };
 
     my $exclude = do {
         my $arr = ref $self->{exclude} eq 'ARRAY' ? $self->{exclude} : [];
         +{map { $_ => 1 } @$arr};
     };
 
-    my $cloned = 0;
+    for my $repo ( @repos ) {
+        my $local_repo = $repo->{name};
 
-    my $print_progress = sub {
-        return sprintf( "[%d/%d]", ++$cloned , scalar(@$repolist) );
-    };
+        next if exists $exclude->{ $local_repo };
+
+        my $uri = generate_repo_uri($user,$repo->{name},$self);
+        my @command = build_git_clone_command($uri,$self);
+        $local_repo = $self->{prefix} . $local_repo if $self->{prefix};
+        push @command , $local_repo;
+
+        if( -e $local_repo) {
+            if( $self->{skip_exists} ) {
+                info "Found $local_repo, skip.";
+                next;
+            }
+            elsif( $self->{force} ) {
+                notice "Force mode, Deleting original $local_repo";
+                rmtree $local_repo or do {
+                    error "Could not remove '$local_repo', skip.\n";
+                    next;
+                };
+            } 
+            else {
+                # fetch and jump to next
+                info $progress->() . " $local_repo exists, fetching...";
+                chdir($local_repo);
+                run_git_fetch {
+                    all => 1, 
+                    quiet => $self->{quiet},
+                    tags => $self->{tags},
+                };
+                chdir($into);
+                next;
+            }
+        }
+
+        if( $self->{prompt} ) {
+            next unless dialog_yes_default "Clong " . $repo->{name} . ' ?';
+        }
+
+        info sprintf "%s Cloning %s (%d/%d) ...", 
+            $progress->(),
+            $repo->{full_name},
+            $repo->{watchers},
+            $repo->{forks};
+        my $cmd = join " ",@command;
+        qx($cmd);
+
+        if( $self->{tags} ) {
+            chdir $local_repo;
+            run_git_fetch { 
+                all => 1, 
+                quiet => $self->{quiet},
+                tags => $self->{tags},
+            };
+            chdir $into;
+        }
+
+    }
+
+=pod
+
 
     for my $repo ( @{ $repolist } ) {
         my $repo_name      = $repo->{name};
@@ -115,15 +163,7 @@ sub run {
         $local_repo_dir    = $self->{prefix} . "-" . $local_repo_dir if $self->{prefix};
 
         print $uri . "\n" if $self->{verbose};
-        next if exists $exclude->{$repo_name};
 
-        if( $self->{skip_exists} ) {
-            # Found local repository. Update it.
-            if(-e $local_repo_dir) {
-                _info "Found $local_repo_dir, skipped.";
-                next;
-            }
-        }
 
         if( $self->{skip_forks} ) {
             # NOTICE: This might exceed the API rate, careful.
@@ -141,12 +181,6 @@ sub run {
 
         if( -e $local_repo_dir ) {
 
-            if( $self->{force} ) {
-                rmtree $local_repo_dir or do {
-                    print STDERR "could not remove '$local_repo_dir', skipped.\n";
-                    next;
-                };
-            }
 
             my $cwd = Cwd::getcwd();
             chdir $local_repo_dir;

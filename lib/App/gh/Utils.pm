@@ -9,12 +9,21 @@ use constant debug => $ENV{DEBUG};
 
 my $screen_width = 92;
 
-our @EXPORT = qw(_debug _info info get_github_auth print_list);
-our @EXPORT_OK = qw(
-generate_repo_uri 
-build_git_clone_command
-dialog_yes_default
+our @EXPORT = qw(_debug _info 
+    info 
+    error
+    notice
+    get_github_auth print_list
 );
+our @EXPORT_OK = qw(
+    generate_repo_uri 
+    run_git_fetch
+    build_git_clone_command
+    build_git_fetch_command
+    dialog_yes_default
+);
+
+sub build_git_fetch_command;
 
 # XXX: move this to logger....... orz
 sub _debug {
@@ -106,13 +115,51 @@ sub print_list {
 }
 
 
-sub info { 
+
+sub error {
     my @msg = @_;
-    print STDERR color 'bold green';
+    print STDERR color 'red';
     print STDERR join("\n", @msg), "\n";
     print STDERR color 'reset';
 }
 
+sub info { 
+    my @msg = @_;
+    print STDERR color 'green';
+    print STDERR join("\n", @msg), "\n";
+    print STDERR color 'reset';
+}
+
+sub notice {
+    my @msg = @_;
+    print STDERR color 'bold yellow';
+    print STDERR join("\n", @msg), "\n";
+    print STDERR color 'reset';
+}
+
+
+sub run_git_fetch {
+    my @command = build_git_fetch_command @_;
+    my $cmd = join ' ' , @command;
+    my $result = qx($cmd);
+    return $result;
+}
+
+sub build_git_fetch_command {
+    my ($remote,$options) = (undef,{});
+        $remote = shift if ref($_[0]) ne 'HASH';
+        $options = shift if ref($_[0]) eq 'HASH';
+    my @command = qw(git fetch);
+    push @command, $remote if $remote;
+    push @command, '--all' if $options->{all};
+    push @command, '--multiple' if $options->{multiple};
+    push @command, '--tags' if $options->{tags};
+    push @command, '--quiet' if $options->{quiet};
+    push @command, '--recurse-submodules=' 
+            . ($options->{submodules} || 'yes')
+                if $options->{submodules};
+    return @command;
+}
 
 sub build_git_clone_command { 
     my $uri = shift;;
