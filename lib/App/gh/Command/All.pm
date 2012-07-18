@@ -44,10 +44,15 @@ sub options { (
     ) }
 
 
+# 
+# @param string $user github user id
+# @param string $type github repository type (all,owner,member,all)
+# @see http://developer.github.com/v3/repos/
+
 sub run {
     my $self = shift;
     my $user = shift;
-    my $type = shift || 'owner';  # all, owner, member. default: all.
+    my $type = shift || 'owner';
 
     # turn off buffering
     $|++; 
