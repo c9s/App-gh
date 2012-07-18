@@ -138,6 +138,10 @@ sub notice {
 }
 
 
+#
+# @param string $remote git remote name
+# @param hashref $options  
+# @return string command output
 sub run_git_fetch {
     my @command = build_git_fetch_command @_;
     my $cmd = join ' ' , @command;
@@ -145,6 +149,11 @@ sub run_git_fetch {
     return $result;
 }
 
+
+# 
+# @param string $remote Git remote name
+# @param hashref $options 
+# @return array command list
 sub build_git_fetch_command {
     my ($remote,$options) = (undef,{});
         $remote = shift if ref($_[0]) ne 'HASH';
@@ -161,6 +170,11 @@ sub build_git_fetch_command {
     return @command;
 }
 
+
+# 
+# @param string $uri
+# @param hashref $options default { }
+# @return array command list
 sub build_git_clone_command { 
     my $uri = shift;;
     my $options = shift || {};
@@ -174,6 +188,11 @@ sub build_git_clone_command {
     return @command;
 }
 
+#
+# @param string $user
+# @param string $repo
+# @param hashref $options
+# return string GitHub Clone URI
 sub generate_repo_uri { 
     my ($user,$repo,$options) = @_;
 
@@ -196,6 +215,10 @@ sub generate_repo_uri {
     return sprintf( 'git://github.com/%s/%s.git', $user, $repo );
 }
 
+
+#
+# @param string $msg
+# @return boolean
 sub dialog_yes_default {
     my $msg = shift;
     local $|;
