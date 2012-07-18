@@ -116,6 +116,10 @@ To clone these repositories as bared:
 
     $ gh all facebook --bare
 
+To recursively clone submodules:
+
+    $ gh all perl6 --recursive
+
 <!--
 ### fork
 
