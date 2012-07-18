@@ -140,6 +140,12 @@ option.
 
     $ gh import --remote github
 
+### search
+
+To search repositories, simply use `search` command:
+
+    $ gh search keyword
+
 
 
 <!--

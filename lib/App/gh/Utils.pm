@@ -7,7 +7,6 @@ use URI;
 
 use constant debug => $ENV{DEBUG};
 
-my $screen_width = 92;
 
 our @EXPORT = qw(_debug
     info 
@@ -64,14 +63,20 @@ sub print_list {
         $column_w = length($_->[0]) if length($_->[0]) > $column_w ;
     } @lines;
 
+    my $screen_width = 92;
+
     for my $arg ( @lines ) {
         my $title = shift @$arg;
-
         my $padding = int($column_w) - length( $title );
 
-        if ( $ENV{WRAP} && ( $column_w + 3 + length( join " ",@$arg) ) > $screen_width ) {
+        if ( $ENV{WRAP} && ( $column_w + 3 + length( join(" ",@$arg)) ) > $screen_width ) {
             # wrap description
-            my $string = $title . " " x $padding . " - " . join(" ",@$arg) . "\n";
+            my $string = 
+                color('bold white') . 
+                $title .
+                color('reset') . 
+                " " x $padding . " - " . join(" ",@$arg) . "\n";
+
             $string =~ s/\n//g;
 
             my $cnt = 0;
@@ -99,7 +104,10 @@ sub print_list {
             print "\n";
             print "\n" if $wrapped;
         }
-        else { print $title;
+        else { 
+            print color 'bold white';
+            print $title;
+            print color 'reset';
             print " " x $padding;
             print " - ";
             $$arg[0] = ' ' unless $$arg[0];

@@ -29,7 +29,7 @@ sub run {
     for my $repo ( @{ $data->{repositories} } ) {
         my $name = sprintf "%s/%s", $repo->{username} , $repo->{name};
         my $desc = $repo->{description};
-        push @ary, [ $name , $desc ];
+        push @ary, [ $name , $desc || '' ];
     }
     print_list @ary;
 
