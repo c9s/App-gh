@@ -179,11 +179,12 @@ sub build_git_clone_command {
     my $uri = shift;;
     my $options = shift || {};
     my @command = qw(git clone);
-    push @command, '--bare' if $options->{bare};
+    push @command, '--bare'                         if $options->{bare};
     push @command, '--branch=' . $options->{branch} if $options->{branch};
-    push @command, '--quiet'     if $options->{quiet};
-    push @command, '--mirror'     if $options->{mirror};
-    push @command, '--recursive' if $options->{recursive};
+    push @command, '--quiet'                        if $options->{quiet};
+    push @command, '--mirror'                       if $options->{mirror};
+    push @command, '--recursive'                    if $options->{recursive};
+    push @command, '--origin=' . $options->{origin} if $options->{origin};
     push @command, $uri;
     return @command;
 }
