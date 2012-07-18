@@ -13,10 +13,18 @@ install CPAN modules, to install cpanminus:
 
 Now you have `cpanm`, you can install App::gh
 
-    $ cpanm App::gh
-
+    $ cpanm https://github.com/c9s/App-gh/zipball/develop
 
 ## Setup
+
+To use App::gh, you need to configure your password or OAuth
+token in your `.gitconfig` file, just drop the lines below
+to setup your password:
+
+    [github]
+    user = c9s
+    password = your password
+
 
 ## Commands
 
