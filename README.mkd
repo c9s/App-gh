@@ -71,6 +71,11 @@ commits from others' fork.
 
     $ gh clone c9s App-gh --forks
 
+To clone repository and set the default remote name instead 
+of `origin`, you can specify `--origin` option:
+
+    $ gh clone c9s App-gh --origin github
+
 ### all
 
 By using the `all` command, you can clone all repositories

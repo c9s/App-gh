@@ -37,6 +37,7 @@ sub options { (
         "mirror"     => "mirror",
         "b|branch=s" => "branch",
         "recursive"  => "recursive",
+        "origin"     => "origin",
 
 
         "p|prefix=s" => "prefix",

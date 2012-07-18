@@ -54,6 +54,7 @@ sub options { (
     "b|branch=s" => "branch",
     "mirror"     => "mirror",
     "recursive"  => "recursive",
+    "origin"     => "origin",
 ) }
 
 
