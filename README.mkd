@@ -37,9 +37,10 @@ To use OAuth token, you need to set your OAuth access token:
 
 ### clone
 
-Clone Plack repository from miyagawa:
+To clone a repository, use below command form:
 
-    $ gh clone miyagawa/Plack
+    $ gh clone [user]/[repo]
+    $ gh clone [user] [repo]
 
 When cloning repository from others, the default URI is 
 HTTP, which is `read-only`.
@@ -61,7 +62,7 @@ To specify URI type, you can simply pass options like
 
     $ gh clone clkao Web-Hippie --ro
 
-Clone from ssh URI:
+Clone from SSH URI:
 
     $ gh clone miyagawa/Plack --ssh
 
