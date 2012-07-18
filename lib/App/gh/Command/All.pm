@@ -46,18 +46,24 @@ sub run {
 
     die 'Need account id.' unless $user;
 
+    if( $self->{into} ) {
+        print STDERR "Cloning all repositories into @{[ $self->{into} ]}\n";
+        mkpath [ $self->{into} ];
+        chdir  $self->{into};
+    }
+
     info "Getting repositories from $user...";
     my @repos = App::gh->github->repos->list_user($user,$type);
     for my $repo ( @repos ) {
+
+
         my $uri = generate_repo_uri($user,$repo->{name},$self);
         my @command = build_git_clone_command($uri,$self);
-
         info sprintf "Cloning %s (%d/%d) ...", $repo->{full_name},
             $repo->{watchers},$repo->{forks};
         my $cmd = join " ",@command;
         qx($cmd);
     }
-    # use Data::Dumper; warn Dumper( @repos );
 
 =pod
 

@@ -117,6 +117,7 @@ sub build_git_clone_command {
     push @command, '--bare' if $options->{bare};
     push @command, '--branch=' . $options->{branch} if $options->{branch};
     push @command, '--quiet'     if $options->{quiet};
+    push @command, '--mirror'     if $options->{mirror};
     push @command, '--recursive' if $options->{recursive};
     push @command, $uri;
     return @command;
