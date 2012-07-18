@@ -159,12 +159,12 @@ sub build_git_fetch_command {
         $remote = shift if ref($_[0]) ne 'HASH';
         $options = shift if ref($_[0]) eq 'HASH';
     my @command = qw(git fetch);
-    push @command, $remote if $remote;
-    push @command, '--all' if $options->{all};
+    push @command, $remote      if $remote;
+    push @command, '--all'      if $options->{all};
     push @command, '--multiple' if $options->{multiple};
-    push @command, '--tags' if $options->{tags};
-    push @command, '--quiet' if $options->{quiet};
-    push @command, '--verbose' if $options->{verbose};
+    push @command, '--tags'     if $options->{tags};
+    push @command, '--quiet'    if $options->{quiet};
+    push @command, '--verbose'  if $options->{verbose};
     push @command, '--recurse-submodules=' 
             . ($options->{submodules} || 'yes')
                 if $options->{submodules};
