@@ -47,7 +47,7 @@ sub options { (
 sub run {
     my $self = shift;
     my $user = shift;
-    my $type = shift || 'all';
+    my $type = shift || 'owner';  # all, owner, member. default: all.
 
     # turn off buffering
     $|++; 
@@ -154,34 +154,12 @@ sub run {
 
 =pod
 
-
     for my $repo ( @{ $repolist } ) {
-        my $repo_name      = $repo->{name};
-        my $uri            = $self->gen_uri( $user, $repo_name );
-        my $local_repo_dir = $repo_name;
-        $local_repo_dir    = "$local_repo_dir.git" if $self->{bare};
-        $local_repo_dir    = $self->{prefix} . "-" . $local_repo_dir if $self->{prefix};
-
-        print $uri . "\n" if $self->{verbose};
-
-
-        if( $self->{skip_forks} ) {
-            # NOTICE: This might exceed the API rate, careful.
-            # Please put this to the end of condition.
-            my $info = App::gh->api->repo_info( $user , $repo_name );
-            if($info->{parent}) {
-                _info "Skipping repository with parent: $repo_name";
-                next;
-            }
-        }
-
         # =================
         # End of conditions for skipping clone
 
 
         if( -e $local_repo_dir ) {
-
-
             my $cwd = Cwd::getcwd();
             chdir $local_repo_dir;
             my $guard = guard { chdir $cwd };    # switch back
@@ -197,7 +175,7 @@ sub run {
                 $flags .= qq{ -q } unless $self->{verbose};
 
                 # prune deleted remote branches
-                qx{ git remote update --prune };
+                qx{git remote update --prune};
 
                 # fetch all remotes
                 qx{ git fetch --all };
@@ -207,16 +185,6 @@ sub run {
             }
         }
         else {
-            # No repository was cloned yet. Clone it.
-            _info "Cloning " . $repo->{name} . " ... " . $print_progress->();
-
-            my $flags = qq();
-            $flags .= qq{ -q }     unless $self->{verbose};
-            $flags .= qq{ --bare } if     $self->{bare};
-
-            my $cmd = qq{ git clone $flags $uri $local_repo_dir};
-            qx{ $cmd };
-
             # Support old git (which does not support `git clone --mirror`)
             if ($self->{mirror}) {
                 my $cwd = Cwd::getcwd();
