@@ -22,7 +22,7 @@ balh
     --https
     --git|ro
     -k | --forks     also fetch forks.
-
+    -b | --branch    clone specific branch.
 
 =cut
 
@@ -33,7 +33,8 @@ sub options { (
     "https" => "protocol_https",         # https://github.com/c9s/repo.git
     "git|ro"   => "protocol_git",        # git://github.com/c9s/repo.git
     "k|forks|fork"  => 'with_fork',
-    "bare" => "bare",
+    "b|bare" => "bare",
+    "b|branch=s" => "branch",
 ) }
 
 sub run {
@@ -51,12 +52,14 @@ sub run {
     }
 
     my $uri = $self->gen_uri( $user, $repo );
-    my $flags = q{};
-    $flags .= qq{ --bare } if $self->{bare};
 
-    print 'cloning ', $uri,  "...\n";
-    system( qq{git clone $flags $uri} );
+    my @command = qw(git clone);
+    push @command, '--bare' if $self->{bare};
+    push @command, '--branch=' . $self->{branch} if $self->{branch};
+    push @command, $uri;
 
+    print 'Cloning ', $uri,  "...\n";
+    system( join ' ', @command );
 
     # fetch with fork
     if( $self->{with_fork} ) {
@@ -67,7 +70,7 @@ sub run {
         my @forks = $repos->forks;
 
         if( @forks ) {
-            print "Found " , @forks , " forks to fetch...\n";
+            print "Found " , scalar(@forks) , " forks to fetch...\n";
             chdir $dirname;
             for my $fork ( @forks ) {
                 my ($full_name,$clone_url,$login) =
