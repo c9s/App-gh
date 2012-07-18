@@ -47,13 +47,23 @@ sub run {
     die 'Need account id.' unless $user;
 
     if( $self->{into} ) {
-        print STDERR "Cloning all repositories into @{[ $self->{into} ]}\n";
+        info "Cloning all repositories into @{[ $self->{into} ]}";
         mkpath [ $self->{into} ];
         chdir  $self->{into};
     }
 
     info "Getting repositories from $user...";
     my @repos = App::gh->github->repos->list_user($user,$type);
+
+    unless(@repos) {
+        info "Found no repository to clone, exiting";
+        return;
+    }
+
+    info "Found " . scalar(@repos) . " repositories to clone:";
+    print " " x 8 . join " " , map { $_->{name} } @repos;
+    print "\n";
+
     for my $repo ( @repos ) {
 
 
@@ -67,21 +77,6 @@ sub run {
 
 =pod
 
-    my $repolist = App::gh->api->user_repos( $user );
-    return if @$repolist == 0;
-
-    if( $self->{into} ) {
-        print STDERR "Cloning all repositories into @{[ $self->{into} ]}\n";
-        mkpath [ $self->{into} ];
-        chdir  $self->{into};
-    }
-
-    $self->{bare} = 1 if $self->{mirror};
-
-
-    _info "Will clone repositories below:";
-    print " " x 8 . join " " , map { $_->{name} } @{ $repolist };
-    print "\n";
 
     _info "With options:";
     _info " Prefix: " . $self->{prefix} if $self->{prefix};

@@ -104,9 +104,9 @@ sub print_list {
 
 sub info { 
     my @msg = @_;
-    print color 'bold green';
-    print join("\n", @msg), "\n";
-    print color 'reset';
+    print STDERR color 'bold green';
+    print STDERR join("\n", @msg), "\n";
+    print STDERR color 'reset';
 }
 
 
