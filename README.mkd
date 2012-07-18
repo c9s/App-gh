@@ -1,6 +1,24 @@
 # App::gh
 
-## COMMANDS
+App::gh is an utility helps you operate commands through
+GitHub's API, currently App::gh is migrating to GitHub API v3.
+
+
+## Installation
+
+App::gh is written in Perl, so you might need a cpanminus to
+install CPAN modules, to install cpanminus:
+
+    $ curl -L http://cpanmin.us | perl - --sudo App::cpanminus
+
+Now you have `cpanm`, you can install App::gh
+
+    $ cpanm App::gh
+
+
+## Setup
+
+## Commands
 
 ### clone
 
