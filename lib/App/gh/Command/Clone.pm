@@ -76,23 +76,22 @@ sub run {
     print 'Cloning ', $uri,  "...\n";
     system( join ' ', @command );
 
-    # fetch with fork
+    # fetch forks
     if( $self->{with_fork} ) {
         my $dirname = basename($uri,'.git');
 
         # get networks
         my $repos = App::gh->github->repos->set_default_user_repo($user,$repo);
         my @forks = $repos->forks;
-
         if( @forks ) {
             print "Found " , scalar(@forks) , " forks to fetch...\n";
             chdir $dirname;
             for my $fork ( @forks ) {
                 my ($full_name,$clone_url,$login) =
                         ($fork->{full_name},$fork->{clone_url},$fork->{owner}->{login});
-                print qq{Adding remote $login => $clone_url\n};
+                print "===> Adding remote $login => $clone_url\n";
                 qx(git remote add $login $clone_url);
-                print "Fetching fork $full_name...\n";
+                print "===> Fetching fork $full_name...\n";
                 qx(git fetch $login);
             }
         }
