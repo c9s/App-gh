@@ -28,8 +28,6 @@ sub options { (
         "https"  => "protocol_https",         # https://github.com/c9s/repo.git
         "git|ro" => "protocol_git",         # git://github.com/c9s/repo.git
 
-        "skip-forks" => "skip_forks",  # skip repositories fork from others.
-
 
         "tags"       => "tags",
         "q|quiet"    => "quiet",
@@ -244,9 +242,6 @@ Genernal Options:
 
     --into {path}
         clone repos into a {path}.
-
-    --skip-forks
-        skip repos which has a parent repo (fork from others)
 
     --skip-exists, -s
         skip existed repos.
