@@ -48,6 +48,7 @@ sub options { (
     "k|forks|fork"  => 'with_fork',
     "b|bare" => "bare",
     "b|branch=s" => "branch",
+    "mirror"     => "mirror",
     "recursive"  => "recursive",
 ) }
 
