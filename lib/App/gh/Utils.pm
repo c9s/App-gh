@@ -164,6 +164,7 @@ sub build_git_fetch_command {
     push @command, '--multiple' if $options->{multiple};
     push @command, '--tags' if $options->{tags};
     push @command, '--quiet' if $options->{quiet};
+    push @command, '--verbose' if $options->{verbose};
     push @command, '--recurse-submodules=' 
             . ($options->{submodules} || 'yes')
                 if $options->{submodules};
@@ -185,6 +186,7 @@ sub build_git_clone_command {
     push @command, '--mirror'                       if $options->{mirror};
     push @command, '--recursive'                    if $options->{recursive};
     push @command, '--origin=' . $options->{origin} if $options->{origin};
+    push @command, '--verbose' if $options->{verbose};
     push @command, $uri;
     return @command;
 }
