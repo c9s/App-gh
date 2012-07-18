@@ -2,6 +2,7 @@ package App::gh::Command::Clone;
 use warnings;
 use strict;
 use base qw(App::gh::Command);
+use File::Basename;
 use App::gh::Utils;
 use App::gh;
 
@@ -56,21 +57,26 @@ sub run {
     print 'cloning ', $uri,  "...\n";
     system( qq{git clone $flags $uri} );
 
+
+    # fetch with fork
     if( $self->{with_fork} ) {
-        my ( $dirname ) = ( $uri =~ m/([a-zA-Z0-9-]+)\.git$/ );
-        chdir $dirname;
+        my $dirname = basename($uri,'.git');
 
         # get networks
-        my $networks = App::gh->api->repo_network( $user , $repo );
-        for my $net ( @$networks ) {
-            my $acc = $net->{owner};
-            my $url = $net->{url};
+        my $repos = App::gh->github->repos->set_default_user_repo($user,$repo);
+        my @forks = $repos->forks;
 
-            print qq{Adding remote $acc => $url.git\n};
-            qx(git remote add $acc $url.git);
-
-            print qq{Fetching remote $acc\n};
-            qx(git fetch $acc);
+        if( @forks ) {
+            print "Found " , @forks , " forks to fetch...\n";
+            chdir $dirname;
+            for my $fork ( @forks ) {
+                my ($full_name,$clone_url,$login) =
+                        ($fork->{full_name},$fork->{clone_url},$fork->{owner}->{login});
+                print qq{Adding remote $login => $clone_url\n};
+                qx(git remote add $login $clone_url);
+                print "Fetching fork $full_name...\n";
+                qx(git fetch $login);
+            }
         }
     }
 }
