@@ -102,7 +102,7 @@ sub print_list {
         else { print $title;
             print " " x $padding;
             print " - ";
-            $$arg[0] = ' - ' unless $$arg[0];
+            $$arg[0] = ' ' unless $$arg[0];
             print join " " , @$arg;
             print "\n";
         }

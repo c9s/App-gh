@@ -18,37 +18,39 @@ App::gh::Command::Search - search repositories
 
 =cut
 
-sub options {
-    ( 'l|long' => 'long' )
-}
-
 sub run {
     my ($self,$keyword) = @_;
-
     local $|;
     info "Fetching list...";
 
-    my $result = App::gh->api->search($keyword);
-    if( $self->{long} ) {
-        for my $entry ( @{ $result->{repositories} } ) {
-            print color 'white bold';
-            say "*   $entry->{owner}/$entry->{name}";
-            print color 'reset';
-            say "    W/F:      $entry->{watchers}/$entry->{forks}";
-            say "    Url:      " .  $entry->{url} if $entry->{url};
-            say "    Homepage: " .  $entry->{homepage} if $entry->{homepage};
-            say "\n" . wrap( '    ', '    ', $entry->{description} ) . "\n";
-        }
-    } else {
-        my @ary = ();
-        for my $repo ( @{ $result->{repositories} } ) {
-            my $name = sprintf "%s/%s", $repo->{username} , $repo->{name};
-            my $desc = $repo->{description};
-            push @ary, [ $name , $desc ];
-        }
-        # print short list
-        print_list @ary;
+    my $data = App::gh->github->query( 'GET' , '/legacy/repos/search/' . $keyword );
+
+    my @ary = ();
+    for my $repo ( @{ $data->{repositories} } ) {
+        my $name = sprintf "%s/%s", $repo->{username} , $repo->{name};
+        my $desc = $repo->{description};
+        push @ary, [ $name , $desc ];
     }
+    print_list @ary;
+
+#     my $result = App::gh->api->search($keyword);
+#     if( $self->{long} ) {
+#         for my $entry ( @{ $result->{repositories} } ) {
+#             print color 'white bold';
+#             say "*   $entry->{owner}/$entry->{name}";
+#             print color 'reset';
+#             say "    W/F:      $entry->{watchers}/$entry->{forks}";
+#             say "    Url:      " .  $entry->{url} if $entry->{url};
+#             say "    Homepage: " .  $entry->{homepage} if $entry->{homepage};
+#             say "\n" . wrap( '    ', '    ', $entry->{description} ) . "\n";
+#         }
+#     } else {
+#         my @ary = ();
+#         for my $repo ( @{ $result->{repositories} } ) {
+#         }
+#         # print short list
+#     }
+
 }
 
 1;
