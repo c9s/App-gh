@@ -1,5 +1,8 @@
 Revision history for App-gh
 
+0.62
+    - Fix search command.
+
 0.61
     - Fix `clone` command.
     - Fix `all` command.
