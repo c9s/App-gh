@@ -72,7 +72,8 @@ sub run {
     my @command = build_git_clone_options($uri,$self);
 
     print 'Cloning ', $uri,  "...\n";
-    system( join ' ', @command );
+    my $cmd = join ' ', @command;
+    qx($cmd);
 
     # fetch forks
     if( $self->{with_fork} ) {

@@ -4,7 +4,11 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 use File::Path qw(mkpath rmtree);
-use App::gh::Utils qw(info generate_repo_uri build_git_clone_command);
+use App::gh::Utils qw(info 
+    generate_repo_uri 
+    build_git_clone_command
+    dialog_yes_default
+);
 use Scope::Guard qw(guard);
 use Cwd ();
 
@@ -60,29 +64,37 @@ sub run {
         return;
     }
 
-    info "Found " . scalar(@repos) . " repositories to clone:";
+    my $cloned = 0;
+    my $total = scalar(@repos);
+
+    info "Found " . $total . " repositories to clone:";
     print " " x 8 . join " " , map { $_->{name} } @repos;
     print "\n";
 
-    print "Are you sure to continue ? (Y/n) ";
-    my $answer = <STDIN>; chomp $answer; return if $answer eq 'n';
+    return unless dialog_yes_default "Are you sure to continue ?";
 
     for my $repo ( @repos ) {
         my $uri = generate_repo_uri($user,$repo->{name},$self);
         my @command = build_git_clone_command($uri,$self);
-        info sprintf "Cloning %s (%d/%d) ...", $repo->{full_name},
-            $repo->{watchers},$repo->{forks};
+        my $local_repo = $repo->{name};
+        $local_repo = $self->{prefix} . $local_repo if $self->{prefix};
+        push @command , $local_repo;
+
+        if( $self->{prompt} ) {
+            next unless dialog_yes_default "Clong " . $repo->{name} . ' ?';
+        }
+
+        info sprintf "[%d/%d] Cloning %s (%d/%d) ...", 
+            ++$cloned,
+            $total,
+            $repo->{full_name},
+            $repo->{watchers},
+            $repo->{forks};
         my $cmd = join " ",@command;
         qx($cmd);
     }
 
 =pod
-
-
-    _info "With options:";
-    _info " Prefix: " . $self->{prefix} if $self->{prefix};
-    _info " Bare: on" if $self->{bare};
-    _info " Mirror: on" if $self->{mirror};
 
     my $exclude = do {
         my $arr = ref $self->{exclude} eq 'ARRAY' ? $self->{exclude} : [];
@@ -103,16 +115,6 @@ sub run {
         $local_repo_dir    = $self->{prefix} . "-" . $local_repo_dir if $self->{prefix};
 
         print $uri . "\n" if $self->{verbose};
-
-        # ===> Conditions for skipping repos, to prevent api rate exceeded
-        if( $self->{prompt} ) {
-            print "Clone $repo_name [Y/n] ? ";
-            my $ans = <STDIN>;
-            chomp( $ans );
-            $ans ||= 'Y';
-            next if( $ans =~ /n/ );
-        }
-
         next if exists $exclude->{$repo_name};
 
         if( $self->{skip_exists} ) {

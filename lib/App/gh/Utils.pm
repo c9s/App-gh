@@ -10,7 +10,11 @@ use constant debug => $ENV{DEBUG};
 my $screen_width = 92;
 
 our @EXPORT = qw(_debug _info info get_github_auth print_list);
-our @EXPORT_OK = qw(generate_repo_uri build_git_clone_command);
+our @EXPORT_OK = qw(
+generate_repo_uri 
+build_git_clone_command
+dialog_yes_default
+);
 
 # XXX: move this to logger....... orz
 sub _debug {
@@ -145,6 +149,20 @@ sub generate_repo_uri {
     return sprintf( 'git://github.com/%s/%s.git', $user, $repo );
 }
 
+sub dialog_yes_default {
+    my $msg = shift;
+    local $|;
+    print STDERR $msg;
+    print STDERR ' (Y/n) ';
+
+    my $a = <STDIN>;
+    chomp $a;
+    if($a =~ /n/) {
+        return 0;
+    }
+    return 1 if $a =~ /y/;
+    return 1; # default to Y
+}
 
 
 1;
