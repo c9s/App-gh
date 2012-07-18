@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 use File::Path qw(mkpath rmtree);
-use App::gh::Utils;
+use App::gh::Utils qw(info generate_repo_uri build_git_clone_command);
 use Scope::Guard qw(guard);
 use Cwd ();
 
@@ -22,8 +22,13 @@ sub options { (
 
         "skip-forks" => "skip_forks",  # skip repositories fork from others.
 
+        "q|quiet" => "quiet",
         "bare" => "bare",
         "mirror" => "mirror",
+        "b|branch=s" => "branch",
+        "recursive" => "recursive",
+
+
         "p|prefix=s" => "prefix",
         "f|force" => "force",
     ) }
@@ -31,18 +36,32 @@ sub options { (
 
 sub run {
     my $self = shift;
-    my $acc  = shift;
+    my $user = shift;
+    my $type = shift || 'all';
 
     # turn off buffering
     $|++; 
 
-    $self->{into} ||= $acc;
+    $self->{into} ||= $user;
 
-    die 'Need account id.' unless $acc;
+    die 'Need account id.' unless $user;
 
-    _info "Getting repository list from github: $acc";
+    info "Getting repositories from $user...";
+    my @repos = App::gh->github->repos->list_user($user,$type);
+    for my $repo ( @repos ) {
+        my $uri = generate_repo_uri($user,$repo->{name},$self);
+        my @command = build_git_clone_command($uri,$self);
 
-    my $repolist = App::gh->api->user_repos( $acc );
+        info sprintf "Cloning %s (%d/%d) ...", $repo->{full_name},
+            $repo->{watchers},$repo->{forks};
+        my $cmd = join " ",@command;
+        qx($cmd);
+    }
+    # use Data::Dumper; warn Dumper( @repos );
+
+=pod
+
+    my $repolist = App::gh->api->user_repos( $user );
     return if @$repolist == 0;
 
     if( $self->{into} ) {
@@ -76,7 +95,7 @@ sub run {
 
     for my $repo ( @{ $repolist } ) {
         my $repo_name      = $repo->{name};
-        my $uri            = $self->gen_uri( $acc, $repo_name );
+        my $uri            = $self->gen_uri( $user, $repo_name );
         my $local_repo_dir = $repo_name;
         $local_repo_dir    = "$local_repo_dir.git" if $self->{bare};
         $local_repo_dir    = $self->{prefix} . "-" . $local_repo_dir if $self->{prefix};
@@ -105,7 +124,7 @@ sub run {
         if( $self->{skip_forks} ) {
             # NOTICE: This might exceed the API rate, careful.
             # Please put this to the end of condition.
-            my $info = App::gh->api->repo_info( $acc , $repo_name );
+            my $info = App::gh->api->repo_info( $user , $repo_name );
             if($info->{parent}) {
                 _info "Skipping repository with parent: $repo_name";
                 next;
@@ -172,6 +191,8 @@ sub run {
         }
     }
     print "Done\n";
+=cut
+
 }
 
 

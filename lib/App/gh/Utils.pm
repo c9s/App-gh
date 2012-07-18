@@ -2,14 +2,15 @@ package App::gh::Utils;
 use warnings;
 use strict;
 use base qw(Exporter);
+use Term::ANSIColor;
 use URI;
 
 use constant debug => $ENV{DEBUG};
 
 my $screen_width = 92;
 
-our @EXPORT = qw(_debug _info get_github_auth print_list);
-our @EXPORT_OK = qw(generate_repo_uri);
+our @EXPORT = qw(_debug _info info get_github_auth print_list);
+our @EXPORT_OK = qw(generate_repo_uri build_git_clone_command);
 
 # XXX: move this to logger....... orz
 sub _debug {
@@ -101,6 +102,25 @@ sub print_list {
 }
 
 
+sub info { 
+    my @msg = @_;
+    print color 'bold green';
+    print join("\n", @msg), "\n";
+    print color 'reset';
+}
+
+
+sub build_git_clone_command { 
+    my $uri = shift;;
+    my $options = shift || {};
+    my @command = qw(git clone);
+    push @command, '--bare' if $options->{bare};
+    push @command, '--branch=' . $options->{branch} if $options->{branch};
+    push @command, '--quiet'     if $options->{quiet};
+    push @command, '--recursive' if $options->{recursive};
+    push @command, $uri;
+    return @command;
+}
 
 sub generate_repo_uri { 
     my ($user,$repo,$options) = @_;

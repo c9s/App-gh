@@ -3,7 +3,7 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 use File::Basename;
-use App::gh::Utils qw(generate_repo_uri);
+use App::gh::Utils qw(generate_repo_uri build_git_clone_command);
 use App::gh;
 
 =head1 NAME
@@ -16,12 +16,13 @@ balh
 
 =head1 OPTIONS
 
+    -q, --quiet
     --verbose
     --ssh
     --http
     --https
     --git|ro
-    -k | --forks     also fetch forks.
+    -k, --forks     also fetch forks.
 
 Git Options:
 
@@ -67,11 +68,7 @@ sub run {
 
     my $uri = generate_repo_uri($user, $repo, $self);
 
-    my @command = qw(git clone);
-    push @command, '--bare' if $self->{bare};
-    push @command, '--branch=' . $self->{branch} if $self->{branch};
-    push @command, '--recursive' if $self->{recursive};
-    push @command, $uri;
+    my @command = build_git_clone_options($uri,$self);
 
     print 'Cloning ', $uri,  "...\n";
     system( join ' ', @command );
