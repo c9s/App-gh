@@ -26,7 +26,7 @@ sub run {
     my ($self,$keyword) = @_;
 
     local $|;
-    say "Fetching list...";
+    info "Fetching list...";
 
     my $result = App::gh->api->search($keyword);
     if( $self->{long} ) {

@@ -4,6 +4,7 @@ use strict;
 use base qw(App::gh::Command);
 use File::Basename;
 use Cwd;
+use App::gh::Utils;
 require App::gh::Git;
 use Carp;
 
@@ -54,23 +55,23 @@ sub run {
             homepage => ($self->{homepage} || "" ),
             public => $self->{private} ? 0 : 1 ,
         });
-        print "Repository created. \n";
+        info "Repository created. \n";
     }
 
-    print "Adding GitHub repo $reponame as remote [$remote].\n";
+    info "Adding GitHub repo $reponame as remote [$remote].";
     $local_repo->command("remote", "add", $remote,
                          "git\@github.com:${gh_id}/${reponame}.git");
 
     # Only set up branch remote if it isn't already set up.
     if (! $local_repo->config('branch.master.remote')) {
-        print "Setting up remote [$remote] for master branch.\n";
+        info "Setting up remote [$remote] for master branch.";
         $local_repo->command('config', 'branch.master.remote', "$remote");
         $local_repo->command('config', 'branch.master.merge', 'refs/heads/master');
     }
 
-    print "Pushing to remote [$remote]\n";
+    info "Pushing to remote [$remote]";
     $local_repo->command("push", $remote , "master");
-    print "Done.\n";
+    info "Done.\n";
 }
 
 1;

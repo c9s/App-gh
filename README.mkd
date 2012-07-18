@@ -125,6 +125,23 @@ To recursively clone submodules:
 
     $ gh all perl6 --recursive
 
+
+### import
+
+By using the `import` command, you can import your git
+repository to your GitHub account.
+
+You can simply type below line the upload your project:
+
+    $ gh import
+
+To specify remote name for GitHub, you can use `--remote`
+option.
+
+    $ gh import --remote github
+
+
+
 <!--
 ### fork
 
