@@ -50,6 +50,28 @@ sub options { (
     "recursive"  => "recursive",
 ) }
 
+sub get_repo_uri { 
+    my ($user,$repo,$options) = @_;
+
+    $options->{protocol_ssh} = 1 
+        if App::gh->config->github_id eq $user;
+
+    if( $options->{protocol_git} ) {
+        return sprintf( 'git://github.com/%s/%s.git', $user, $repo );
+    }
+    elsif( $options->{protocol_ssh} ||
+        $options->is_mine($user, $repo) ) {
+        return sprintf( 'git@github.com:%s/%s.git', $user, $repo );
+    }
+    elsif( $options->{protocol_http} ) {
+        return sprintf( 'http://github.com/%s/%s.git', $user , $repo );
+    }
+    elsif( $options->{protocol_https}) {
+        return sprintf( 'https://github.com/%s/%s.git', $user , $repo );
+    }
+    return sprintf( 'git://github.com/%s/%s.git', $user, $repo );
+}
+
 sub run {
     my $self = shift;
     my $user = shift;
@@ -64,7 +86,7 @@ sub run {
         die "Usage: gh clone [user] [repo]\n";
     }
 
-    my $uri = $self->gen_uri( $user, $repo );
+    my $uri = get_repo_uri($user, $repo, $self);
 
     my @command = qw(git clone);
     push @command, '--bare' if $self->{bare};
