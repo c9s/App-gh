@@ -31,12 +31,12 @@ sub options { (
         "skip-forks" => "skip_forks",  # skip repositories fork from others.
 
 
-        "tags"    => "tags",
-        "q|quiet" => "quiet",
-        "bare" => "bare",
-        "mirror" => "mirror",
+        "tags"       => "tags",
+        "q|quiet"    => "quiet",
+        "bare"       => "bare",
+        "mirror"     => "mirror",
         "b|branch=s" => "branch",
-        "recursive" => "recursive",
+        "recursive"  => "recursive",
 
 
         "p|prefix=s" => "prefix",

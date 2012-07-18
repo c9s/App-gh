@@ -73,20 +73,48 @@ commits from others' fork.
 
 ### all
 
-To clone all repository of miyagawa:
+By using the `all` command, you can clone all repositories
+from an user.
+
+Below is the basic form:
+
+    $ gh all [user] [type]
+
+`[type]` can be `member`, `all`, `owner`. if you specify 
+`all` then all repositories including fork projects will be 
+cloned. if you specify `owner`, then only the owner's
+projects will be cloned.
+
+For example, to clone all repositories of miyagawa:
 
     $ gh all miyagawa
 
-    $ gh all facebook --into facebook
+To clone all repositories that owned by facebook:
+
+    $ gh all facebook owner
+
+By specifing `--into` option, you can clone these 
+repositories into a specific directory, for example:
+
+    $ gh all facebook owner --into path/to/facebook
 
     $ gh all perl6 --into perl6-stuff
 
-    $ gh all perl6 --into perl6-stuff --prompt
+To prompt before cloning each repository:
 
-    $ gh all perl6 --into perl6-stuff --verbose --prompt
+    $ gh all perl6 --prompt
 
-    $ gh all clkao --ro  # read-only
+To also fetch tags, you can specify `--tags` option:
 
+    $ gh all facebook --tags
+
+You can also specify a prefix to each repo:
+
+    $ gh all facebook --prefix=facebook-prefix-
+
+To clone these repositories as bared:
+
+    $ gh all facebook --bare
 
 <!--
 ### fork
