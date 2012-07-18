@@ -36,16 +36,12 @@ sub options { (
 ) }
 
 sub run {
-    my ($self) = shift;
-
-    my $user;
+    my $self = shift;
+    my $user = shift;
     my $repo;
-
-    $user = shift;
     if( $user =~ /\// ) {
-        ( $user, $repo ) = split /\//, $user;
-    }
-    else {
+        ($user, $repo) = split /\//, $user;
+    } else {
         $repo = shift;
     }
 

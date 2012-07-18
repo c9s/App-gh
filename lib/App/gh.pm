@@ -14,10 +14,6 @@ sub config {
     return "App::gh::Config";
 }
 
-sub api {
-    return "App::gh::API";
-}
-
 sub git {
     return App::gh::Git->repository;
 }
