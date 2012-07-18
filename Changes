@@ -1,14 +1,19 @@
 Revision history for App-gh
 
-
 0.60
     - Support Net::GitHub::V3
     - Fix authentication for Core API
     - Fix import command 
     - Still a lot of things to be fixed.
 
+0.57
+    - bug fixes
+
 0.56
     - Add page command to create gh-pages branch.
+
+0.553
+    - Improve pullreq send command. Add base argument.
 
 0.552
     - let IO::Pager be in requires.

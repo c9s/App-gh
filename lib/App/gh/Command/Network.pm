@@ -30,8 +30,11 @@ sub get_networks {
     my ( $name, $url ) = split( /\s+/, qx( git remote -v | grep origin | grep push ) );
 
     # git://github.com/miyagawa/Tatsumaki.git
-    if ( $url && ( $url =~ m{git://github.com/(.*?)/(.*?).git}
-            || $url =~ m{git\@github.com:(.*?)/(.*?).git} ) ) {
+    #   -or-
+    # https://github.com/miyagawa/Tatsumaki.git
+    if ( $url && ( $url =~ m{git://github.com/(.*?)/(.*?)\.git}
+            || $url =~ m{git\@github.com:(.*?)/(.*?)\.git}
+            || $url =~ m{https://github.com/(.*?)/(.*?)\.git} ) ) {
 
         my ( $acc, $repo ) = ( $1, $2 );
         return App::gh->api->repo_network( $acc , $repo );

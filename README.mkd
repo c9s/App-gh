@@ -21,10 +21,11 @@ To use App::gh, you need to configure your password or OAuth
 token in your `.gitconfig` file, just drop the lines below
 to setup your password:
 
+```ini
     [github]
-    user = c9s
-    password = your password
-
+        user = c9s
+        password = your password
+```
 
 ## Commands
 
@@ -54,7 +55,7 @@ clone from ssh uri:
 
 ### all
 
-to clone all repository of miyagawa:
+To clone all repository of miyagawa:
 
     $ gh all miyagawa
 
