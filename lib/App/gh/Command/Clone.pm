@@ -22,7 +22,19 @@ balh
     --https
     --git|ro
     -k | --forks     also fetch forks.
+
+Git Options:
+
     -b | --branch    clone specific branch.
+
+    --recursive, --recurse-submodules
+
+        After the clone is created, initialize all submodules within, using their default settings.
+        This is equivalent to running git submodule update --init --recursive immediately after the
+        clone is finished. This option is ignored if the cloned repository does not have a
+        worktree/checkout (i.e. if any of --no-checkout/-n, --bare, or --mirror is given)
+
+        See `git help clone`
 
 =cut
 
@@ -35,6 +47,7 @@ sub options { (
     "k|forks|fork"  => 'with_fork',
     "b|bare" => "bare",
     "b|branch=s" => "branch",
+    "recursive"  => "recursive",
 ) }
 
 sub run {
@@ -56,6 +69,7 @@ sub run {
     my @command = qw(git clone);
     push @command, '--bare' if $self->{bare};
     push @command, '--branch=' . $self->{branch} if $self->{branch};
+    push @command, '--recursive' if $self->{recursive};
     push @command, $uri;
 
     print 'Cloning ', $uri,  "...\n";
