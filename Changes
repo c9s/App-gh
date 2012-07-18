@@ -1,5 +1,12 @@
 Revision history for App-gh
 
+0.61
+    - Fix `clone` command.
+    - Fix `all` command.
+    - Update documenation for setup and installation.
+    - Refactor git command functions
+    - Use Term::ANSIColor
+
 0.60
     - Support Net::GitHub::V3
     - Fix authentication for Core API
