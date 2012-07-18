@@ -13,7 +13,7 @@ install CPAN modules, to install cpanminus:
 
 Now you have `cpanm`, you can install App::gh
 
-    $ cpanm https://github.com/c9s/App-gh/zipball/develop
+    $ sudo cpanm https://github.com/c9s/App-gh/zipball/develop
 
 ## Setup
 
@@ -27,31 +27,49 @@ to setup your password:
         password = your password
 ```
 
+To use OAuth token, you need to set your OAuth access token:
+
+    [github]
+        user = c9s
+        access_token = SHA1601f1889667efaebb33b8c12572835da3f027f78
+
 ## Commands
 
 ### clone
 
-clone Plack repository from miyagawa:
+Clone Plack repository from miyagawa:
 
-    $ gh clone miyagawa/Plack   # default: read-only
+    $ gh clone miyagawa/Plack
 
-or:
+When cloning repository from others, the default URI is 
+HTTP, which is `read-only`.
+
+When cloning repository from yourself, the default URI is 
+SSH, which is `read & write`.
+
+To specify URI type, you can simply pass options like 
+`--http` for HTTP, `--https` for HTTPS, `--ssh` for SSH,
+`--ro` for read-only URI.  e.g.:
 
     $ gh clone miyagawa Plack
 
-    $ gh clone foo Social --http
+    $ gh clone user repo --http
 
-    $ gh clone foo Social --https
+    $ gh clone user repo --https
+
+    $ gh clone user repo --ssh
 
     $ gh clone clkao Web-Hippie --ro
 
-clone from read-only uri:
-
-    $ gh clone miyagawa/Plack --ro
-
-clone from ssh uri:
+Clone from ssh URI:
 
     $ gh clone miyagawa/Plack --ssh
+
+To fetch related remote of forks, you can specify
+`--forks` option. this command allows you to download 
+commits from others' fork.
+
+    $ gh clone c9s App-gh --forks
 
 ### all
 
