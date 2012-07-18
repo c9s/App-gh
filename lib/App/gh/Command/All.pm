@@ -64,9 +64,10 @@ sub run {
     print " " x 8 . join " " , map { $_->{name} } @repos;
     print "\n";
 
+    print "Are you sure to continue ? (Y/n) ";
+    my $answer = <STDIN>; chomp $answer; return if $answer eq 'n';
+
     for my $repo ( @repos ) {
-
-
         my $uri = generate_repo_uri($user,$repo->{name},$self);
         my @command = build_git_clone_command($uri,$self);
         info sprintf "Cloning %s (%d/%d) ...", $repo->{full_name},
