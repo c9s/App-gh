@@ -69,6 +69,8 @@ To clone all repository of miyagawa:
 
     $ gh all clkao --ro  # read-only
 
+
+<!--
 ### fork
 
 to fork project:
@@ -196,6 +198,7 @@ And comment to the issue
     "pu" => "pull"
     "se" => "search"
     "up" => "update"
+-->
 
 ## INSTALLATION
 
