@@ -187,6 +187,27 @@ To search repositories, simply use `search` command:
     $ gh search keyword
 ```
 
+### update
+
+Sometimes you need to update remote refs, branches, tags,
+you might run `git remote update --prune`, and run pull with
+--rebase option to rebase changes on your local branch.
+
+With App::gh, you can do simpler with the `update` command.
+
+```bash
+    $ gh update
+```
+
+The command above actually runs:
+
+```bash
+    git remote update --prune
+    git remote | while read remote; do
+        git pull --rebase $remote $(git rev-parse --abbrev-ref HEAD)
+    done
+```
+
 <!--
 ### fork
 
