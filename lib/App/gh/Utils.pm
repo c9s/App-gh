@@ -19,6 +19,7 @@ our @EXPORT_OK = qw(
     run_git_fetch
     build_git_clone_command
     build_git_fetch_command
+    build_git_remote_command
     dialog_yes_default
 );
 
@@ -172,6 +173,34 @@ sub build_git_fetch_command {
     push @command, '--recurse-submodules=' 
             . ($options->{submodules} || 'yes')
                 if $options->{submodules};
+    return @command;
+}
+
+sub build_git_remote_command {
+    my ($subcommand,@args,$options);
+    $subcommand = shift if ! ref $subcommand;
+
+    push @args, shift(@_) while $_[0] && ! ref $_[0];
+    $options    = shift if ref $_[0] eq 'HASH';
+    $options    ||= {};
+
+    my @command = qw(git remote);
+
+    push @command, '--verbose' if $options->{verbose};
+    push @command, $subcommand if $subcommand;
+
+    # git remote update
+    if( $subcommand =~ /update/ ) {
+        push @command, '--prune' if $options->{prune};
+        push @command,@args if @args; # push remote names
+    }
+    elsif( $subcommand =~ /prune/ ) {
+        push @command, '--dry-run' if $options->{dry_run};
+        push @command, @args if @args; # push remote names
+    }
+    elsif( $subcommand =~ /rename/ ) {
+        push @command, @args; # old name and new name
+    }
     return @command;
 }
 

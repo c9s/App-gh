@@ -5,8 +5,6 @@ use base qw(App::gh::Command);
 use App::gh;
 use App::gh::Utils;
 
-# XXX: improve me
-
 =head1 NAME
 
 App::gh::Command::Update - remote update --prune
@@ -26,7 +24,7 @@ sub run {
     }
 
     info "Running update --prune";
-    qx{ git remote update --prune  };
+    qx{git remote update --prune};
 
     my @lines = split /\n/,qx{ git remote -v | grep '(fetch)'};
     for my $line ( @lines ) {
