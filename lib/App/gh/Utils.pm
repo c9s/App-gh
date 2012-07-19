@@ -16,6 +16,7 @@ our @EXPORT = qw(_debug
 );
 our @EXPORT_OK = qw(
     generate_repo_uri 
+    git_current_branch
     run_git_fetch
     build_git_clone_command
     build_git_fetch_command
@@ -218,6 +219,12 @@ sub build_git_clone_command {
     push @command, '--verbose' if $options->{verbose};
     push @command, $uri;
     return @command;
+}
+
+sub git_current_branch {
+    $ref = qx(git rev-parse --abbrev-ref HEAD);
+    chomp($ref);
+    return $ref;
 }
 
 #
