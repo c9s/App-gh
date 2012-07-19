@@ -57,6 +57,7 @@ scripts/gh
 t/00-load.t
 t/manifest.t
 t/01-git.t
+t/02-utils.t
 xt/01-git.t
 TODO.md
 scripts/transfer_git_pm
