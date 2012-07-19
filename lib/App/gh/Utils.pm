@@ -222,7 +222,7 @@ sub build_git_clone_command {
 }
 
 sub git_current_branch {
-    $ref = qx(git rev-parse --abbrev-ref HEAD);
+    my $ref = qx(git rev-parse --abbrev-ref HEAD);
     chomp($ref);
     return $ref;
 }
