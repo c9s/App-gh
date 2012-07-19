@@ -3,7 +3,7 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 use App::gh;
-use App::gh::Utils;
+use App::gh::Utils qw(info build_git_remote_command);
 
 =head1 NAME
 
@@ -18,27 +18,39 @@ writable remotes.
 
 sub run {
     my $self = shift;
+    my @remotes = @_;
 
     unless ( -d ".git" ) {
         die "Not a repository";
     }
 
-    info "Running update --prune";
-    qx{git remote update --prune};
+    info "Running remote update with prune";
+    my @cmds = build_git_remote_command('update',{ prune => 1 });
+    system(@cmds) == 0 
+        or die "system @cmds failed: $?";
 
-    my @lines = split /\n/,qx{ git remote -v | grep '(fetch)'};
-    for my $line ( @lines ) {
-        my ( $remote , $uri , $type ) = ($line =~ m{^(\w+)\s+(\S+)\s+\((\w+)\)} );
-        # use Data::Dumper; warn Dumper( $remote , $uri , $type );
-        info "Updating from $remote ...";
-        qx{ git pull --rebase $remote };
+    die "Can not update, you have uncommitted changes." if qx(git diff);
 
-        if( $uri =~ /^git\@github\.com/ ) {
-            info "Pushing changes to $remote : $uri";
-            qx{ git push  $remote };
+    if( @remotes ) {
+        for my $remote (@remotes) {
+            info "Pull and rebase from $remote ...";
+            qx{git pull --rebase $remote};
         }
     }
+    else {
+        my @lines = split /\n/,qx{ git remote -v | grep '(fetch)'};
+        for my $line ( @lines ) {
+            my ( $remote, $uri, $type) = ($line =~ m{^(\w+)\s+(\S+)\s+\((\w+)\)} );
+            # use Data::Dumper; warn Dumper( $remote , $uri , $type );
+            info "Pull and rebase from $remote ...";
+            qx{git pull --rebase $remote};
 
+            if( $uri =~ /^git\@github\.com/ ) {
+                info "Pushing changes to $remote : $uri";
+                qx{ git push  $remote };
+            }
+        }
+    }
     info "Done";
 }
 

@@ -9,7 +9,6 @@ ok @cmds;
 is 3,scalar @cmds;
 is_deeply [ qw(git remote update) ], \@cmds;
 
-
 # git prune origin
 @cmds = build_git_remote_command('prune','origin',{ });
 ok @cmds;

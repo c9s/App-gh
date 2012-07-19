@@ -192,15 +192,11 @@ sub build_git_remote_command {
     # git remote update
     if( $subcommand =~ /update/ ) {
         push @command, '--prune' if $options->{prune};
-        push @command,@args if @args; # push remote names
     }
     elsif( $subcommand =~ /prune/ ) {
         push @command, '--dry-run' if $options->{dry_run};
-        push @command, @args if @args; # push remote names
     }
-    elsif( $subcommand =~ /rename/ ) {
-        push @command, @args; # old name and new name
-    }
+    push @command, @args if @args;
     return @command;
 }
 
