@@ -41,7 +41,7 @@ sub run {
     my $current_head = git_current_branch;
     if( @remotes ) {
         for my $remote (@remotes) {
-            info "Pull and rebase from $remote ...";
+            info "Pull and rebase from $remote/$current_head...";
             qx{git pull --rebase $remote $current_head};
         }
     }
