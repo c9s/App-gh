@@ -31,7 +31,6 @@ sub run {
 
     my $diff = qx(git diff);
     chomp($diff);
-    use Data::Dumper; warn Dumper( $diff );
     die "Can not update, you have uncommitted changes." if $diff;
 
     if( @remotes ) {
