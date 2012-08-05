@@ -156,52 +156,49 @@ sub run {
 
     }
 
-=pod
-
-    for my $repo ( @{ $repolist } ) {
-        # =================
-        # End of conditions for skipping clone
-
-
-        if( -e $local_repo_dir ) {
-            my $cwd = Cwd::getcwd();
-            chdir $local_repo_dir;
-            my $guard = guard { chdir $cwd };    # switch back
-            print "Updating $local_repo_dir from remotes ..." . $print_progress->() . "\n";
-
-            if( qx{ git config --get core.bare } =~ /\Atrue\n?\Z/ ) {
-                # Here I assume remote.<remote>.mirror is automatically set.
-                # bacause --bare and --mirror do the set-up.
-                qx{ git fetch --all };
-            }
-            else {
-                my $flags = qq();
-                $flags .= qq{ -q } unless $self->{verbose};
-
-                # prune deleted remote branches
-                qx{git remote update --prune};
-
-                # fetch all remotes
-                qx{ git fetch --all };
-
-                # update current working repo
-                qx{ git pull $flags --rebase --all };
-            }
-        }
-        else {
-            # Support old git (which does not support `git clone --mirror`)
-            if ($self->{mirror}) {
-                my $cwd = Cwd::getcwd();
-                chdir $local_repo_dir;
-                my $guard = guard { chdir $cwd };    # switch back
-                qx{ git config remote.origin.fetch '+refs/*:refs/*' };
-                qx{ git config remote.origin.url $uri };
-                qx{ git config remote.origin.mirror true };
-            }
-        }
-    }
-    print "Done\n";
-=cut
+#    for my $repo ( @{ $repolist } ) {
+#        # =================
+#        # End of conditions for skipping clone
+#
+#
+#        if( -e $local_repo_dir ) {
+#            my $cwd = Cwd::getcwd();
+#            chdir $local_repo_dir;
+#            my $guard = guard { chdir $cwd };    # switch back
+#            print "Updating $local_repo_dir from remotes ..." . $print_progress->() . "\n";
+#
+#            if( qx{ git config --get core.bare } =~ /\Atrue\n?\Z/ ) {
+#                # Here I assume remote.<remote>.mirror is automatically set.
+#                # bacause --bare and --mirror do the set-up.
+#                qx{ git fetch --all };
+#            }
+#            else {
+#                my $flags = qq();
+#                $flags .= qq{ -q } unless $self->{verbose};
+#
+#                # prune deleted remote branches
+#                qx{git remote update --prune};
+#
+#                # fetch all remotes
+#                qx{ git fetch --all };
+#
+#                # update current working repo
+#                qx{ git pull $flags --rebase --all };
+#            }
+#        }
+#        else {
+#            # Support old git (which does not support `git clone --mirror`)
+#            if ($self->{mirror}) {
+#                my $cwd = Cwd::getcwd();
+#                chdir $local_repo_dir;
+#                my $guard = guard { chdir $cwd };    # switch back
+#                qx{ git config remote.origin.fetch '+refs/*:refs/*' };
+#                qx{ git config remote.origin.url $uri };
+#                qx{ git config remote.origin.mirror true };
+#            }
+#        }
+#    }
+#    print "Done\n";
 
 }
 
