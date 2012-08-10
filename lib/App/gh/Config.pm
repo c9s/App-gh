@@ -18,7 +18,7 @@ sub parse {
     return $_parse_memoize{$file} if exists $_parse_memoize{$file};
 
     my %config;
-    for my $line (split "\n", qx(git config --list -f $file)) {
+    for my $line (split "\n", qx(git config --list -f '$file')) {
         # $line = foo.bar.baz=value
         if (my ($key, $value) = ($line =~ m/^([^=]+)=(.*)/)) {
             my $h = \%config;
