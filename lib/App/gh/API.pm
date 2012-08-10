@@ -18,53 +18,7 @@ sub new_ua {
 
 sub request {
     my ( $class, $verb, $query , %args ) = @_;
-    my $ua = $class->new_ua;
-    my $url = URI->new('http://github.com/api/v2/json/' . $query );
-    my $github_id     =  App::gh->config->github_id();
-    my $github_token  =  App::gh->config->github_token();
-
-    # normalize $verb to lowercase (for dispatch to $ua later)
-    $verb = "\L$verb\E";
-
-    # passing empty login/token triggers 401 unauthorized
-    if ($github_id and $github_token) {
-        if ($verb eq 'post') {
-            my %content = %args;
-            @content{'login', 'token'} = ($github_id, $github_token);
-            %args = ();
-            $args{'Content-Type'} = 'form-data';
-            $args{'Content'} = \%content;
-        }
-        else {
-            @args{'login', 'token'} = ($github_id, $github_token);
-        }
-    }
-    my $response = $ua->$verb($url, %args);
-
-
-    try {
-        my $data;
-        my $content = $response->decoded_content;
-
-        if ( ! $response->is_success ) {
-            # if the error message looks like JSON,
-            # then should provide a readable format.
-            if ( $content =~ m/{"error"/ ) {
-                my $r = decode_json( $content );
-                die join "\n", @{ $r->{error} };
-            }
-            die $response->status_line . ': ' . $content;
-        }
-
-        $data = decode_json( $content );
-        die 'Error: Can not decode json. => ' . $content unless $data;
-        die join "\n", @{ $data->{error} } if ref $data->{error} ;
-        die $data->{error} if $data->{error} && ! ref $data->{error};
-        return $data;
-    }
-    catch {
-        die $_;
-    };
+    die('v2 API is deprecated from github');
 }
 
 sub search {

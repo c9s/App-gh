@@ -61,7 +61,7 @@ sub run {
     my $t = stat($f->filename)->mtime;
     system $ENV{EDITOR}, $f->filename;
     if ($t == stat($f->filename)->mtime) {
-        _info "No changes. Issue was not sent.";
+        info "No changes. Issue was not sent.";
         return;
     }
 
@@ -70,14 +70,14 @@ sub run {
     close $fh;
 
     if (length($body) == 0) {
-        _info "Message should have lines at least.";
+        info "Message should have lines at least.";
         return;
     }
 
-    _info "Sending comment to issue #$number...";
+    info "Sending comment to issue #$number...";
     my $data = App::gh->api->issue_comment($user, $repo, $number, $body);
 
-    _info "sent";
+    info "sent";
 }
 
 

@@ -71,7 +71,7 @@ sub run {
     my $t = stat($f->filename)->mtime;
     system $ENV{EDITOR}, $f->filename;
     if ($t == stat($f->filename)->mtime) {
-        _info "No changes. Issue was not sent.";
+        info "No changes. Issue was not sent.";
         return;
     }
 
@@ -83,14 +83,14 @@ sub run {
     chomp( $body );
 
     if (length($title) == 0 || length($body) == 0) {
-        _info "Message should two lines at least.";
+        info "Message should two lines at least.";
         return;
     }
 
-    _info "Editing issue...";
+    info "Editing issue...";
     $data = App::gh->api->issue_edit($user, $repo, $number, $title, $body);
 
-    _info "sent: " . $data->{issue}->{html_url};
+    info "sent: " . $data->{issue}->{html_url};
 }
 
 

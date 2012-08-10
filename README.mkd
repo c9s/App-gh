@@ -1,109 +1,214 @@
 # App::gh
 
-## SYNOPSIS
+App::gh is an utility helps you operate commands through
+GitHub's API, currently App::gh is migrating to GitHub API v3.
 
-    show help message;
 
-        $ gh help
+## Installation
 
-## COMMANDS
+App::gh is written in Perl, so you might need a cpanminus to
+install CPAN modules, to install cpanminus:
+
+```bash
+    $ curl -L http://cpanmin.us | perl - --sudo App::cpanminus
+```
+
+Now you have `cpanm`, you can install App::gh
+
+```bash
+    $ sudo cpanm https://github.com/c9s/App-gh/zipball/develop
+```
+
+## Setup
+
+To use App::gh, you need to configure your password or OAuth
+token in your `.gitconfig` file, just drop the lines below
+to setup your password:
+
+```ini
+    [github]
+        user = c9s
+        password = your password
+```
+
+To use OAuth token, you need to set your OAuth access token:
+
+```ini
+    [github]
+        user = c9s
+        access_token = SHA1601f1889667efaebb33b8c12572835da3f027f78
+```
+
+## Commands
+
+### clone
+
+To clone a repository, use below command form:
+
+```bash
+    $ gh clone [user]/[repo]
+    $ gh clone [user] [repo]
+```
+
+When cloning repository from others, the default URI is 
+HTTP, which is `read-only`.
+
+When cloning repository from yourself, the default URI is 
+SSH, which is `read & write`.
+
+To specify URI type, you can simply pass options like 
+`--http` for HTTP, `--https` for HTTPS, `--ssh` for SSH,
+`--ro` for read-only URI.  e.g.:
+
+```bash
+    $ gh clone miyagawa Plack
+
+    $ gh clone user repo --http
+
+    $ gh clone user repo --https
+
+    $ gh clone user repo --ssh
+
+    $ gh clone clkao Web-Hippie --ro
+```
+
+Clone from SSH URI:
+
+```bash
+    $ gh clone miyagawa/Plack --ssh
+```
+
+To fetch related remote of forks, you can specify
+`--forks` option. this command allows you to download 
+commits from others' fork.
+
+```bash
+    $ gh clone c9s App-gh --forks
+```
+
+To clone repository and set the default remote name instead 
+of `origin`, you can specify `--origin` option:
+
+```bash
+    $ gh clone c9s App-gh --origin github
+```
+
+### all
+
+By using the `all` command, you can clone all repositories
+from an user.
+
+Below is the basic form:
+
+```bash
+    $ gh all [user] [type]
+```
+
+The `[type]` can be `member`, `all`, `owner`. if you specify 
+`all` then all repositories including fork projects will be 
+cloned. if you specify `owner`, then only the owner's
+projects will be cloned.
+
+For example, to clone all repositories of miyagawa:
+
+```bash
+    $ gh all miyagawa
+```
+
+To clone all repositories that owned by facebook:
+
+```bash
+    $ gh all facebook owner
+```
+
+By specifing `--into` option, you can clone these 
+repositories into a specific directory, for example:
+
+```bash
+    $ gh all facebook owner --into path/to/facebook
+
+    $ gh all perl6 --into perl6-stuff
+```
+
+To prompt before cloning each repository:
+
+```bash
+    $ gh all perl6 --prompt
+```
+
+To also fetch tags, you can specify `--tags` option:
+
+```bash
+    $ gh all facebook --tags
+```
+
+You can also specify a prefix to each repo:
+
+```bash
+    $ gh all facebook --prefix=facebook-prefix-
+```
+
+To clone these repositories as bared:
+
+```bash
+    $ gh all facebook --bare
+```
+
+To recursively clone submodules:
+
+```bash
+    $ gh all perl6 --recursive
+```
 
 
 ### import
 
-Import a repository to github:
+By using the `import` command, you can import your git
+repository to your GitHub account.
 
+You can simply type below line the upload your project:
+
+```bash
     $ gh import
+```
 
-### info
+To specify remote name for GitHub, you can use `--remote`
+option.
 
-Show repository info:
-
-    $ cd App
-    $ gh info
-
-### commit
-
-commit process:
-
-    % gh commit
-    # On branch master
-    # Your branch is ahead of 'origin/master' by 3 commits.
-    #
-    # Changed but not updated:
-    #   (use "git add <file>..." to update what will be committed)
-    #   (use "git checkout -- <file>..." to discard changes in working directory)
-    #
-    #	modified:   Changes
-    #	modified:   Makefile.PL
-    #	modified:   README.mkd
-    #
-    no changes added to commit (use "git add" and/or "git commit -a")
-    Show Diff(d), Status(s), Commit(c), Quit(q) :___
-
-### recent
-
-get github recent activities.
-
-    $ gh recent
-
-### list:
-
-list all repository of c9s:
-
-    $ gh list c9s
-
-if you want text wrapped:
-
-    $ WRAP=1 gh list c9s
-
-### clone
-
-clone Plack repository from miyagawa:
-
-    $ gh clone miyagawa/Plack   # default: read-only
-
-or:
-
-    $ gh clone miyagawa Plack
-
-    $ gh clone foo Social --http
-
-    $ gh clone foo Social --https
-
-    $ gh clone clkao Web-Hippie --ro
-
-clone from read-only uri:
-
-    $ gh clone miyagawa/Plack --ro
-
-clone from ssh uri:
-
-    $ gh clone miyagawa/Plack --ssh
+```bash
+    $ gh import --remote github
+```
 
 ### search
 
-search repository:
+To search repositories, simply use `search` command:
 
-    $ gh search Plack
+```bash
+    $ gh search keyword
+```
 
-### all
+### update
 
-to clone all repository of miyagawa:
+Sometimes you need to update remote refs, branches, tags,
+you might run `git remote update --prune`, and run pull with
+--rebase option to rebase changes on your local branch.
 
-    $ gh all miyagawa
+With App::gh, you can do simpler with the `update` command.
 
-    $ gh all facebook --into facebook
+```bash
+    $ gh update
+```
 
-    $ gh all perl6 --into perl6-stuff
+The command above actually runs:
 
-    $ gh all perl6 --into perl6-stuff --prompt
+```bash
+    git remote update --prune
+    git remote | while read remote; do
+        git pull --rebase $remote $(git rev-parse --abbrev-ref HEAD)
+    done
+```
 
-    $ gh all perl6 --into perl6-stuff --verbose --prompt
-
-    $ gh all clkao --ro  # read-only
-
-
+<!--
 ### fork
 
 to fork project:
@@ -231,6 +336,7 @@ And comment to the issue
     "pu" => "pull"
     "se" => "search"
     "up" => "update"
+-->
 
 ## INSTALLATION
 
@@ -260,6 +366,25 @@ add ~/.zsh/functions to your fpath
 ## DEVELOPMENT
 
 please keep the dependency simple and less.
+
+
+## CONTRIBUTORS
+
+    Alexandr Ciornii alexchorny@gmail.com
+    Breno G. de Oliveira garu@cpan.org
+    Chris Weyl cweyl@alumni.drew.edu
+    Fuji, Goro gfuji@cpan.org
+    Ryan C. Thompson rct@thompsonclan.org
+    Tokuhiro Matsuno tokuhirom@gmail.com
+    Yo-An Lin cornelius.howl@gmail.com
+    Zak B. Elep zakame@zakame.net
+    c9s cornelius.howl@gmail.com
+    chocolateboy chocolate@cpan.org
+    mattn mattn.jp@gmail.com
+    tokuhirom tokuhirom@gmail.com
+    tyru tyru.exe@gmail.com
+    xaicron xaicron@gmail.com
+    yj liyuray@gmail.com
 
 ## SUPPORT AND DOCUMENTATION
 

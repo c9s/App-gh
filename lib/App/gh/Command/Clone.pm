@@ -2,7 +2,12 @@ package App::gh::Command::Clone;
 use warnings;
 use strict;
 use base qw(App::gh::Command);
-use App::gh::Utils;
+use File::Basename;
+use App::gh::Utils qw(
+generate_repo_uri 
+build_git_clone_command
+run_git_fetch
+);
 use App::gh;
 
 =head1 NAME
@@ -15,13 +20,26 @@ balh
 
 =head1 OPTIONS
 
+    -q, --quiet
     --verbose
     --ssh
     --http
     --https
     --git|ro
-    -k | --forks     also fetch forks.
+    -k, --forks     also fetch forks.
 
+Git Options:
+
+    -b | --branch    clone specific branch.
+    --origin
+    --recursive, --recurse-submodules
+
+        After the clone is created, initialize all submodules within, using their default settings.
+        This is equivalent to running git submodule update --init --recursive immediately after the
+        clone is finished. This option is ignored if the cloned repository does not have a
+        worktree/checkout (i.e. if any of --no-checkout/-n, --bare, or --mirror is given)
+
+        See `git help clone`
 
 =cut
 
@@ -32,20 +50,21 @@ sub options { (
     "https" => "protocol_https",         # https://github.com/c9s/repo.git
     "git|ro"   => "protocol_git",        # git://github.com/c9s/repo.git
     "k|forks|fork"  => 'with_fork',
-    "bare" => "bare",
+    "b|bare" => "bare",
+    "b|branch=s" => "branch",
+    "mirror"     => "mirror",
+    "recursive"  => "recursive",
+    "origin"     => "origin",
 ) }
 
+
 sub run {
-    my ($self) = shift;
-
-    my $user;
+    my $self = shift;
+    my $user = shift;
     my $repo;
-
-    $user = shift;
     if( $user =~ /\// ) {
-        ( $user, $repo ) = split /\//, $user;
-    }
-    else {
+        ($user, $repo) = split /\//, $user;
+    } else {
         $repo = shift;
     }
 
@@ -53,28 +72,33 @@ sub run {
         die "Usage: gh clone [user] [repo]\n";
     }
 
-    my $uri = $self->gen_uri( $user, $repo );
-    my $flags = q{};
-    $flags .= qq{ --bare } if $self->{bare};
+    my $uri = generate_repo_uri($user, $repo, $self);
 
-    print 'cloning ', $uri,  "...\n";
-    system( qq{git clone $flags $uri} );
+    my @command = build_git_clone_options($uri,$self);
 
+    print 'Cloning ', $uri,  "...\n";
+    my $cmd = join ' ', @command;
+    qx($cmd);
+
+    # fetch forks
     if( $self->{with_fork} ) {
-        my ( $dirname ) = ( $uri =~ m/([a-zA-Z0-9-]+)\.git$/ );
-        chdir $dirname;
+        my $dirname = basename($uri,'.git');
 
         # get networks
-        my $networks = App::gh->api->repo_network( $user , $repo );
-        for my $net ( @$networks ) {
-            my $acc = $net->{owner};
-            my $url = $net->{url};
-
-            print qq{Adding remote $acc => $url.git\n};
-            qx(git remote add $acc $url.git);
-
-            print qq{Fetching remote $acc\n};
-            qx(git fetch $acc);
+        my $repos = App::gh->github->repos->set_default_user_repo($user,$repo);
+        my @forks = $repos->forks;
+        if( @forks ) {
+            print "Found " , scalar(@forks) , " forks to fetch...\n";
+            chdir $dirname;
+            for my $fork ( @forks ) {
+                my ($full_name,$clone_url,$login) =
+                        ($fork->{full_name},$fork->{clone_url},$fork->{owner}->{login});
+                print "===> Adding remote $login => $clone_url\n";
+                qx(git remote add $login $clone_url);
+                print "===> Fetching fork $full_name...\n";
+                run_git_fetch $login;
+                qx(git fetch $login);
+            }
         }
     }
 }

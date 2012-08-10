@@ -88,7 +88,7 @@ sub run {
 
                     ($user,$repo) = ( $1 , $2 );
 
-                    _info "Found GitHub repository of $user/$repo";
+                    info "Found GitHub repository of $user/$repo";
 
                     my $_remotes = qx(git remote | grep @{[ $gh_id ]});
                     if( $_remotes ) {
@@ -101,26 +101,26 @@ sub run {
                     } else {
                         $remote_uri = qq( git\@github.com:@{[ $gh_id ]}/$repo.git);
                     };
-                    _info "Adding remote '@{[ $gh_id ]}' => $remote_uri";
+                    info "Adding remote '@{[ $gh_id ]}' => $remote_uri";
 
                     # url = git@github.com:c9s/App-gh.git
                     my $cmd = qq( git remote add @{[ $gh_id ]} $remote_uri);
                     _debug $cmd;
                     qx($cmd);
 
-                    _info "Remote added.";
+                    info "Remote added.";
                 }
             }
         }
     }
 
-    _info "Forking...";
+    info "Forking...";
     my $data = App::gh->api->fork($user , $repo);
 
     use Data::Dumper;
     _debug Dumper( $data );
 
-    _info "Repository forked:";
+    info "Repository forked:";
 
     App::gh::Utils->print_repo_info($data->{repository});
 

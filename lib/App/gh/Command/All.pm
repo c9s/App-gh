@@ -4,7 +4,15 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 use File::Path qw(mkpath rmtree);
-use App::gh::Utils;
+use App::gh::Utils qw(
+    info 
+    error
+    notice
+    generate_repo_uri 
+    run_git_fetch
+    build_git_clone_command
+    dialog_yes_default
+);
 use Scope::Guard qw(guard);
 use Cwd ();
 
@@ -20,158 +28,178 @@ sub options { (
         "https"  => "protocol_https",         # https://github.com/c9s/repo.git
         "git|ro" => "protocol_git",         # git://github.com/c9s/repo.git
 
-        "skip-forks" => "skip_forks",  # skip repositories fork from others.
 
-        "bare" => "bare",
-        "mirror" => "mirror",
+        "tags"       => "tags",
+        "q|quiet"    => "quiet",
+        "bare"       => "bare",
+        "mirror"     => "mirror",
+        "b|branch=s" => "branch",
+        "recursive"  => "recursive",
+        "origin"     => "origin",
+
+
         "p|prefix=s" => "prefix",
         "f|force" => "force",
     ) }
 
 
+# 
+# @param string $user github user id
+# @param string $type github repository type (all,owner,member,all)
+# @see http://developer.github.com/v3/repos/
+
 sub run {
     my $self = shift;
-    my $acc  = shift;
+    my $user = shift;
+    my $type = shift || 'owner';
 
     # turn off buffering
     $|++; 
 
-    $self->{into} ||= $acc;
+    my $cwd = Cwd::getcwd();
+    $self->{into} ||= $user;
 
-    die 'Need account id.' unless $acc;
-
-    _info "Getting repository list from github: $acc";
-
-    my $repolist = App::gh->api->user_repos( $acc );
-    return if @$repolist == 0;
+    die 'Need account id.' unless $user;
 
     if( $self->{into} ) {
-        print STDERR "Cloning all repositories into @{[ $self->{into} ]}\n";
+        info "Cloning all repositories into @{[ $self->{into} ]}";
         mkpath [ $self->{into} ];
         chdir  $self->{into};
     }
 
-    $self->{bare} = 1 if $self->{mirror};
+    info "Getting repositories from $user...";
+    my @repos = App::gh->github->repos->list_user($user,$type);
 
+    unless(@repos) {
+        info "Found no repository to clone, exiting";
+        return;
+    }
 
-    _info "Will clone repositories below:";
-    print " " x 8 . join " " , map { $_->{name} } @{ $repolist };
+    my $into = Cwd::getcwd();
+    my $cloned = 0;
+    my $total = scalar(@repos);
+
+    info "Found " . $total . " repositories to clone:";
+    print " " x 8 . join " " , map { $_->{name} } @repos;
     print "\n";
 
-    _info "With options:";
-    _info " Prefix: " . $self->{prefix} if $self->{prefix};
-    _info " Bare: on" if $self->{bare};
-    _info " Mirror: on" if $self->{mirror};
+    return unless dialog_yes_default "Are you sure to continue ?";
+
+    my $progress = sub {
+        return sprintf "[%d/%d]",
+            ++$cloned,
+            $total;
+    };
 
     my $exclude = do {
         my $arr = ref $self->{exclude} eq 'ARRAY' ? $self->{exclude} : [];
         +{map { $_ => 1 } @$arr};
     };
 
-    my $cloned = 0;
+    for my $repo ( @repos ) {
+        my $local_repo = $repo->{name};
 
-    my $print_progress = sub {
-        return sprintf( "[%d/%d]", ++$cloned , scalar(@$repolist) );
-    };
+        next if exists $exclude->{ $local_repo };
 
-    for my $repo ( @{ $repolist } ) {
-        my $repo_name      = $repo->{name};
-        my $uri            = $self->gen_uri( $acc, $repo_name );
-        my $local_repo_dir = $repo_name;
-        $local_repo_dir    = "$local_repo_dir.git" if $self->{bare};
-        $local_repo_dir    = $self->{prefix} . "-" . $local_repo_dir if $self->{prefix};
+        my $uri = generate_repo_uri($user,$repo->{name},$self);
+        my @command = build_git_clone_command($uri,$self);
+        $local_repo = $self->{prefix} . $local_repo if $self->{prefix};
+        push @command , $local_repo;
 
-        print $uri . "\n" if $self->{verbose};
-
-        # ===> Conditions for skipping repos, to prevent api rate exceeded
-        if( $self->{prompt} ) {
-            print "Clone $repo_name [Y/n] ? ";
-            my $ans = <STDIN>;
-            chomp( $ans );
-            $ans ||= 'Y';
-            next if( $ans =~ /n/ );
-        }
-
-        next if exists $exclude->{$repo_name};
-
-        if( $self->{skip_exists} ) {
-            # Found local repository. Update it.
-            if(-e $local_repo_dir) {
-                _info "Found $local_repo_dir, skipped.";
+        if( -e $local_repo) {
+            if( $self->{skip_exists} ) {
+                info "Found $local_repo, skip.";
                 next;
             }
-        }
-
-        if( $self->{skip_forks} ) {
-            # NOTICE: This might exceed the API rate, careful.
-            # Please put this to the end of condition.
-            my $info = App::gh->api->repo_info( $acc , $repo_name );
-            if($info->{parent}) {
-                _info "Skipping repository with parent: $repo_name";
-                next;
-            }
-        }
-
-        # =================
-        # End of conditions for skipping clone
-
-
-        if( -e $local_repo_dir ) {
-
-            if( $self->{force} ) {
-                rmtree $local_repo_dir or do {
-                    print STDERR "could not remove '$local_repo_dir', skipped.\n";
+            elsif( $self->{force} ) {
+                notice "Force mode, Deleting original $local_repo";
+                rmtree $local_repo or do {
+                    error "Could not remove '$local_repo', skip.\n";
                     next;
                 };
-            }
-
-            my $cwd = Cwd::getcwd();
-            chdir $local_repo_dir;
-            my $guard = guard { chdir $cwd };    # switch back
-            print "Updating $local_repo_dir from remotes ..." . $print_progress->() . "\n";
-
-            if( qx{ git config --get core.bare } =~ /\Atrue\n?\Z/ ) {
-                # Here I assume remote.<remote>.mirror is automatically set.
-                # bacause --bare and --mirror do the set-up.
-                qx{ git fetch --all };
-            }
+            } 
             else {
-                my $flags = qq();
-                $flags .= qq{ -q } unless $self->{verbose};
-
-                # prune deleted remote branches
-                qx{ git remote update --prune };
-
-                # fetch all remotes
-                qx{ git fetch --all };
-
-                # update current working repo
-                qx{ git pull $flags --rebase --all };
+                # fetch and jump to next
+                info $progress->() . " $local_repo exists, fetching...";
+                chdir($local_repo);
+                run_git_fetch {
+                    all => 1, 
+                    quiet => $self->{quiet},
+                    tags => $self->{tags},
+                };
+                chdir($into);
+                next;
             }
         }
-        else {
-            # No repository was cloned yet. Clone it.
-            _info "Cloning " . $repo->{name} . " ... " . $print_progress->();
 
-            my $flags = qq();
-            $flags .= qq{ -q }     unless $self->{verbose};
-            $flags .= qq{ --bare } if     $self->{bare};
-
-            my $cmd = qq{ git clone $flags $uri $local_repo_dir};
-            qx{ $cmd };
-
-            # Support old git (which does not support `git clone --mirror`)
-            if ($self->{mirror}) {
-                my $cwd = Cwd::getcwd();
-                chdir $local_repo_dir;
-                my $guard = guard { chdir $cwd };    # switch back
-                qx{ git config remote.origin.fetch '+refs/*:refs/*' };
-                qx{ git config remote.origin.url $uri };
-                qx{ git config remote.origin.mirror true };
-            }
+        if( $self->{prompt} ) {
+            next unless dialog_yes_default "Clong " . $repo->{name} . ' ?';
         }
+
+        info sprintf "%s Cloning %s (%d/%d) ...", 
+            $progress->(),
+            $repo->{full_name},
+            $repo->{watchers},
+            $repo->{forks};
+        my $cmd = join " ",@command;
+        qx($cmd);
+
+        if( $self->{tags} ) {
+            chdir $local_repo;
+            run_git_fetch { 
+                all => 1, 
+                quiet => $self->{quiet},
+                tags => $self->{tags},
+            };
+            chdir $into;
+        }
+
     }
-    print "Done\n";
+
+#    for my $repo ( @{ $repolist } ) {
+#        # =================
+#        # End of conditions for skipping clone
+#
+#
+#        if( -e $local_repo_dir ) {
+#            my $cwd = Cwd::getcwd();
+#            chdir $local_repo_dir;
+#            my $guard = guard { chdir $cwd };    # switch back
+#            print "Updating $local_repo_dir from remotes ..." . $print_progress->() . "\n";
+#
+#            if( qx{ git config --get core.bare } =~ /\Atrue\n?\Z/ ) {
+#                # Here I assume remote.<remote>.mirror is automatically set.
+#                # bacause --bare and --mirror do the set-up.
+#                qx{ git fetch --all };
+#            }
+#            else {
+#                my $flags = qq();
+#                $flags .= qq{ -q } unless $self->{verbose};
+#
+#                # prune deleted remote branches
+#                qx{git remote update --prune};
+#
+#                # fetch all remotes
+#                qx{ git fetch --all };
+#
+#                # update current working repo
+#                qx{ git pull $flags --rebase --all };
+#            }
+#        }
+#        else {
+#            # Support old git (which does not support `git clone --mirror`)
+#            if ($self->{mirror}) {
+#                my $cwd = Cwd::getcwd();
+#                chdir $local_repo_dir;
+#                my $guard = guard { chdir $cwd };    # switch back
+#                qx{ git config remote.origin.fetch '+refs/*:refs/*' };
+#                qx{ git config remote.origin.url $uri };
+#                qx{ git config remote.origin.mirror true };
+#            }
+#        }
+#    }
+#    print "Done\n";
+
 }
 
 
@@ -211,9 +239,6 @@ Genernal Options:
 
     --into {path}
         clone repos into a {path}.
-
-    --skip-forks
-        skip repos which has a parent repo (fork from others)
 
     --skip-exists, -s
         skip existed repos.

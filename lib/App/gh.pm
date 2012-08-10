@@ -1,24 +1,42 @@
 package App::gh;
 use warnings;
 use strict;
-our $VERSION = '0.57';
+our $VERSION = '0.63';
 use App::gh::Config;
 use App::gh::API;
+use Net::GitHub;
 use Cwd;
 require App::gh::Git;
 
+my $GITHUB;
+
 sub config {
     return "App::gh::Config";
-}
-
-sub api {
-    return "App::gh::API";
 }
 
 sub git {
     return App::gh::Git->repository;
 }
 
+sub github { 
+    my $class = shift;
+    my $access_token = $class->config->github_access_token;
+    return $GITHUB ||= Net::GitHub->new( access_token => $access_token ) if $access_token;
+
+    my $github_id = $class->config->github_id;
+    my $github_password = $class->config->github_password;
+
+    die('Please configure your github.user') unless $github_id;
+    die('Please configure your github.password') unless $github_password;
+
+    return $GITHUB ||= Net::GitHub->new(  # Net::GitHub::V3
+        login => $github_id,
+        pass  => $github_password,
+        # $class->config->github_token,
+    );
+}
+
+1;
 __END__
 
 =head1 NAME
@@ -69,7 +87,7 @@ Some Github operations (like forking) require that your user is authenticated. T
 
   [github]
       user=myuser
-      token=XXX
+      password=XXX
 
 You can find your token by logging into Github, then going to C<"Account Settings"> on the top right corner, then C<"Account Admin">. Make sure to update this information if you ever change your password.
 

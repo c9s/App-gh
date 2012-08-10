@@ -56,22 +56,17 @@ sub current {
     return $class->parse( $path );
 }
 
-
 # when command trying to read config, we should let it die, and provide another
 # method to check github id and token.
-sub github_token {
-    my $class = shift;
-    my $config;
-    $config = $class->global();
-    return $config->{github}->{token};
-}
+# XXX: abandoned, since we are using Net::GitHub V3
+sub github_token { return $_[0]->global()->{github}->{token}; }
 
-sub github_id {
-    my $class = shift;
-    my $config;
-    $config = $class->global();
-    return $config->{github}->{user};
-}
+sub github_password { return $_[0]->global()->{github}->{password}; }
+
+# Auth with OAuth
+sub github_access_token { return $_[0]->global()->{github}->{access_token}; }
+
+sub github_id { return $_[0]->global()->{github}->{user}; }
 
 sub global {
     my $class = shift;

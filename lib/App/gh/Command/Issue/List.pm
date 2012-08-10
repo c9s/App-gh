@@ -57,7 +57,7 @@ sub run {
 
     my $data = App::gh->api->issue_list($user, $repo);
     unless (@{$data->{issues}}) {
-        _info "No issues found.";
+        info "No issues found.";
     } else {
         for my $issue (@{$data->{issues}}) {
             printf "* Issue %-4d [%s] %s - %s\n" , 

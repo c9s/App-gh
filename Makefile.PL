@@ -23,7 +23,9 @@ requires 'Term::ReadLine';
 requires 'Scope::Guard';
 requires 'Error';
 requires 'Try::Tiny';
+requires 'Net::GitHub';
 requires 'IO::Pager';
+requires 'LWP::Protocol::https';
 
 # `gh recent` support
 recommends 'XML::Atom';

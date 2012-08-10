@@ -3,9 +3,12 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 use App::gh;
-use App::gh::Utils;
-
-# XXX: improve me
+use App::gh::Utils qw(
+    info 
+    error
+    build_git_remote_command
+    git_current_branch
+);
 
 =head1 NAME
 
@@ -20,28 +23,42 @@ writable remotes.
 
 sub run {
     my $self = shift;
+    my @remotes = @_;
 
     unless ( -d ".git" ) {
         die "Not a repository";
     }
 
-    _info "Running update --prune";
-    qx{ git remote update --prune  };
+    info "Running remote update with prune";
+    my @cmds = build_git_remote_command('update',{ prune => 1 });
+    system(@cmds) == 0 
+        or die error "system @cmds failed: $?";
 
-    my @lines = split /\n/,qx{ git remote -v | grep '(fetch)'};
-    for my $line ( @lines ) {
-        my ( $remote , $uri , $type ) = ($line =~ m{^(\w+)\s+(\S+)\s+\((\w+)\)} );
-        # use Data::Dumper; warn Dumper( $remote , $uri , $type );
-        _info "Updating from $remote ...";
-        qx{ git pull --rebase $remote };
+    my $diff = qx(git diff);
+    chomp($diff);
+    die error("Can not update, you have uncommitted changes.") if $diff;
 
-        if( $uri =~ /^git\@github\.com/ ) {
-            _info "Pushing changes to $remote : $uri";
-            qx{ git push  $remote };
+    my $current_head = git_current_branch;
+    if( @remotes ) {
+        for my $remote (@remotes) {
+            info "Pull and rebase from $remote/$current_head...";
+            qx{git pull --rebase $remote $current_head};
         }
     }
+    else {
+        my @lines = split /\n/,qx{ git remote -v | grep '(fetch)'};
+        for my $line ( @lines ) {
+            my ( $remote, $uri, $type) = ($line =~ m{^(\w+)\s+(\S+)\s+\((\w+)\)} );
+            info "Pull and rebase from $remote ...";
+            qx{git pull --rebase $remote $current_head};
 
-    _info "Done";
+            # if( $uri =~ /^git\@github\.com/ ) {
+            #     info "Pushing changes to $remote : $uri";
+            #     qx{ git push  $remote };
+            # }
+        }
+    }
+    info "Done";
 }
 
 1;

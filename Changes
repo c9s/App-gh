@@ -1,5 +1,24 @@
 Revision history for App-gh
 
+0.63
+    - Fix and update the `update` command.
+
+0.62
+    - Fix search command.
+
+0.61
+    - Fix `clone` command.
+    - Fix `all` command.
+    - Update documenation for setup and installation.
+    - Refactor git command functions
+    - Use Term::ANSIColor
+
+0.60
+    - Support Net::GitHub::V3
+    - Fix authentication for Core API
+    - Fix import command 
+    - Still a lot of things to be fixed.
+
 0.57
     - bug fixes
 
