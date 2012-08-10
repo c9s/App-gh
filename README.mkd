@@ -367,6 +367,25 @@ add ~/.zsh/functions to your fpath
 
 please keep the dependency simple and less.
 
+
+## CONTRIBUTORS
+
+    Alexandr Ciornii alexchorny@gmail.com
+    Breno G. de Oliveira garu@cpan.org
+    Chris Weyl cweyl@alumni.drew.edu
+    Fuji, Goro gfuji@cpan.org
+    Ryan C. Thompson rct@thompsonclan.org
+    Tokuhiro Matsuno tokuhirom@gmail.com
+    Yo-An Lin cornelius.howl@gmail.com
+    Zak B. Elep zakame@zakame.net
+    c9s cornelius.howl@gmail.com
+    chocolateboy chocolate@cpan.org
+    mattn mattn.jp@gmail.com
+    tokuhirom tokuhirom@gmail.com
+    tyru tyru.exe@gmail.com
+    xaicron xaicron@gmail.com
+    yj liyuray@gmail.com
+
 ## SUPPORT AND DOCUMENTATION
 
 After installing, you can find documentation for this module with the
