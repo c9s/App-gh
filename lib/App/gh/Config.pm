@@ -3,46 +3,46 @@ use warnings;
 use strict;
 use File::HomeDir ();
 use File::Spec;
-
-sub _parse_options {
-    my $part = shift;
-    my $options;
-    while(  $part =~ /^\s*(.+?)\s*=\s*(.*?)\s*$/gm ) {
-        my ($name,$value) = ($1,$2);
-        $options->{ $name } = $value;
-    }
-    return $options;
-}
+use File::Basename qw(dirname);
 
 
 
 
+my %_parse_memoize;
 # XXX: use Config::Tiny to parse ini format config.
 sub parse {
     my ( $class, $file ) = @_;
 
-    # read file
-    open FH , "<" , $file;
-    local $/;
-    my $content = <FH>;
-    close FH;
+    # Return cached result.
+    $file = File::Spec->rel2abs($file);
+    return $_parse_memoize{$file} if exists $_parse_memoize{$file};
 
-    # TODO: simply parse config.... better choice ?
-    my @parts = split /(?=\[.*?\])/,$content;
     my %config;
-    for my $part ( @parts ) {
-        if( $part =~ /^\[(\w+)\s+["'](\w+)["']\]/g ) {
-            my ($o1 , $o2 ) = ($1, $2);
-            $config{ $o1 } ||= {};
-            $config{ $o1 }->{ $o2 }
-                = _parse_options( $part );
-        }
-        elsif( $part =~ /^\[(.*?)\]/g  ) {
-            my $key = $1;
-            my $options = _parse_options( $part );
-            $config{ $key } = $options;
+    for my $line (split "\n", qx(git config --list -f '$file')) {
+        # $line = foo.bar.baz=value
+        if (my ($key, $value) = ($line =~ m/^([^=]+)=(.*)/)) {
+            my $h = \%config;
+            if ($key eq 'include.path') {
+                my $path = File::Spec->file_name_is_absolute($value) ? $value : File::Spec->rel2abs($value, dirname($file));
+                %config = (%config, %{ $class->parse($path) });
+                # Uncomment this to get rid of "include.path" in %config
+                #next;
+            }
+            my @keys = split /\./, $key;
+            next unless @keys;
+            # Create empty hashref.
+            # %config = (foo => {bar => ($h = {})})
+            for (@keys[0..$#keys-1]) {
+                $h->{$_} = {} unless exists $h->{$_};
+                $h = $h->{$_};
+            }
+            # $config{foo}{bar}{baz} = $value;
+            $h->{$keys[-1]} = $value;
         }
     }
+
+    # Cache result not to invoke 'git' command frequently.
+    $_parse_memoize{$file} = \%config;
     return \%config;
 }
 
