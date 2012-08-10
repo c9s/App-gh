@@ -8,10 +8,14 @@ use File::Basename qw(dirname);
 
 
 
+my %_parse_memoize;
 # XXX: use Config::Tiny to parse ini format config.
-# TODO: Use cache not to invoke 'git' command frequently?
 sub parse {
     my ( $class, $file ) = @_;
+
+    # Return cached result.
+    $file = File::Spec->rel2abs($file);
+    return $_parse_memoize{$file} if exists $_parse_memoize{$file};
 
     my %config;
     for my $line (split "\n", qx(git config --list -f $file)) {
@@ -37,6 +41,8 @@ sub parse {
         }
     }
 
+    # Cache result not to invoke 'git' command frequently.
+    $_parse_memoize{$file} = \%config;
     return \%config;
 }
 
