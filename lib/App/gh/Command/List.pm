@@ -27,9 +27,12 @@ sub run {
     $acc =~ s{/$}{};
 
 	# TODO: use api class.
-	my $repolist = App::gh->api->user_repos( $acc );
+    my $query = App::gh->github->repos;
+    my @repolist = $query->list_user($acc);
+    push @repolist, $query->next_page while $query->has_next_page;
+
     my @lines = ();
-    for my $repo ( @$repolist ) {
+    for my $repo ( @repolist ) {
         my $repo_name = $repo->{name};
 
         # name-only

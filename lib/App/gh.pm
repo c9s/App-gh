@@ -26,8 +26,10 @@ sub github {
     my $github_id = $class->config->github_id;
     my $github_password = $class->config->github_password;
 
-    die('Please configure your github.user') unless $github_id;
-    die('Please configure your github.password') unless $github_password;
+    die "Please configure your github.user in .gitconfig (see App::gh pod)\n"  
+        unless $github_id;
+    die "Please configure your github.password in .gitconfig (See App::gh pod)\n"
+        unless $github_password;
 
     return $GITHUB ||= Net::GitHub->new(  # Net::GitHub::V3
         login => $github_id,
