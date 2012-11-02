@@ -74,7 +74,7 @@ sub print_list {
         if ( $ENV{WRAP} && ( $column_w + 3 + length( join(" ",@$arg)) ) > $screen_width ) {
             # wrap description
             my $string = 
-                color('bold white') . 
+                color('bold') . 
                 $title .
                 color('reset') . 
                 " " x $padding . " - " . join(" ",@$arg) . "\n";
@@ -107,7 +107,7 @@ sub print_list {
             print "\n" if $wrapped;
         }
         else { 
-            print color 'bold white';
+            print color 'bold';
             print $title;
             print color 'reset';
             print " " x $padding;
