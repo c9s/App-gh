@@ -74,7 +74,7 @@ sub run {
 
     my $uri = generate_repo_uri($user, $repo, $self);
 
-    my @command = build_git_clone_options($uri,$self);
+    my @command = build_git_clone_command($uri,$self);
 
     print 'Cloning ', $uri,  "...\n";
     my $cmd = join ' ', @command;
