@@ -68,9 +68,10 @@ sub run {
 
 
 	my $gh_id = App::gh->config->github_id;
-	my $gh_token = App::gh->config->github_token;
+	my $gh_token = App::gh->config->github_token 
+        || App::gh->config->github_password;
     unless( $gh_id && $gh_token ) {
-        die "Github authtoken not found. Can not fork repository.\n";
+        die "Github credentials not found. Cannot fork repository.\n";
     }
 
 
@@ -115,7 +116,7 @@ sub run {
     }
 
     info "Forking...";
-    my $data = App::gh->api->fork($user , $repo);
+    my $data = App::gh::API->fork($user, $repo);
 
     use Data::Dumper;
     _debug Dumper( $data );
