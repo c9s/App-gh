@@ -7,6 +7,7 @@ use URI;
 use JSON::XS;
 use App::gh::Utils;
 use Try::Tiny;
+use Net::GitHub;
 
 sub new_ua {
     my $class = shift;
@@ -30,11 +31,18 @@ sub fork {
     my ( $class, $user, $repo) = @_;
     Carp::croak("Missing mandatory parameter: user") unless defined $user;
     my $gh_id = App::gh->config->github_id;
-    my $gh_token = App::gh->config->github_token;
-    unless( $gh_id && $gh_token ) {
-        die "Github authtoken not found. Can not fork repository.\n";
-    }
-    return $class->request(POST => sprintf("repos/fork/%s/%s?login=%s&token=%s", $user , $repo , $gh_id , $gh_token ));
+    my $gh_password = App::gh->config->github_password;
+
+    my $gh = Net::GitHub->new(
+        version => 3,
+        login   => App::gh->config->github_id,
+        pass    =>  App::gh->config->github_password,
+    );
+
+    my $repos = $gh->repos;
+    $repos->set_default_user_repo( $user, $repo );
+
+    return $repos->create_fork;
 }
 
 sub repo_network {
