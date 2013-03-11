@@ -1,5 +1,8 @@
 Revision history for App-gh
 
+0.65
+    - Replace JSON::XS with JSON
+
 0.64
     - Fix the `clone` command.
 
