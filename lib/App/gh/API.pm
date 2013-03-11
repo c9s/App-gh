@@ -4,7 +4,7 @@ use strict;
 use Carp ();
 use LWP::UserAgent;
 use URI;
-use JSON::XS;
+use JSON;
 use App::gh::Utils;
 use Try::Tiny;
 use Net::GitHub;
@@ -233,10 +233,10 @@ Which returnes a hashref:
 
     {
         'owner' => 'c9s',
-        'has_downloads' => bless( do{\(my $o = 1)}, 'JSON::XS::Boolean' ),
+        'has_downloads' => bless( do{\(my $o = 1)}, 'JSON::Boolean' ),
         'has_issues' => $VAR1->{'repository'}{'has_downloads'},
         'name' => 'App-gh',
-        'private' => bless( do{\(my $o = 0)}, 'JSON::XS::Boolean' ),
+        'private' => bless( do{\(my $o = 0)}, 'JSON::Boolean' ),
         'has_wiki' => $VAR1->{'repository'}{'has_downloads'},
         'pushed_at' => '2010/11/13 09:15:44 -0800',
         'description' => 'Powerful GitHub Helper Utility in Perl.',

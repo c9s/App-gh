@@ -17,7 +17,7 @@ requires 'File::HomeDir';
 requires 'LWP::Simple';
 requires 'URI';
 requires 'Text::Wrap';
-requires 'JSON::XS';
+requires 'JSON';
 requires 'HTML::Strip';
 requires 'Term::ReadLine';
 requires 'Scope::Guard';

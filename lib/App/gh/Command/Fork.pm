@@ -19,9 +19,9 @@ curl -F 'login=schacon' -F 'token=XXX' http://github.com/api/v2/yaml/repos/fork/
 
 $VAR1 = {
           'repository' => {
-                            'has_downloads' => bless( do{\(my $o = 1)}, 'JSON::XS::Boolean' ),
+                            'has_downloads' => bless( do{\(my $o = 1)}, 'JSON::Boolean' ),
                             'owner' => 'c9s',
-                            'has_issues' => bless( do{\(my $o = 0)}, 'JSON::XS::Boolean' ),
+                            'has_issues' => bless( do{\(my $o = 0)}, 'JSON::Boolean' ),
                             'name' => 'AnyMQ',
                             'private' => $VAR1->{'repository'}{'has_issues'},
                             'has_wiki' => $VAR1->{'repository'}{'has_downloads'},
