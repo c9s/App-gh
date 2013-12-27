@@ -4,6 +4,8 @@ use strict;
 use base qw(App::gh::Command);
 use App::gh::Utils;
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Drop - drop a repository.

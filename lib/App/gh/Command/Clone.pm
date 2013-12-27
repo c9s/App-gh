@@ -10,6 +10,8 @@ run_git_fetch
 );
 use App::gh;
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Clone - clone repository

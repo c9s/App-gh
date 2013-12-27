@@ -6,6 +6,8 @@ use App::gh;
 use App::gh::Utils;
 use File::Spec;
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Page - create GitHub gh-page

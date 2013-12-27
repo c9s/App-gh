@@ -9,6 +9,8 @@ use Text::Wrap;
 require App::gh::Git;
 
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Issue::Show - show the issue.

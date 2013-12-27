@@ -8,6 +8,8 @@ use Term::ANSIColor;
 use Text::Wrap;
 use v5.10;
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Search - search repositories

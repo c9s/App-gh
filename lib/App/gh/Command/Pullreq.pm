@@ -7,6 +7,8 @@ use App::gh::Utils;
 
 use constant subcommands => qw(List Show Send);
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Pullreq - pull request. (show/list/send)

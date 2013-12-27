@@ -3,6 +3,8 @@ use warnings;
 use strict;
 use base 'App::CLI::Command::Help';
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Help - help command.

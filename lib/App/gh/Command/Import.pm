@@ -77,6 +77,8 @@ sub run {
 1;
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Import - create and import a repository, or add a remote for an existing one.

@@ -10,6 +10,8 @@ use IO::Pager;
 require App::gh::Git;
 
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::PullReq::Show - show the pull request.
