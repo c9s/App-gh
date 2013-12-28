@@ -1,3 +1,5 @@
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Git - Perl interface to the App::gh::Git version control system

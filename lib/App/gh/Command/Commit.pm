@@ -9,6 +9,8 @@ use App::gh::Utils;
 use File::Temp;
 use Term::ReadLine;
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Commit - quick commit process (show status, diff, then commitCloneall)

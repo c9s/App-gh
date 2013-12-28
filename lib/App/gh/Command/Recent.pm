@@ -8,6 +8,8 @@ use Text::Wrap;
 use HTML::Strip;
 use IO::Pager;
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Recent - show recent status.

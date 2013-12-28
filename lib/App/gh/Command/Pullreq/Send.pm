@@ -7,6 +7,8 @@ use File::Temp;
 require App::gh::Git;
 
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::PullReq::Send - pull request of current branch.

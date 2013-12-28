@@ -5,6 +5,8 @@ use base qw(App::gh::Command);
 use App::gh::Utils;
 use App::gh;
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Push - push changes to writable github remotes

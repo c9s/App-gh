@@ -196,6 +196,8 @@ sub issue_comment {
 1;
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::API - Github API class

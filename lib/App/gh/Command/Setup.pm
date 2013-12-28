@@ -42,6 +42,8 @@ END
 1;
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Setup - setup command

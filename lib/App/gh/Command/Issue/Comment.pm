@@ -8,6 +8,8 @@ use File::Temp;
 require App::gh::Git;
 
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Issue::Edit - comment to the issue.
