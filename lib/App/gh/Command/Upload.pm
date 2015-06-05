@@ -5,6 +5,8 @@ use base qw(App::gh::Command);
 use Net::GitHub::Upload;
 use App::gh::Utils;
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Upload - upload file to github.

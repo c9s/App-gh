@@ -5,6 +5,8 @@ use base qw(App::gh::Command);
 use App::gh;
 use App::gh::Utils;
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Pull - pull changes from other forks.
@@ -37,7 +39,7 @@ This will create a gugod-master branch:
 
 =head3 Github Steps:
 
-Step 1: Check out a new branch to test the changes — run this from your project directory
+Step 1: Check out a new branch to test the changes - run this from your project directory
 
     git checkout -b chocolateboy-optional_dep_and_warnings_fixes master
 

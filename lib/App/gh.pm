@@ -41,6 +41,8 @@ sub github {
 1;
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh - An apt-like Github utility.

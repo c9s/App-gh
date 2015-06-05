@@ -10,6 +10,8 @@ use App::gh::Utils qw(
     git_current_branch
 );
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Update - remote update --prune

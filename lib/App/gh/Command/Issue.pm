@@ -7,6 +7,8 @@ use App::gh::Utils;
 
 use constant subcommands => qw(List Show Edit Comment);
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::Issue - issues. (show/list/edit/comment)

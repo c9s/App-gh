@@ -206,6 +206,8 @@ sub run {
 1;
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 App::gh::Command::All - clone/update all repositories from one
