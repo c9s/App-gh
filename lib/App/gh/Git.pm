@@ -11,6 +11,7 @@ package App::gh::Git;
 
 use 5.008;
 use strict;
+use File::Temp qw(tempfile);
 
 
 BEGIN {
@@ -1081,7 +1082,7 @@ sub _temp_cache {
 			$tmpdir = $self->repo_path();
 		}
 
-		($$temp_fd, $fname) = File::Temp->tempfile(
+		($$temp_fd, $fname) = tempfile(
 			'Git_XXXXXX', UNLINK => 1, DIR => $tmpdir,
 			) or throw Error::Simple("couldn't open new temp file");
 
