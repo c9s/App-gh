@@ -3,6 +3,7 @@ use warnings;
 use strict;
 use base qw(App::gh::Command);
 use App::gh::Utils;
+use Data::Dumper;
 
 
 =encoding utf8
@@ -120,24 +121,8 @@ sub run {
     info "Forking...";
     my $data = App::gh::API->fork($user, $repo);
 
-    use Data::Dumper;
     _debug Dumper( $data );
-
     info "Repository forked:";
-
-    App::gh::Utils->print_repo_info($data->{repository});
-
-    # $data = $data->{repository};
-    # print "  Name:          " . $data->{name} . "\n";
-    # print "  Description:   " . $data->{description} . "\n";
-    # print "  Owner:         " . $data->{owner} . "\n";
-    # print "  Watchers:      " . $data->{watchers} . "\n";
-    # print "  Created at:    " . $data->{created_at} . "\n";
-    # print "  Pushed at:     " . $data->{pushed_at} . "\n";
-    # print "  Fork:          " . $data->{'fork'} . "\n";
-    # print "  URL:           " . $data->{url} . "\n";
-    # print "  Homepage:      " . ($data->{homepage}||'') . "\n";
-
 }
 
 
