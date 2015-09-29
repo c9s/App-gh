@@ -210,11 +210,11 @@ __END__
 
 =head1 NAME
 
-App::gh::Command::All - clone/update all repositories from one
+App::gh::Command::All - clone/update all repositories from a GitHub user
 
 =head1 DESCRIPTION
 
-If you need a mirror of repos from one, you will need this command.
+If you need a mirror of all the repositories of a GitHub user, you will need this command.
 
 If repos exists, clone command will pull changes for these repos from remotes.
 
@@ -234,7 +234,7 @@ command again:
 
 =head1 OPTIONS
 
-Genernal Options:
+General Options:
 
     --prompt
         prompt for each cloning repo.
