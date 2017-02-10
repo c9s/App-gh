@@ -1,59 +1,133 @@
 package App::gh::Command::Search;
+# ABSTRACT: search repositories
+
+use 5.10.0;
+
 use warnings;
 use strict;
-use base qw(App::gh::Command);
-use App::gh::Utils;
-use App::gh;
-use Term::ANSIColor;
-use Text::Wrap;
-use v5.10;
+
+use MooseX::App::Command;
+
+use Moose::Util::TypeConstraints qw/ enum /;
+use Module::Runtime qw/ use_module /;
+
+use Term::ANSIColor qw/ colored /;
+
+extends 'App::gh';
+
+use experimental 'switch', 'postderef';
+
+
+parameter query => (
+    is => 'ro',
+    documentation => 'search query',
+);
+
+option sort => (
+    is => 'ro',
+    default => 'popularity',
+    documentation => 'sorting criteria',
+);
+
+option reverse => (
+    is            => 'ro',
+    isa           => 'Bool',
+    default       => sub { 0 },
+    documentation => 'list entries in descending order',
+);
+
+option format => (
+    is => 'ro',
+    isa => enum([ qw/ summary json / ]),
+    default => 'summary',
+    documentation => 'printing format',
+);
+
+
+sub run {
+    my $self = shift;
+
+    my %repos = $self->search_repositories({ 
+        q     => $self->query,
+        sort  => $self->sort,
+        order => $self->reverse ? 'desc' : 'asc'
+    });
+
+    given ( $self->format ) {
+        $self->print_json(\%repos) when 'json'; 
+
+        default { $self->print_summary(\%repos) }
+    }
+
+}
+
+use IO::Interactive qw/ is_interactive /;
+
+has handlebars => (
+    is => 'ro',
+    lazy => 1,
+    default => sub {
+        use_module( 'Text::Handlebars' )->new(
+            helpers => {
+                color => sub {
+                    my( $context, $color, $options ) = @_;
+                    my $output = $options->{fn}->($context)||'';
+                    return is_interactive() ?  colored( [ $color ], $output ) : $output;
+                },
+                pad => sub {
+                    my( $context, $padding, $options ) = @_;
+                    return sprintf "%${padding}s", $options->{fn}->($context);
+                },
+            }
+        );
+    },
+    handles => [ 'render_string' ],
+);
+
+# TODO turn into option
+has summary_entry => (
+    is => 'ro',
+    default => '{{#color "blue"}}{{#pad "-30"}}{{ full_name }}{{/pad}}{{/color}} - {{ description }}'
+);
+
+use JSON qw/ to_json /;
+sub print_json {
+    print to_json( $_[1], { pretty => 1, canonical => 1, allow_blessed => 1 } );
+}
+
+sub print_summary {
+    my( $self, $repos ) = @_;
+    my $template = $self->summary_entry;
+
+    say $self->render_string( $self->summary_entry(), $_) 
+        for $repos->{items}->@*;
+}
+
 
 =encoding utf8
 
-=head1 NAME
-
-App::gh::Command::Search - search repositories
-
 =head1 USAGE
 
-    $ gh search perl6
+    $ gh search --sort popularity --reverse perl6
 
 =cut
 
-sub run {
-    my ($self,$keyword) = @_;
-    local $|;
-    info "Fetching list...";
+# search --reverse (desc) --sort
 
-    my $data = App::gh->github->query( 'GET' , '/legacy/repos/search/' . $keyword );
+# three format options short, or verbose, or json
 
-    my @ary = ();
-    for my $repo ( @{ $data->{repositories} } ) {
-        my $name = sprintf "%s/%s", $repo->{username} , $repo->{name};
-        my $desc = $repo->{description};
-        push @ary, [ $name , $desc || '' ];
-    }
-    print_list @ary;
+# color if interactive, strip'em if not
+# template for entries
 
-#     my $result = App::gh->api->search($keyword);
-#     if( $self->{long} ) {
-#         for my $entry ( @{ $result->{repositories} } ) {
-#             print color 'white bold';
-#             say "*   $entry->{owner}/$entry->{name}";
-#             print color 'reset';
-#             say "    W/F:      $entry->{watchers}/$entry->{forks}";
-#             say "    Url:      " .  $entry->{url} if $entry->{url};
-#             say "    Homepage: " .  $entry->{homepage} if $entry->{homepage};
-#             say "\n" . wrap( '    ', '    ', $entry->{description} ) . "\n";
-#         }
-#     } else {
-#         my @ary = ();
-#         for my $repo ( @{ $result->{repositories} } ) {
-#         }
-#         # print short list
-#     }
+# Term::ANSIColor
+# IO::Interactive
+# Text::Balanced
 
-}
+# allow to config color aliases
+
+#    !blue on_red<$_{username} }/$_{name}>
+
+
 
 1;
 __END__
