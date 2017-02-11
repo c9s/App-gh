@@ -1,7 +1,8 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More tests => 1;
+
 use Capture::Tiny qw/ capture_stdout /;
 use List::AllUtils qw/ pairs /;
 

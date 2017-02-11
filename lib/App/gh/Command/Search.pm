@@ -15,8 +15,11 @@ use Term::ANSIColor qw/ colored /;
 
 extends 'App::gh';
 
-use experimental 'switch', 'postderef';
+with 'App::gh::Role::Format' => {
+    formats => [qw/ summary json /],
+};
 
+use experimental 'switch', 'postderef';
 
 parameter query => (
     is => 'ro',
@@ -36,12 +39,6 @@ option reverse => (
     documentation => 'list entries in descending order',
 );
 
-option format => (
-    is => 'ro',
-    isa => enum([ qw/ summary json / ]),
-    default => 'summary',
-    documentation => 'printing format',
-);
 
 
 sub run {
@@ -53,47 +50,15 @@ sub run {
         order => $self->reverse ? 'desc' : 'asc'
     });
 
-    given ( $self->format ) {
-        $self->print_json(\%repos) when 'json'; 
-
-        default { $self->print_summary(\%repos) }
-    }
+    $self->print_formatted(\%repos);
 
 }
-
-use IO::Interactive qw/ is_interactive /;
-
-has handlebars => (
-    is => 'ro',
-    lazy => 1,
-    default => sub {
-        use_module( 'Text::Handlebars' )->new(
-            helpers => {
-                color => sub {
-                    my( $context, $color, $options ) = @_;
-                    my $output = $options->{fn}->($context)||'';
-                    return is_interactive() ?  colored( [ $color ], $output ) : $output;
-                },
-                pad => sub {
-                    my( $context, $padding, $options ) = @_;
-                    return sprintf "%${padding}s", $options->{fn}->($context);
-                },
-            }
-        );
-    },
-    handles => [ 'render_string' ],
-);
 
 # TODO turn into option
 has summary_entry => (
     is => 'ro',
     default => '{{#color "blue"}}{{#pad "-30"}}{{ full_name }}{{/pad}}{{/color}} - {{ description }}'
 );
-
-use JSON qw/ to_json /;
-sub print_json {
-    print to_json( $_[1], { pretty => 1, canonical => 1, allow_blessed => 1 } );
-}
 
 sub print_summary {
     my( $self, $repos ) = @_;
