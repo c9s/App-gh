@@ -1,55 +1,100 @@
 package App::gh::Command::List;
+# ABSTRACT: list a user's repositories
+
+use 5.10.0;
+
 use warnings;
 use strict;
-use base qw(App::gh::Command);
-use App::gh;
-use App::gh::Utils;
+
+use MooseX::App::Command;
+
+use Moose::Util::TypeConstraints qw/ enum /;
+use Module::Runtime qw/ use_module /;
+
+use Term::ANSIColor qw/ colored /;
+use JSON qw/ to_json /;
+
+extends 'App::gh';
+
+use experimental 'switch', 'postderef';
+
+parameter username => (
+    is       => 'ro',
+    required => 1,
+);
+
+option format => (
+    is => 'ro',
+    isa => enum([ qw/ summary json / ]),
+    default => 'summary',
+    documentation => 'printing format',
+);
+
+# TODO move into a role
+    # with 'App::gh::Role::Formats' => { 
+    # first one is the default
+    #     formats => [ 'json', 'summary' ],
+    # };
+
+sub print_formatted {
+    my $self = shift;
+    my $method = 'print_' . $self->format;
+    $self->$method(@_);
+}
+
+sub print_summary {
+    my( $self, $repos ) = @_;
+
+    say $self->render_string( $self->summary_entry, $_) 
+        for @$repos;
+};
+
+# TODO read again if there are more
+
+# TODO turn into option
+has summary_entry => (
+    is => 'ro',
+    default => '{{#color "blue"}}{{#pad "-30"}}{{ name }}{{/pad}}{{/color}} - {{ description }}'
+);
+
+use IO::Interactive qw/ is_interactive /;
+
+has handlebars => (
+    is => 'ro',
+    lazy => 1,
+    default => sub {
+        use_module( 'Text::Handlebars' )->new(
+            helpers => {
+                color => sub {
+                    my( $context, $color, $options ) = @_;
+                    my $output = $options->{fn}->($context)||'';
+                    return is_interactive() ?  colored( [ $color ], $output ) : $output;
+                },
+                pad => sub {
+                    my( $context, $padding, $options ) = @_;
+                    return sprintf "%${padding}s", $options->{fn}->($context);
+                },
+            }
+        );
+    },
+    handles => [ 'render_string' ],
+);
 
 
-=encoding utf8
-
-=head1 NAME
-
-App::gh::Command::List - list repository from one.
-
-=head1 USAGE
-
-    $ gh list [user id]
-
-=cut
-
-sub options {
-    ( 'n|name' => 'name_only' )
+sub print_json {
+    my( undef, $data ) = @_;
+    print to_json $data, { pretty => 1, canonical => 1, allow_blessed => 1 };
 }
 
 sub run {
-    my ( $self, $acc ) = @_;
+    my $self = shift;
 
-    $acc ||= App::gh->config->github_id;
-    $acc =~ s{/$}{};
+    my @repos = $self->list_user_repos( $self->username );
 
-	# TODO: use api class.
-    my $query = App::gh->github->repos;
-    my @repolist = $query->list_user($acc);
-    push @repolist, $query->next_page while $query->has_next_page;
+    $self->print_formatted(\@repos);
 
-    my @lines = ();
-    for my $repo ( @repolist ) {
-        my $repo_name = $repo->{name};
-
-        # name-only
-        if( $self->{name_only} ) {
-            print $acc . "/" . $repo->{name} , "\n";
-        }
-        else {
-            push @lines , [
-                $acc . "/" . $repo->{name} ,
-                ($repo->{description}||"")
-            ];
-        }
-    }
-    print_list @lines if @lines;
 }
+
 
 1;
 

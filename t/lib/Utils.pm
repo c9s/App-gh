@@ -9,6 +9,7 @@ use List::AllUtils qw/ pairmap pairgrep /;
 
 our %url_mapping = (
     'search/repositories' => 'search.json',
+    'users/yanick/repos'  => 'repos.json',
 );
 
 my $ua = Test::LWP::UserAgent->new;
