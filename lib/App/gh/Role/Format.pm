@@ -6,6 +6,7 @@ use JSON qw/ to_json /;
 use Moose::Util::TypeConstraints qw/ enum /;
 use IO::Interactive qw/ is_interactive /;
 use Module::Runtime qw/ use_module /;
+use Term::ANSIColor qw/ colored /;
 
 parameter formats => (
     isa => 'ArrayRef',

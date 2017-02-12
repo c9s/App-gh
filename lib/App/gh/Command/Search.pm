@@ -11,7 +11,6 @@ use MooseX::App::Command;
 use Moose::Util::TypeConstraints qw/ enum /;
 use Module::Runtime qw/ use_module /;
 
-use Term::ANSIColor qw/ colored /;
 
 extends 'App::gh';
 
