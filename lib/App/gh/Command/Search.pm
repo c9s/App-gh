@@ -1,59 +1,97 @@
 package App::gh::Command::Search;
+# ABSTRACT: search repositories
+
+use 5.10.0;
+
 use warnings;
 use strict;
-use base qw(App::gh::Command);
-use App::gh::Utils;
-use App::gh;
-use Term::ANSIColor;
-use Text::Wrap;
-use v5.10;
+
+use MooseX::App::Command;
+
+use Moose::Util::TypeConstraints qw/ enum /;
+use Module::Runtime qw/ use_module /;
+
+
+extends 'App::gh';
+
+with 'App::gh::Role::Format' => {
+    formats => [qw/ summary json /],
+};
+
+use experimental 'switch', 'postderef';
+
+parameter query => (
+    is => 'ro',
+    documentation => 'search query',
+);
+
+option sort => (
+    is => 'ro',
+    default => 'popularity',
+    documentation => 'sorting criteria',
+);
+
+option reverse => (
+    is            => 'ro',
+    isa           => 'Bool',
+    default       => sub { 0 },
+    documentation => 'list entries in descending order',
+);
+
+
+
+sub run {
+    my $self = shift;
+
+    my %repos = $self->search_repositories({ 
+        q     => $self->query,
+        sort  => $self->sort,
+        order => $self->reverse ? 'desc' : 'asc'
+    });
+
+    $self->print_formatted(\%repos);
+
+}
+
+# TODO turn into option
+has summary_entry => (
+    is => 'ro',
+    default => '{{#color "blue"}}{{#pad "-30"}}{{ full_name }}{{/pad}}{{/color}} - {{ description }}'
+);
+
+sub print_summary {
+    my( $self, $repos ) = @_;
+    my $template = $self->summary_entry;
+
+    say $self->render_string( $self->summary_entry(), $_) 
+        for $repos->{items}->@*;
+}
+
 
 =encoding utf8
 
-=head1 NAME
-
-App::gh::Command::Search - search repositories
-
 =head1 USAGE
 
-    $ gh search perl6
+    $ gh search --sort popularity --reverse perl6
 
 =cut
 
-sub run {
-    my ($self,$keyword) = @_;
-    local $|;
-    info "Fetching list...";
+# search --reverse (desc) --sort
 
-    my $data = App::gh->github->query( 'GET' , '/legacy/repos/search/' . $keyword );
+# three format options short, or verbose, or json
 
-    my @ary = ();
-    for my $repo ( @{ $data->{repositories} } ) {
-        my $name = sprintf "%s/%s", $repo->{username} , $repo->{name};
-        my $desc = $repo->{description};
-        push @ary, [ $name , $desc || '' ];
-    }
-    print_list @ary;
+# color if interactive, strip'em if not
+# template for entries
 
-#     my $result = App::gh->api->search($keyword);
-#     if( $self->{long} ) {
-#         for my $entry ( @{ $result->{repositories} } ) {
-#             print color 'white bold';
-#             say "*   $entry->{owner}/$entry->{name}";
-#             print color 'reset';
-#             say "    W/F:      $entry->{watchers}/$entry->{forks}";
-#             say "    Url:      " .  $entry->{url} if $entry->{url};
-#             say "    Homepage: " .  $entry->{homepage} if $entry->{homepage};
-#             say "\n" . wrap( '    ', '    ', $entry->{description} ) . "\n";
-#         }
-#     } else {
-#         my @ary = ();
-#         for my $repo ( @{ $result->{repositories} } ) {
-#         }
-#         # print short list
-#     }
+# Term::ANSIColor
+# IO::Interactive
+# Text::Balanced
 
-}
+# allow to config color aliases
+
+#    !blue on_red<$_{username} }/$_{name}>
+
+
 
 1;
 __END__

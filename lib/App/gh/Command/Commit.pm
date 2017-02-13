@@ -6,7 +6,7 @@ use utf8;
 use base qw(App::gh::Command);
 use File::Path qw(mkpath);
 use App::gh::Utils;
-use File::Temp;
+use File::Temp qw(tempfile);
 use Term::ReadLine;
 
 =encoding utf8
@@ -82,7 +82,6 @@ sub run {
             last unless grep { $_ } @lines;  # skip commit if those lines are empty.
 
             # create a tempfile and put messages into the temp file.
-            use File::Temp qw(tempfile);
             my ($fh, $filename) = tempfile( ".gh_commit_XXXX" , SUFFIX => '.msg');
 
             # put messages into history.

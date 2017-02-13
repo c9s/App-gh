@@ -1,55 +1,55 @@
 package App::gh::Command::List;
+# ABSTRACT: list a user's repositories
+
+use 5.10.0;
+
 use warnings;
 use strict;
-use base qw(App::gh::Command);
-use App::gh;
-use App::gh::Utils;
 
+use MooseX::App::Command;
 
-=encoding utf8
+use Moose::Util::TypeConstraints qw/ enum /;
+use Module::Runtime qw/ use_module /;
 
-=head1 NAME
+use Term::ANSIColor qw/ colored /;
+use JSON qw/ to_json /;
 
-App::gh::Command::List - list repository from one.
+extends 'App::gh';
+with 'App::gh::Role::Format' => {
+    formats => [qw/ summary json /],
+};
 
-=head1 USAGE
+use experimental 'switch', 'postderef';
 
-    $ gh list [user id]
+parameter username => (
+    is       => 'ro',
+    required => 1,
+);
 
-=cut
+sub print_summary {
+    my( $self, $repos ) = @_;
 
-sub options {
-    ( 'n|name' => 'name_only' )
-}
+    say $self->render_string( $self->summary_entry, $_) 
+        for @$repos;
+};
+
+# TODO read again if there are more
+
+# TODO turn into option
+has summary_entry => (
+    is => 'ro',
+    default => '{{#color "blue"}}{{#pad "-30"}}{{ name }}{{/pad}}{{/color}} - {{ description }}'
+);
 
 sub run {
-    my ( $self, $acc ) = @_;
+    my $self = shift;
 
-    $acc ||= App::gh->config->github_id;
-    $acc =~ s{/$}{};
+    my @repos = $self->list_user_repos( $self->username );
 
-	# TODO: use api class.
-    my $query = App::gh->github->repos;
-    my @repolist = $query->list_user($acc);
-    push @repolist, $query->next_page while $query->has_next_page;
+    $self->print_formatted(\@repos);
 
-    my @lines = ();
-    for my $repo ( @repolist ) {
-        my $repo_name = $repo->{name};
-
-        # name-only
-        if( $self->{name_only} ) {
-            print $acc . "/" . $repo->{name} , "\n";
-        }
-        else {
-            push @lines , [
-                $acc . "/" . $repo->{name} ,
-                ($repo->{description}||"")
-            ];
-        }
-    }
-    print_list @lines if @lines;
 }
+
 
 1;
 

@@ -1,23 +1,5 @@
 #!/usr/bin/env perl
-use lib 'lib';
-use LWP::Simple;
-use JSON::XS;
-use utf8;
-use warnings;
-use constant debug => $ENV{DEBUG};
-use App::gh::Utils;
-use App::gh::Command;
-require App::gh::Git;
 
-$|=1;
+use App::gh;
 
-binmode STDOUT, ':utf8';
-
-my $act = shift;
-
-$SIG{INT} = sub {
-    exit;
-};
-
-App::gh::Command->invoke( ($act || 'help') , @ARGV );
-exit;
+App::gh->new_with_command->run;
